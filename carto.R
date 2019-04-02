@@ -18,6 +18,7 @@ plot.obj = function(rast) {
   plot(rast) ;  lines(read.table("data_carto/WORLD_lowres.dat"))
 }
 
+
 # création de cartes mensuelle de TMEAN et PRECMEAN (moy climatique 1970-2000) ####
 LFprec = list.files(WD,pattern ="PRECm",full = T)
 LFtm = list.files(WD,pattern = "TMEANm",full = T)
@@ -67,4 +68,7 @@ axis(side = 4) ; mtext(side = 4, line = 3, "Temperature (°)")
 
 Alpine.ext = extent (-10,40,35,55)
 plot.raster("data_carto/GRASSLANDS_10min.tif",Alpine.ext)
+
+#plot(raster("data_carto/PIA03395.tif"),extent (0,21600,0,9049))
+#plot.raster("data_carto/PIA03395.tif",extent (10800,12000,7350,8000))
 

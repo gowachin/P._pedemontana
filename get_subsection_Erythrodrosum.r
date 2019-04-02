@@ -8,12 +8,14 @@ mat2=mat[which(row.names(mat)%in%int),] # with one outgroup: AP1 (P. lutea)
 mat2
 
 Sub_appendix = Appendix_table[Appendix_table$Recode %in% int,]
-Alpine.ext = extent (-1,17,42,48)
+Alpine.ext = extent (-10,25,40,50)
 plot.raster("data_carto/GRASSLANDS_10min.tif",Alpine.ext)
+#plot.obj("data_carto/elevation1x1_new.tif")
 par(new = T)
 text(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude, Sub_appendix$Recode, cex = 0.7) #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
 #points(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude)
-points(x = Occurences_Alps$lon , y = Occurences_Alps$lat) # attention problemes de noms entre lon et lat, c'est l'inverse.
+points(x = Occurences_Alps$lon , y = Occurences_Alps$lat, cex = 0.5) # attention problemes de noms entre lon et lat, c'est l'inverse.
+
 
 # subset to keep SNPs only
 as.character(mat2[,1])
@@ -44,7 +46,7 @@ sort(row.names(mat)) ; length(row.names(mat))
 
 unmatch = sort(row.names(mat)[row.names(mat) %!in% Appendix_table$Recode])
 unmatch ; length(unmatch)
-# c'est quoi PVE?!
+# PVE == Primula veris, génome de référence
 
 # recodes les noms pour extraire infos de position
 Appendix_table$Recode = Appendix_table$Code
