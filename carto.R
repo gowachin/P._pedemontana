@@ -11,14 +11,6 @@ library(rgdal)
 
 WD = "~/Bureau/BEE/Stage/Pedemontana/data_carto"
 
-plot.raster = function(rast,ext) {
-  plot(crop(raster(rast), ext)) ;  lines(read.table("data_carto/WORLD_lowres.dat"))
-}
-plot.obj = function(rast) {
-  plot(rast) ;  lines(read.table("data_carto/WORLD_lowres.dat"))
-}
-
-
 # création de cartes mensuelle de TMEAN et PRECMEAN (moy climatique 1970-2000) ####
 LFprec = list.files(WD,pattern ="PRECm",full = T)
 LFtm = list.files(WD,pattern = "TMEANm",full = T)
@@ -40,13 +32,13 @@ PREC = stack(LFprec) #empile les couches
 extract(PREC,GRE) # meme chose qu'avant, mais sans boucle for
 
 RF = raster("data_carto/RAINFOREST_10min.tif") #tif des rainforest
-plot.obj(RF)
+plot.raster(RF, raw=F,line =T)
 #mais rainforest en europe, donc peut etre besoin d'un seuil
 
 RF80 = RF # même chose que précedement, mais en mode binaire
 RF80[RF>=80] = 1
 RF80[RF<80] = 0 #on peut aussi faire ça par raster::reclassify
-plot.obj(RF80)
+plot.raster(RF80, raw = F, line = T)
 
 #quel est le profil thermique et hydrique des RF (a 80%) ####
 FT80 = xyFromCell(RF,ID.RF80)
@@ -67,7 +59,7 @@ plot(Tmean, col = "darkred", xlab=NA, ylab=NA,main = paste("Diagramme Tropical (
 axis(side = 4) ; mtext(side = 4, line = 3, "Temperature (°)")
 
 Alpine.ext = extent (-10,40,35,55)
-plot.raster("data_carto/GRASSLANDS_10min.tif",Alpine.ext)
+plot.raster("data_carto/GRASSLANDS_10min.tif",ext = Alpine.ext,line = T)
 
 #plot(raster("data_carto/PIA03395.tif"),extent (0,21600,0,9049))
 #plot.raster("data_carto/PIA03395.tif",extent (10800,12000,7350,8000))

@@ -2,3 +2,4 @@
 
 export("%!in%")
 export(manual)
+export(plot.raster)
