@@ -62,5 +62,5 @@ Alpine.ext = extent (-10,40,35,55)
 plot.raster("data_carto/GRASSLANDS_10min.tif",ext = Alpine.ext,line = T)
 
 #plot(raster("data_carto/PIA03395.tif"),extent (0,21600,0,9049))
-#plot.raster("data_carto/PIA03395.tif",extent (10800,12000,7350,8000))
+plot.raster("data_carto/STRM.tif",ext =extent (10800,12000,7350,8000))
 

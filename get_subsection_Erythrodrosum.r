@@ -55,18 +55,28 @@ Repart.villosa = Occurences_Alps[Occurences_Alps$Taxon == "Primula villosa",],
 Repart.hirsuta = Occurences_Alps[Occurences_Alps$Taxon == "Primula hirsuta",],
 Repart.daonensis = Occurences_Alps[Occurences_Alps$Taxon == "Primula daonensis",])
 
+summary(Repart[[3]])
+par(mfrow = c(8,2))
+for (i in 1:length(Repart)) {print(summary(Repart[[i]]))
+  lat = hist(Repart[[i]]$lat) ; lon = hist(Repart[[i]]$lon)
+  plot(lat, xlim = c(44,48), col = color[i])
+  plot(lon, xlim = c(5.7,15.9), col = color[i])
+  }
+par(mfrow = c(1,1))
 Sub_appendix = Appendix_table[Appendix_table$Recode %in% int,]
-Alpine.ext = extent (-2,18,42,48)
+Alpine.ext = extent (5.5,15.9,44.1,47.8)
 plot.raster("data_carto/GRASSLANDS_10min.tif",Alpine.ext,line = T)
-tail = c(0.1,0.1,0.1,0.1) ; color = c("red","green","grey","purple")
+tail = c(0.1,0.1,0.1,0.1) ; color = c("red","black","grey50","purple")
 for (i in 1:length(Repart)) {points(x = Repart[[i]]$lon , y = Repart[[i]]$lat, cex = tail[i], col=color[i]) }
 text(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude, Sub_appendix$Recode, cex = 0.7) #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
 #points(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude)
+abline(h=45.6, col = "red", lty = 4)
 
-Pedemonta.ext = extent (5,11,44,46)
+
+Pedemonta.ext = extent (6.1,9.3,44.5,46.8)
 Pede_appendix = Appendix_table[Appendix_table$Recode %in% pedemontana,]
 plot.raster("data_carto/GRASSLANDS_10min.tif",Pedemonta.ext,line = T)
-tail = c(0.1,0.1,0.1,0.1) ; color = c("red","black","grey","purple")
+tail = c(0.1,0.1,0.1,0.1) ; color = c("red","black","grey50","purple")
 for (i in 1:length(Repart)) {points(x = Repart[[i]]$lon , y = Repart[[i]]$lat, cex = tail[i], col=color[i]) }
-text(x = Pede_appendix$Latitude, y = Pede_appendix$Longitude, Pede_appendix$Recode, cex = 0.7) #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
+text(x = Pede_appendix$Latitude, y = Pede_appendix$Longitude, Pede_appendix$Recode, cex = 0.7, col = "blue") #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
 #points(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude)
