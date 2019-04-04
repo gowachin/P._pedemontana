@@ -90,31 +90,36 @@ library(vegan)
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 #format structure créé par PGDSpider!
-struct2geno(file = "data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_STRUCTURE.txt",
+system("cd ; echo ########fichier home######## ; ls ;
+        cd Téléchargements/PGDSpider_2.1.1.5/ ; echo fichier PGDSpider2 ; ls ;
+       ./PGDSpider2.sh")
+
+struct2geno(file = "data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_str_rearranged.str",
             TESS = FALSE, diploid = TRUE, FORMAT = 2,
-            extra.row = 0, extra.col = 2, output = "data/freebayes_22_structure.geno")
+            extra.row = 0, extra.col = 2, output = "data/freebayes_23_str_rearranged.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
-obj  <- snmf("data/freebayes_22_structure.geno", K = 1:14, entropy = T, ploidy = 2,
-             CPU = 7,repetitions = 20, project= "new", alpha=100)
+obj  <- snmf("data/freebayes_23_str_rearranged.geno", K = 1:14, entropy = T, ploidy = 2,
+             CPU = 7,repetitions = 10, project= "new", alpha=100)
 # Choix du K optimal (20 runs)
 par(mfrow = c(1,1))
 plot(obj, col = "blue", pch=1,cex=0.8)
-color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","black")
+beep(3)
+color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","black","yellow","darkgreen")
 
-obj.snmf = snmf("data/freebayes_22_structure.geno", K = 3, alpha = 100, project = "new")
-qmatrix = Q(obj.snmf, K = 3)
+obj.snmf = snmf("data/freebayes_23_str_rearranged.geno", K = 11, alpha = 100, project = "new")
+qmatrix = Q(obj.snmf, K = 11)
 barplot(t(qmatrix), col = color, border = NA, space = 0,        xlab = "Individuals", ylab = "Admixture coefficients")
 
 Pop = function(K) {
-obj.snmf = snmf("data/freebayes_22_structure.geno", K = K, alpha = 100, project = "new",
+obj.snmf = snmf("data/freebayes_23_str_rearranged.geno", K = K, alpha = 100, project = "new",
                 CPU = 7)
 qmatrix = Q(obj.snmf, K = K)
 barplot(t(qmatrix), col = color, border = NA, space = 0,        xlab = "Individuals", ylab = "Admixture coefficients")}
 
-par(mfrow = c(3,3))
-for (i in 1:9) Pop(i)
-Pop(9)
+par(mfrow = c(3,4))
+for (i in 1:12) Pop(i) ;beep(3)
+
 # td Stephanie ####
 
 #1561_SNP.str : Fichier au format structure contenant les données génétiques (1561 loci) pour chaque individu (88ind)
