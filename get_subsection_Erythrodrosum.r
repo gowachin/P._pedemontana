@@ -81,3 +81,133 @@ for (i in 1:length(Repart)) {points(x = Repart[[i]]$lon , y = Repart[[i]]$lat, c
 
 text(x = Pede_appendix$Latitude, y = Pede_appendix$Longitude, Pede_appendix$Recode, cex = 0.7, col = "blue") #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
 #points(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude)
+
+#### script Rstructure ####
+library(LEA)
+library(ade4)
+library(vegan)
+
+source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
+source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
+#format structure créé par PGDSpider!
+struct2geno(file = "data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_STRUCTURE.txt",
+            TESS = FALSE, diploid = TRUE, FORMAT = 2,
+            extra.row = 0, extra.col = 2, output = "data/freebayes_22_structure.geno")
+#permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
+genotype.geno =geno2lfmm( input.file = "~/freebayes_22_structure.geno", output.file = "data/data/freebayes_22_LFMM.lfmm")
+
+test =LEA::read.geno("data/freebayes_22_structure.geno")
+
+#1561_SNP.str : Fichier au format structure contenant les données génétiques (1561 loci) pour chaque individu (88ind)
+#genotype.lfmm : Fichier au format lfmm contenant les données génétiques (1561 loci) pour chaque individu
+#stations.txt : Fichier contenant les caractéristiques des stations : coordonnées GPS, altitude et données climatiques
+#data.env.txt : Fichier contenant les mêmes caractéristiques environnementales mais pour chaque individu
+#loci.txt : Fichier contenant les noms des loci
+
+# Convertir le fichier format lfmm en objet geno :
+genotype.geno<-lfmm2geno("genotype.lfmm", force = T )
+stations<-read.table("stations.txt",h=T)
+env.data<-read.table("data.env.txt",h=T)
+
+####ACP sur les données environnementales (ade4) ####
+# Sélectionner uniquement les variables altitude et climatiques
+data.pca<-stations[,4:8]
+row.names(data.pca)<-stations$Population
+# Réaliser l’ACP
+env.pca<-dudi.pca(data.pca, scannf = FALSE, nf = 2)
+# Pourcentages d’inertie et contributions absolues
+inertia.dudi(env.pca,col.inertia=TRUE) #2axes pour inertie de 89%
+# Représentation graphique
+par(mfrow=c(1,1))
+plot(env.pca$li, ylab="Altitude et temperature min",xlab="Longitude et temperature max",main="Segregation des pop selon tendances environnementales")
+text(env.pca$li, as.character(rownames(env.pca$li)), offset = 0.7 ,pos =1, col="darkgreen") ;
+s.corcircle(env.pca$co)
+s.arrow(2*env.pca$co,xax=1,yax=2,sub="axe1/axe2")
+s.label(env.pca$li,xax=1,yax=2,sub="axe1/axe2", add.plot = T)
+#reunion differente d'un point de vue env de la reunion
+
+####Inférence de la structure génétique (LEA) ####
+# Calcul de la structure pour plusieurs K : ici 1 à 14
+obj  <- snmf("genotype.geno", K = 1:14, entropy = T, repetitions = 10, project= "new", alpha=100)
+obj  <- snmf("genotype.geno", K = 1:14, entropy = T, repetitions = 1, project= "new", alpha=100)
+
+# Choix du K optimal (20 runs)
+plot(obj, col = "blue", pch=1,cex=0.8,lines=TRUE)
+
+# Récupérer la valeur de cross-entropy pour chaque run pour le meilleur K
+ce2=cross.entropy(obj,K=2)
+ce3=cross.entropy(obj,K=3)
+ce4=cross.entropy(obj,K=4)
+
+# Plot de la structure du meilleur run pour le meilleur K identifié
+par(mfrow=c(1,2))
+#K=2
+best2 = which.min(ce2)
+qmatrix2=Q(obj,K=2, run=best2)
+env = read.table("data.env.txt", h=T)
+rownames(qmatrix2) = env$Population
+barplot(t(qmatrix2),col=c(2,3), xlab = "Individuals", ylab = "Admixture coefficients",las=2,cex.names=0.6)
+
+#K=3
+best3 = which.min(ce3)
+qmatrix3=Q(obj,K=3, run=best3)
+env = read.table("data.env.txt", h=T)
+rownames(qmatrix3) = env$Population
+barplot(t(qmatrix3),col=c(2,3,4), xlab = "Individuals", ylab = "Admixture coefficients",las=2,cex.names=0.6)
+
+#K=4
+best4 = which.min(ce4)
+qmatrix4=Q(obj,K=4, run=best3)
+env = read.table("data.env.txt", h=T)
+rownames(qmatrix4) = env$Population
+barplot(t(qmatrix4),col=c(2,3,4,5), xlab = "Individuals", ylab = "Admixture coefficients",las=2,cex.names=0.6)
+
+####Recherche de loci outlier pour la variable Min_Temp_Cold (LEA) ####
+
+# Création d’un projet qui ne contient que cette variable
+attach(env.data)
+write.env(Min_Temp_Cold ,"Min_Temps_Cold.env")
+detach(env.data)
+
+# Corrélation entre données génotypiques et climatique
+mint.cor<-lfmm("genotype.lfmm","Min_Temps_Cold.env",K=2,repetitions=1,project="new")
+
+# Calculer les p-valeurs ajustées
+zs = z.scores(Min_Temp_Cold_project, K = 2)
+zs.median = apply(zs, MARGIN = 1, median) #Combine z-scores using the median
+lambda = median(zs.median^2)/qchisq(0.5, df = 1) #Recalibrate
+adj.p.values = pchisq(zs.median^2/lambda, df = 1, lower = FALSE) #Compute adjusted p-values from the combined z-scores
+p=adj.p.values
+hist(adj.p.values, col = "grey",nclass=20,xlab="Adjusted p-values")
+candidates.qv.cold.lfmm = which(qvalue(adj.p.values, fdr = .05)$signif)
+
+candi.cold.lfmm=as.character(read.table("loci.txt")[candidates.qv.cold.lfmm,1])
+write.table(candi.cold.lfmm,"candidates_cold.lfmm.txt")
+
+# Manhattan plot
+plot(-log10(p), xlab= "loci number", ylab= "-log10pvalues",cex=0.8,pch=20,main="Manhattan plot Minimum Temperature of the Coldest month")
+points(candidates.qv.cold.lfmm, -log10(adj.p.values[candidates.qv.cold.lfmm]), pch = 19, col = "orange")
+text(candidates.qv.cold.lfmm,-log10(adj.p.values[candidates.qv.cold.lfmm]),as.character(candi.cold.lfmm),cex=0.7, pos=1)
+
+####Analyse de redondance####
+
+rda(genotype~environnement+ Conditions(geographie))
+anova(rda)
+
+####Outflank ####
+# Données
+data = read.table("genotype.lfmm")
+popnames = pop(genind.data)
+locinames = read.table("loci.txt")
+# Calcul du FST pour chaque locus
+FstDataFrame <- MakeDiploidFSTMat(data, locinames, popnames)
+FST<-as.numeric(FstDataFrame$FST)
+# Scan FST avec OutFLANK
+output<-OutFLANK(FstDataFrame, LeftTrimFraction = 0.05, RightTrimFraction = 0.05, Hmin=0.1, NumberOfSamples=length(levels(pop names)), qthreshold = 0.05)
+results<-output$results
+# Distribution p-valeurs et Manhattan plot
+hist(results$pvalues)
+plot(-log(results$pvalues),pch=20,cex=0.4,xlab="Loci",ylab="-log10(pvalues)")
+high_FST_outlier<-output$numberHighFstOutliers
+# Distribution des FST
+OutFLANKResultsPlotter(output, withOutliers = TRUE, NoCorr = TRUE, Hmin = 0.1, binwidth = 0.005)

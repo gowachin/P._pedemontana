@@ -7,3 +7,12 @@
 #sudo apt-get install libfreetype6-dev
 devtools::install_github('bomeara/phrapl')
 library(phrapl)
+library(rgl)
+
+data(TestData)
+migrationArray[[3]]
+
+PlotModel( migrationIndividual=migrationArray[[3]] )
+trees[[1]]
+
+
