@@ -1,5 +1,5 @@
 library(ape)
-mat=read.dna(file='data/freebayes_-F0.3-n10-m30_-q20_mincov20_90samples_SNPs_only_FASTA.fasta',format='fasta')
+mat=read.dna(file='data/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_only_FASTA.fasta',format='fasta')
 mat
 row.names(mat)
 
@@ -9,6 +9,35 @@ Erythro
 
 # subset to keep SNPs only
 as.character(Erythro[,1])
+Erythro[,1]
+
+missing_bases=rep(NA,dim(Erythro)[2])
+for (i in 1:length(missing_bases)){
+  temp=c(unique(as.character(Erythro[,i])))
+  missing_bases[i]=sum(temp=='?') # attention, totalement stringent!!
+  #print(i)
+}
+table(missing_bases)
+informativ=Erythro[,which(missing_bases == 0)]
+informativ
+
+N_bases=rep(NA,dim(informativ)[2])
+for (i in 1:length(N_bases)){
+  temp=c(unique(as.character(informativ[,i])))
+  N_bases[i]=sum(temp!='?')
+  #print(i)
+}
+table(N_bases)
+#composition des sites :
+#N_bases
+# 1    2    3    4    5
+# 3684 1457  319   12    1    ### donne environ 353 SNP binaires car sites ambigues
+Inf_SNP=informativ[,which(N_bases>1)]
+Inf_SNP
+write.dna(informativ,file='data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_informativ_5473_FASTA.fasta',format='fasta')
+
+write.dna(Inf_SNP,file='data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_informativ_1789_FASTA.fasta',format='fasta')
+
 
 N_bases=rep(NA,dim(Erythro)[2])
 for (i in 1:length(N_bases)){
@@ -21,7 +50,7 @@ table(N_bases)
 as.character(Erythro[,which(N_bases==7)])
 SNP=Erythro[,which(N_bases>1)]
 SNP
-write.dna(SNP,file='data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_FASTA.fasta',format='fasta')
+write.dna(SNP,file='data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_FASTA.fasta',format='fasta')
 
 
 # sous-groupe 'pedemontana s.l.'
@@ -94,7 +123,7 @@ system("cd ; echo ########fichier home######## ; ls ;
         cd Téléchargements/PGDSpider_2.1.1.5/ ; echo fichier PGDSpider2 ; ls ;
        ./PGDSpider2.sh")
 
-struct2geno(file = "data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_str_rearranged.str",
+struct2geno(file = "data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_str_rearranged.str",
             TESS = FALSE, diploid = TRUE, FORMAT = 2,
             extra.row = 0, extra.col = 2, output = "data/freebayes_23_str_rearranged.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
@@ -102,6 +131,8 @@ struct2geno(file = "data/freebayes_-F0.3-n10-m30_-q20_mincov20_subsection_Erythr
 obj  <- snmf("data/freebayes_23_str_rearranged.geno", K = 1:14, entropy = T, ploidy = 2,
              CPU = 7,repetitions = 10, project= "new", alpha=100)
 # Choix du K optimal (20 runs)
+ID =rearanged$ind.names
+
 par(mfrow = c(1,1))
 plot(obj, col = "blue", pch=1,cex=0.8)
 beep(3)
@@ -109,16 +140,38 @@ color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","bla
 
 obj.snmf = snmf("data/freebayes_23_str_rearranged.geno", K = 11, alpha = 100, project = "new")
 qmatrix = Q(obj.snmf, K = 11)
-barplot(t(qmatrix), col = color, border = NA, space = 0,        xlab = "Individuals", ylab = "Admixture coefficients")
+barplot(t(qmatrix), col = color, border = NA, space = 0, xlab = "Individuals", ylab = "Admixture coefficients",
+        names.arg =ID, las = 2)
 
 Pop = function(K) {
 obj.snmf = snmf("data/freebayes_23_str_rearranged.geno", K = K, alpha = 100, project = "new",
                 CPU = 7)
 qmatrix = Q(obj.snmf, K = K)
-barplot(t(qmatrix), col = color, border = NA, space = 0,        xlab = "Individuals", ylab = "Admixture coefficients")}
+barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
+        names.arg =ID, las = 2)}
 
 par(mfrow = c(3,4))
 for (i in 1:12) Pop(i) ;beep(3)
+# adegenet ####
+library(parallel)
+
+
+adegenetTutorial("dapc")
+
+rearanged <- fasta2genlight("data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_only_rearanged.fas", chunk=10, parallel=FALSE)
+rearanged
+glPlot(rearanged, posi="topleft")
+
+informativ <- fasta2genlight('data/freebayes_-F0_3-n10-m30_-q20_mincov20_subsection_Erythrodrosum_23samples_SNPs_informativ_5473_FASTA.fasta', chunk=100, n.cores = NULL)
+informativ
+glPlot(informativ , posi="topleft")
+
+genet.fullmat <- fasta2genlight("data/Erythrodrosum_22samples_MAP13_COV10_fullmatrix.fasta", chunk=10, n.cores = NULL)
+genet.fullmat
+glPlot(genet.fullmat, posi="topleft")
+
+
+
 
 # td Stephanie ####
 
