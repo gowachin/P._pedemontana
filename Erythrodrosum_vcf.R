@@ -81,8 +81,12 @@ plot(x = res[,1], y = res[,2], xlab = "seuil de stringence", ylab = "info gardé
 abline(h = 5, col = "red") ; text(x = res[,1], y = res[,2], res[,3], pos = 3)
 par(mfrow = c(1,1))
 
-system("sed -i '1 i\##fileformat=VCFv4.0' 'freebayes_-F0_3-n10-m13_-q20_mincov10_23samples_SNPs_only' " )
+system("cd data_vcf ; ls ;
+       sed -i '1 i\##fileformat=VCFv4.0' 'freebayes_-F0_3-n10-m13_-q20_mincov10_23samples_SNPs_only' " )
 
 tryhard = tri(data = inform_mincov20,n=1, r = T)
 plot(log(tryhard$QUAL)) ; abline(h = log(0.3), col = "red")
-stryhard
+dim(tryhard[which(tryhard$QUAL > 20),])
+dim(tryhard)
+
+write.csv(tryhard, file = "tryhardtest.csv")
