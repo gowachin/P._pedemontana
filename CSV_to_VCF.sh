@@ -61,5 +61,62 @@ sed -i '55 i\ ##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allel
 sed -i '56 i\ ##FORMAT=<ID=QA,Number=A,Type=Integer,Description="Sum of quality of the alternate observations">'   $name
 sed -i '57s/.*/#&/' $name
 
+sed -i '1 s/^.\{1\}//'   $name
+sed -i '2 s/^.\{1\}//'   $name
+sed -i '3 s/^.\{1\}//'   $name
+sed -i '4 s/^.\{1\}//'   $name
+sed -i '5 s/^.\{1\}//'   $name
+sed -i '6 s/^.\{1\}//'   $name
+sed -i '7 s/^.\{1\}//'   $name
+sed -i '8 s/^.\{1\}//'   $name
+sed -i '9 s/^.\{1\}//'   $name
+sed -i '10 s/^.\{1\}//'   $name
+sed -i '11 s/^.\{1\}//'   $name
+sed -i '12 s/^.\{1\}//'   $name
+sed -i '13 s/^.\{1\}//'   $name
+sed -i '14 s/^.\{1\}//'   $name
+sed -i '15 s/^.\{1\}//'   $name
+sed -i '16 s/^.\{1\}//'   $name
+sed -i '17 s/^.\{1\}//'   $name
+sed -i '18 s/^.\{1\}//'   $name
+sed -i '19 s/^.\{1\}//'   $name
+sed -i '20 s/^.\{1\}//'   $name
+sed -i '21 s/^.\{1\}//'   $name
+sed -i '22 s/^.\{1\}//'   $name
+sed -i '23 s/^.\{1\}//'   $name
+sed -i '24 s/^.\{1\}//'   $name
+sed -i '25 s/^.\{1\}//'   $name
+sed -i '26 s/^.\{1\}//'   $name
+sed -i '27 s/^.\{1\}//'   $name
+sed -i '28 s/^.\{1\}//'   $name
+sed -i '29 s/^.\{1\}//'   $name
+sed -i '30 s/^.\{1\}//'   $name
+sed -i '31 s/^.\{1\}//'   $name
+sed -i '32 s/^.\{1\}//'   $name
+sed -i '33 s/^.\{1\}//'   $name
+sed -i '34 s/^.\{1\}//'   $name
+sed -i '35 s/^.\{1\}//'   $name
+sed -i '36 s/^.\{1\}//'   $name
+sed -i '37 s/^.\{1\}//'   $name
+sed -i '38 s/^.\{1\}//'   $name
+sed -i '39 s/^.\{1\}//'   $name
+sed -i '40 s/^.\{1\}//'   $name
+sed -i '41 s/^.\{1\}//'   $name
+sed -i '42 s/^.\{1\}//'   $name
+sed -i '43 s/^.\{1\}//'   $name
+sed -i '44 s/^.\{1\}//'   $name
+sed -i '45 s/^.\{1\}//'   $name
+sed -i '46 s/^.\{1\}//'   $name
+sed -i '47 s/^.\{1\}//'   $name
+sed -i '48 s/^.\{1\}//'   $name
+sed -i '49 s/^.\{1\}//'   $name
+sed -i '50 s/^.\{1\}//'   $name
+sed -i '51 s/^.\{1\}//'   $name
+sed -i '52 s/^.\{1\}//'   $name
+sed -i '53 s/^.\{1\}//'   $name
+sed -i '54 s/^.\{1\}//'   $name
+sed -i '55 s/^.\{1\}//'   $name
+sed -i '56 s/^.\{1\}//'   $name
+
 #mv tryhard.csv tryhard.vcf ; ls
 

@@ -173,6 +173,7 @@ glPlot(genet.fullmat, posi="topleft")
 
 
 
+
 # td Stephanie ####
 
 #1561_SNP.str : Fichier au format structure contenant les données génétiques (1561 loci) pour chaque individu (88ind)
