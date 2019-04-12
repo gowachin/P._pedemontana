@@ -108,3 +108,39 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   if (r== T & p == F) return(data)
   if (r== T & p == T) return(resum)
 }
+
+
+#' subset and reorder
+#'
+#' @param data the csv from a vcf file
+#' @param list list of individual to maintain in this subset
+#'
+#' subset the main information with the list of individual and clean the dataset for monomorphic loci
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+subset.reorder = function(data,list) {
+  manus = data[,1:9]
+  for (i in 1:length(list)) {
+    manus = cbind(manus,data[,which(colnames(data) == list[i])])
+  }
+  manus = clean(manus)
+  return(manus)
+}
+
+
+#' save to vcf a csv
+#'
+#' @param csv the dataframe with the information to save inside a vcf file
+#'
+#' save as a vcf file but need to be a vcf troncated at the origine
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+save2vcf = function(csv) {
+  name = deparse(substitute(csv))
+  write.table(csv, paste("data_vcf/",name,".csv",sep = ""),sep = "\t", quote = F, row.names=F)
+  system(paste(" ./CSV_to_VCF.sh data_vcf/",name,".csv ; mv data_vcf/",name,".csv data_vcf/",name,".vcf",sep="") )
+}

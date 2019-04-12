@@ -1,28 +1,25 @@
 #install.packages("vcfR")
 library(vcfR,readr)
-library(Pedemontana)
-library(adegenet)
+library(ade4,adegenet)
 library(poppr)
 library(parallel)
 library(ape)
-library( hierfstat)
+library(hierfstat)
 library(pcadapt)
 library(LEA)
-library(ade4)
 library(vegan)
+library(Pedemontana)
 
-#vcf.cov10.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf", checkFile = F)
-#vcf.cov20.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf", checkFile = F)
+# creation sous jeu de donnees ####
 
-mincov10_90samples_CSV <- read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_onlyCSV.csv",
-                                     "\t", escape_double = FALSE, trim_ws = TRUE)
-colnames(mincov10_90samples_CSV)
-mincov20_90samples_CSV <- read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_onlyCSV.csv",
-                                     "\t", escape_double = FALSE, trim_ws = TRUE)
-colnames(mincov20_90samples_CSV)
+# #vcf.cov10.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf", checkFile = F)
+# #vcf.cov20.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf", checkFile = F)
 
-#colnames(mincov20_90samples_CSV) == colnames(mincov10_90samples_CSV) # mêmes colnames pour deux tableaux
-#vcf = colnames(mincov20_90samples_CSV)[1:9]
+#mincov10_90samples_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+#mincov20_90samples_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+
+# #colnames(mincov20_90samples_CSV) == colnames(mincov10_90samples_CSV) # mêmes colnames pour deux tableaux
+# #vcf = colnames(mincov20_90samples_CSV)[1:9]
 
 vcf = c("CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT")
 Eryth = c('AMB','AML','AOL'
@@ -43,22 +40,22 @@ pop = c("apennina", "apennina"
         ,"valgau","valgau"
 )
 Erythv = c(vcf,Eryth)
-# without the outgroup: AP1 (P. lutea)
-Erythro_mincov10 = mincov10_90samples_CSV [,which(colnames(mincov10_90samples_CSV) %in% Erythv)]
+# # without the outgroup: AP1 (P. lutea)
+#Erythro_mincov10 = mincov10_90samples_CSV [,which(colnames(mincov10_90samples_CSV) %in% Erythv)]
 
-Erythro_mincov20 = mincov20_90samples_CSV [,which(colnames(mincov20_90samples_CSV) %in% Erythv)]
+#Erythro_mincov20 = mincov20_90samples_CSV [,which(colnames(mincov20_90samples_CSV) %in% Erythv)]
 
 #rm(mincov10_90samples_CSV,mincov20_90samples_CSV )
 
-# clean is personnal fonction (package Pedemontana)
-inform_mincov10 = clean(Erythro_mincov10) ; dim(inform_mincov10)
-#Mode   FALSE    TRUE   pourc.clean
-#logical  447716  177092  71.65657
-# dim : [1] 177092     31
-inform_mincov20 = clean(Erythro_mincov20) ; dim(inform_mincov20)
-#Mode   FALSE    TRUE  pourc.clean
-#logical   60894   24352   71.43326
-# dim : [1] 24352    31
+# # clean is personnal fonction (package Pedemontana)
+#inform_mincov10 = clean(Erythro_mincov10) ; dim(inform_mincov10)
+# #Mode   FALSE    TRUE   pourc.clean
+# #logical  447716  177092  71.65657
+# # dim : [1] 177092     31
+#inform_mincov20 = clean(Erythro_mincov20) ; dim(inform_mincov20)
+# #Mode   FALSE    TRUE  pourc.clean
+# #logical   60894   24352   71.43326
+# # dim : [1] 24352    31
 
 #data = Erythro_mincov20[,10:n.col]
 #levels = apply(data,1, function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."]))
@@ -67,14 +64,41 @@ inform_mincov20 = clean(Erythro_mincov20) ; dim(inform_mincov20)
 
 #rm(Erythro_mincov10,Erythro_mincov20)
 
+#write.table(inform_mincov10,"data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv",sep = "\t", quote = F, row.names=F)
+#write.table(inform_mincov20,"data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv",sep = "\t", quote = F, row.names=F)
+
+# charger subser Eryth ####
+
+mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+mincov20_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+
+a = c('AMB','AML','AOL') #apenina
+c = c('CS1','CP1','CP4') #cottia
+d = c('DGB','DRL') #daonensis
+h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
+p = c('PT1','PV1','GA2','GA4') #pedemontana
+v = c('VR3','VR1','VL2','VB1') #villosa
+
+pop = c("apennina", "apennina"
+        ,"apennina"
+        ,"cottia","cottia","cottia"
+        ,"hirsuta"
+        ,"daonensis","daonensis"
+        ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
+        ,"pedemontana","pedemontana"
+        ,"villosa","villosa","villosa","villosa"
+        ,"valgau","valgau"
+)
+
+Eryth20 = subset.reorder(mincov20_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
+
 #permet de virer les lignes avec seulement un certain nombre de variants ####
 #fonction tri dans le package
-test = tri(data = inform_mincov20,n.r=0.95,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
-colnames(test[,-c(1:9)])
-plot(log(test$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
+Eryth20_t = tri(data = Eryth20,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+colnames(Eryth20_t[,-c(1:9)])
+plot(log(Eryth20_t$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
 
-write.table(test,"data_vcf/tryhard.csv",sep = "\t", quote = F, row.names=F)
-system(" ./CSV_to_VCF.sh data_vcf/tryhard.csv ; mv data_vcf/tryhard.csv data_vcf/tryhard.vcf" )
+save2vcf(Eryth20_t)
 
 # analyse des positions le long du genome ####
 x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
@@ -89,6 +113,70 @@ tryhard2 = tryhardind
 tryhard2@ind.names
 pop(tryhard2) <- as.factor(pop)
 
+# analyse pour genind ####
+
+Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
+Eryth20_g = vcfR2genind(Eryth20_v) ; Eryth20_g
+row.names(Eryth20_g$tab)
+
+assign.pop = function(genind) {
+  for (i in 1:length(row.names(Eryth20_g$tab))){
+
+  }
+  pop(Eryth20_g) <- as.factor(pop)
+  return(genind)
+}
+
+pop(Eryth20_g) <- as.factor(pop)
+
+pop = c("apennina", "apennina"
+        ,"pedemontana","pedemontana"
+        ,"valgau","valgau"
+        ,"cottia","cottia","cottia"
+        ,"villosa","villosa","villosa","villosa"
+        ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
+        ,"daonensis","daonensis"
+)
+
+toto <- summary(Eryth20_g)
+names(toto)
+par(mfrow=c(2,1))
+barplot(toto$loc.n.all, ylab="Number of alleles",
+        main="Number of alleles per locus")
+barplot(toto$Hexp-toto$Hobs, main="Heterozygosity: expected-observed",
+        ylab="Hexp - Hobs")
+
+fstat(Eryth20_g)
+#     pop         Ind
+#Total 0.1242216 -0.09033675
+#pop   0.0000000 -0.24499159
+
+#This table provides the three F statistics F st (pop/total), F it (Ind/total), and F is
+#(ind/pop). These are overall measures which take into account all genotypes and all loci.
+
+matFst <- pairwise.fst(Eryth20_g)
+matFst
+pop(Eryth20_g)
+plot(nj(matFst))
+#        1          2          3          4          5          6
+# 2 0.12868562
+# 3 0.14535658 0.10341028
+# 4 0.11000696 0.09727770 0.10829867
+# 5 0.16043729 0.14541962 0.14920292 0.14778485
+# 6 0.11634573 0.09884202 0.08943198 0.10876489 0.12199082
+# 7 0.20172406 0.17631443 0.18029774 0.15988093 0.12156202 0.09343348
+par(mfrow =c(1,1))
+X <- tab(Eryth20_g, freq = TRUE, NA.method = "mean")
+pca1 <- dudi.pca(X, scale = FALSE, scannf = FALSE, nf = 3)
+barplot(pca1$eig[1:20], main = "PCA eigenvalues", col = heat.colors(50))
+
+s.class(pca1$li, pop(Eryth20_g))
+title("PCA of microbov dataset\naxes 1-2")
+add.scatter.eig(pca1$eig[1:20], 3,1,2)
+
+col <- funky(15)
+s.class(pca1$li, pop(Eryth20_g),xax=1,yax=2, col=transp(col,.6), axesell=FALSE,
+        cstar=0, cpoint=3, grid=FALSE)
 
 # analyse pour genligth! ####
 myFreq <- glMean(tryhard2)
