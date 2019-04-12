@@ -1,5 +1,5 @@
 #install.packages("vcfR")
-#library(vcfR)
+library(vcfR)
 library(readr)
 
 #vcf.cov10.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf", checkFile = F)
@@ -16,20 +16,24 @@ colnames(mincov20_90samples_CSV)
 #vcf = colnames(mincov20_90samples_CSV)[1:9]
 
 vcf = c("CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT")
-# on vire tout sauf  pede  valgaud
-#Eryth = c(vcf,'PT1','PV1','GA2','GA4')
-#Eryth = c(vcf,'DMB','HC1','HGL','HS2','HP1','HPB') # que Hirsuta
-# on vire tout sauf cottia pede hirsu et valgaud
-#Eryth = c(vcf,'CS1','CP1','CP4','DMB','HC1','HGL','HS2','HP1','HPB','PT1','PV1','GA2','GA4')
-# on vire daonensis
-#Eryth = c(vcf,'AMB','AML','AOL','CS1','CP1','CP4','DMB','HC1','HGL','HS2','HP1','HPB','PT1','PV1','GA2','GA4','VR3','VR1','VL2','VB1')
-Eryth = c(vcf,'AMB','AML','AOL'
+Eryth = c('AMB','AML','AOL'
           ,'CS1','CP1','CP4'
-          #,'DGB','DRL'
+          ,'DGB','DRL'
           ,'DMB','HC1','HGL','HS2','HP1','HPB'
           ,'PT1','PV1','GA2','GA4'
-          #,'VR3','VR1','VL2','VB1'
+          ,'VR3','VR1','VL2','VB1'
           )
+pop = c("apennina", "apennina"
+        ,"apennina"
+        ,"cottia","cottia","cottia"
+        ,"hirsuta"
+        ,"daonensis","daonensis"
+        ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
+        ,"pedemontana","pedemontana"
+        ,"villosa","villosa","villosa","villosa"
+        ,"valgau","valgau"
+)
+Eryth = c(vcf,Eryth)
 # without the outgroup: AP1 (P. lutea)
 Erythro_mincov10 = mincov10_90samples_CSV [,which(colnames(mincov10_90samples_CSV) %in% Eryth)]
 
@@ -40,7 +44,7 @@ rm(mincov10_90samples_CSV,mincov20_90samples_CSV )
 #permet de virer lignes vides ####
 clean = function(data) {
   n.col= dim(data)[2]
-  compte = apply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."]) >1)
+  compte = apply(data[,10:n.col],1,function(data) length( levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
   #exterminate = apply(data[,10:n.col],1,paste,collapse ="")
   #compte = exterminate == paste(rep(".",23),collapse = "")
   print(summary(compte))
@@ -69,9 +73,9 @@ inform_mincov20 = clean(Erythro_mincov20) ; dim(inform_mincov20)
 rm(Erythro_mincov10,Erythro_mincov20)
 
 # analyse des positions le long du genome ####
-#plot(inform_mincov20$POS)
-#head(inform_mincov20)
-#plot(as.factor(inform_mincov20$CHROM))
+
+x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
+plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
 
 #permet de virer les lignes avec seulement un certain nombre de variants ####
 tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data frame type inform_mincov10 , n = pourcentage de présence du snp , quiet est le rendu
@@ -107,15 +111,12 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   if (r== T & p == T) return(resum)
 }
 
-#tri(data = inform_mincov10,n.r=0.8, r = F)
-
-test = tri(data = inform_mincov20,n.r=0.95,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
-
+test = tri(data = inform_mincov10,n.r=0.95,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+colnames(test[,-c(1:9)])
 plot(log(test$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
 
 write.table(test,"data_vcf/tryhard.csv",sep = "\t", quote = F, row.names=F)
 system(" ./CSV_to_VCF.sh data_vcf/tryhard.csv ; mv data_vcf/tryhard.csv data_vcf/tryhard.vcf" )
-
 
 # DAPC ####
 par(mfrow = c(1,1))
@@ -124,6 +125,55 @@ library(vcfR)
 library(poppr, parallel)
 tryhard = read.vcfR("data_vcf/tryhard.vcf", checkFile = T)
 tryhard2 = vcfR2genlight(tryhard, n.cores = 7)
+tryhard2@ind.names
+pop(tryhard2) <- as.factor(pop)
+
+myFreq <- glMean(tryhard2)
+hist(myFreq, proba=TRUE, col="gold", xlab="Allele frequencies",
+     main="Distribution of (second) allele frequencies")
+temp <- density(myFreq)
+lines(temp$x, temp$y*1.8,lwd=3)
+
+myFreq <- c(myFreq, 1-myFreq)
+hist(myFreq, proba=TRUE, col="darkseagreen3", xlab="Allele frequencies",
+     main="Distribution of allele frequencies", nclass=20)
+temp <- density(myFreq, bw=.05)
+lines(temp$x, temp$y*2,lwd=3)
+
+pca1 <- glPca(tryhard2)
+scatter(pca1, posi="bottomleft")
+library(ape)
+tre <- nj(dist(as.matrix(tryhard2)))
+tre
+plot(tre, typ="fan", cex=0.7)
+
+myCol <- colorplot(pca1$scores,pca1$scores, transp=TRUE, cex=4)
+abline(h=0,v=0, col="grey")
+add.scatter.eig(pca1$eig[1:40],2,1,2, posi="bottomleft", inset=.05, ratio=.3)
+plot(tre, typ="fan", show.tip=FALSE)
+tiplabels(pch=20, col=myCol, cex=4)
+title("NJ tree of the US influenza data")
+
+dapc1 <- dapc(tryhard2, n.pca=10, n.da=2)
+scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=TRUE,
+        txt.leg=paste("group", 1:7))#, col=c("red","blue"))
+
+myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen")
+
+compoplot(dapc1, col=myCol,lab="", txt.leg=paste("group", 1:7), ncol=2)
+
+
+library( hierfstat)
+tryhard3 = vcfR2genind(tryhard)
+pop(tryhard3) <- as.factor(pop)
+fstat(tryhard3, fstonly=TRUE)
+
+pairwise.fst(tryhard3)
+
+#While a large number of loci are nearly fixed (frequencies close to 0 or 1), there is an
+#appreciable number of alleles with intermediate frequencies and therefore susceptible to
+#contain interesting biological signal.
+
 #Warning message: In vcfR2genlight(tryhard, n.cores = 7) :
 #Found 895 loci with more than two alleles.Objects of class genlight only support loci with two alleles.
 #895 loci will be omitted from the genlight object.
@@ -140,23 +190,14 @@ tryhard2 = vcfR2genlight(tryhard, n.cores = 7)
 #would be to get a matrix of 1 and 0 where '1' indicate NAs, and do the PCA of this.
 #If you obtain a structure, then this is a sign of problem - your NAs are not randomly distributed.
 
-tryhard2@ind.names
-pop(tryhard2) <- as.factor(c("apennina", "apennina"
-                             ,"apennina"
-                             ,"cottia","cottia","cottia"
-                             ,"hirsuta"
-                             #,"daonensis","daonensis"
-                             ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
-                             ,"pedemontana","pedemontana"
-                             #,"villosa","villosa","villosa","villosa"
-                             ,"valgau","valgau"
-                             ))
+
 popNames(tryhard2)
 ploidy(tryhard2) = 2
 glPlot(tryhard2, posi="topleft")
 
 #calcul de distance
-#tryhard2.pop.dist <- poppr::bitwise.dist(tryhard2)
+tryhard2.pop.dist <- poppr::bitwise.dist(tryhard2)
+tryhard2.pop.dist
 
 grp = find.clusters(tryhard2, max.n.clust = round(nInd(tryhard2))-1)#, n.pca = length(pop(tryhard2)))
 names(grp) ; grp$Kstat ; grp$stat ; grp$grp ; grp$size
@@ -179,9 +220,25 @@ scatter(dapc1, posi.da="topright", bg="white",
         posi.pca="topleft")
 
 # PCAdapt analysis ####
-install.packages("pcadapt")
+#install.packages("pcadapt")
+library(pcadapt)
+filename <- read.pcadapt("data_vcf/tryhard.vcf", type = "vcf")
+x <- pcadapt(input = filename, K = 15)
+plot(x, option = "screeplot")
+plot(x, option = "scores", pop = pop)
+plot(x, option = "scores", i = 2, j = 3, pop = pop)
+plot(x, option = "scores", i = 3, j = 4, pop = pop)
 
+#Another option to choose the number of PCs is based on the ‘score plot’ that displays
+#population structure. The score plot displays the projections of the individuals onto
+#the specified principal components. Using the score plot, the choice of K can be limited
+#to the values of K that correspond to a relevant level of population structure.
 
+#When population labels are known, individuals of the same populations can be displayed
+#with the same color using the pop argument, which should contain the list of indices of
+#the populations of origin. In the geno3pops example, the first population is composed of
+#the first 50 individuals, the second population of the next 50 individuals, and so on.
+#Thus, a vector of indices or characters (population names) that can be provided to the argument pop should look like this:
 
 # LEA analysis ####
 # PGDSpider
@@ -190,19 +247,22 @@ system("cd ; cd Téléchargements/PGDSpider_2.1.1.5/ ; ./PGDSpider2.sh")
 spider = function(input,inFORM,output,outFORM) {
   #realise cette commande ci :
   #system("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.vcf -inputformat VCF -outputfile Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.str -outputformat STRUCTURE -spid Bureau/BEE/Stage/Pedemontana/data_vcf/Spid_VCF_STRUCTURE.spid")
-    command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
+
+  if (inFORM == "VCF" & outFORM == "STRUCTURE") {spid = "Spid_VCF_STRUCTURE.spid"}
+  if (inFORM == "VCF" & outFORM == "PED") {spid = "Spid_VCF_PED.spid"}
+
+
+  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
                   input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/Pedemontana/", output, " -outputformat ", outFORM ,
-                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/Spid_VCF_STRUCTURE.spid",sep = "")
+                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/",spid,sep = "")
   print(command)
   system(command)
 }
 
-spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryharding.str","STRUCTURE")
+spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.str","STRUCTURE")
 
 system("sed -i '1d' data_vcf/tryhard.str ")
 
-system("echo 'hello'")
-print("baba")
 library(LEA)
 library(ade4)
 library(vegan)
@@ -217,10 +277,10 @@ struct2geno(file = "data_vcf/tryhard.str", TESS = FALSE, diploid = T, FORMAT = 2
 obj  <- snmf("data_vcf/tryhard.geno", K = 1:14, entropy = T, ploidy = 2,
              CPU = 7,repetitions = 10, project= "new", alpha=100)
 # Choix du K optimal (20 runs)
-ID =c('AMB','AOL','CS1','CP1','CP4','DMB','DGB','DRL','HC1','HGL','HS2','HP1','HPB','PT1','PV1','VL2','VB1','VR1','VR3','GA2','GA4')
+ID =Eryth
 
 par(mfrow = c(1,1))
-plot(obj, col = "blue", pch=1,cex=0.8)
+plot(obj, col = "blue", pch=1,cex=0.5)
 beep(3)
 color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","black","yellow","darkgreen")
 
@@ -241,6 +301,26 @@ for (i in 1:12) Pop(i) ;beep(3)
 # adegenet ####
 library(parallel)
 
+
+# admixture ####
+
+#install.packages("bedr")
+library(bedr)
+tryhard.vcf = read.vcf("data_vcf/tryhard.vcf")
+tryhard.bed = vcf2bed(tryhard.vcf)
+
+# je n'arrive pas à faire de fichier .bed
+
+ admixture = function(input,K) {
+  #realise cette commande ci :
+  #system(" cd ; Téléchargements/admixture_linux-1.3.0/admixture Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.ped 7 ")
+  command = paste("cd ; Téléchargements/admixture_linux-1.3.0/admixture Bureau/BEE/Stage/Pedemontana/",
+                  input, " ", K,sep = "")
+  print(command)
+  system(command)
+}
+ spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.ped","PED")
+admixture("data_vcf/tryhard.ped",7)
 
 # plot de l'évolution du pourcentage de données en fonction des seuils ####
 par(mfrow = c(2,2))
