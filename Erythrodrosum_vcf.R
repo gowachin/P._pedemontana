@@ -1,6 +1,15 @@
 #install.packages("vcfR")
-library(vcfR)
-library(readr)
+library(vcfR,readr)
+library(Pedemontana)
+library(adegenet)
+library(poppr)
+library(parallel)
+library(ape)
+library( hierfstat)
+library(pcadapt)
+library(LEA)
+library(ade4)
+library(vegan)
 
 #vcf.cov10.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf", checkFile = F)
 #vcf.cov20.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf", checkFile = F)
@@ -33,101 +42,55 @@ pop = c("apennina", "apennina"
         ,"villosa","villosa","villosa","villosa"
         ,"valgau","valgau"
 )
-Eryth = c(vcf,Eryth)
+Erythv = c(vcf,Eryth)
 # without the outgroup: AP1 (P. lutea)
-Erythro_mincov10 = mincov10_90samples_CSV [,which(colnames(mincov10_90samples_CSV) %in% Eryth)]
+Erythro_mincov10 = mincov10_90samples_CSV [,which(colnames(mincov10_90samples_CSV) %in% Erythv)]
 
-Erythro_mincov20 = mincov20_90samples_CSV [,which(colnames(mincov20_90samples_CSV) %in% Eryth)]
+Erythro_mincov20 = mincov20_90samples_CSV [,which(colnames(mincov20_90samples_CSV) %in% Erythv)]
 
-rm(mincov10_90samples_CSV,mincov20_90samples_CSV )
+#rm(mincov10_90samples_CSV,mincov20_90samples_CSV )
 
-#permet de virer lignes vides ####
-clean = function(data) {
-  n.col= dim(data)[2]
-  compte = apply(data[,10:n.col],1,function(data) length( levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
-  #exterminate = apply(data[,10:n.col],1,paste,collapse ="")
-  #compte = exterminate == paste(rep(".",23),collapse = "")
-  print(summary(compte))
-  resum = c(pourc.clean = (1-sum(compte)/length(compte) )*100)
-  print(resum)
-
-  end = data[which(compte == T),]
-  #end = data[which(compte == F),]
-  return(end)
-}
-
+# clean is personnal fonction (package Pedemontana)
 inform_mincov10 = clean(Erythro_mincov10) ; dim(inform_mincov10)
-#   Mode   FALSE    TRUE
-#logical  608327   16481
+#Mode   FALSE    TRUE   pourc.clean
+#logical  447716  177092  71.65657
+# dim : [1] 177092     31
 inform_mincov20 = clean(Erythro_mincov20) ; dim(inform_mincov20)
-#Mode   FALSE    TRUE
-#logical   84836     410
+#Mode   FALSE    TRUE  pourc.clean
+#logical   60894   24352   71.43326
+# dim : [1] 24352    31
 
-# travail ####
-#inform_mincov20[1,-c(1:9)][c(1,9)]
-#data = Erythro_mincov20
-#n.col= dim(data)[2]
-#summary(apply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."]) >1) )
-#levels(as.factor(substr(as.character(inform_mincov20[1,-c(1:9)]),1,3)))[!levels(as.factor(substr(as.character(inform_mincov20[1,-c(1:9)]),1,3))) %in% "."]
+#data = Erythro_mincov20[,10:n.col]
+#levels = apply(data,1, function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."]))
+#plot(levels)
+#Erythro_mincov20[which(levels > 3),]$ALT
 
-rm(Erythro_mincov10,Erythro_mincov20)
-
-# analyse des positions le long du genome ####
-
-x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
-plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
+#rm(Erythro_mincov10,Erythro_mincov20)
 
 #permet de virer les lignes avec seulement un certain nombre de variants ####
-tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data frame type inform_mincov10 , n = pourcentage de présence du snp , quiet est le rendu
-  #tri sur les lignes
-  n.col = dim(data)[2] ; n.row = dim(data)[1]
-  matrix = data[,10:n.col]
-  matrix = matrix == "."
-
-  row  = apply(matrix,1,sum)
-  row = 1-row/(n.col-9) >= n.r
-
-  data = data[which(row == T),]
-
-  #tri sur les individus
-  n.col = dim(data)[2] ; n.row = dim(data)[1]
-  matrix = data[,10:n.col]
-  matrix = matrix == "."
-
-  col  = apply(matrix,2,sum)
-  col = 1-col/(n.row) >= n.c
-
-  matrix = data[,10:n.col]
-  matrix = matrix[,which(col == T)]
-  data = cbind(data[,1:9],matrix)
-
-  resum = c(r.pourc.end = sum(row)/length(row)*100 ,
-            r.n.site = sum(row),
-            c.pourc.end = sum(col)/length(col)*100 ,
-            c.n.ind = sum(col))
-
-  if(quiet == F) print(resum)
-  if (r== T & p == F) return(data)
-  if (r== T & p == T) return(resum)
-}
-
-test = tri(data = inform_mincov10,n.r=0.95,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+#fonction tri dans le package
+test = tri(data = inform_mincov20,n.r=0.95,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
 colnames(test[,-c(1:9)])
 plot(log(test$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
 
 write.table(test,"data_vcf/tryhard.csv",sep = "\t", quote = F, row.names=F)
 system(" ./CSV_to_VCF.sh data_vcf/tryhard.csv ; mv data_vcf/tryhard.csv data_vcf/tryhard.vcf" )
 
+# analyse des positions le long du genome ####
+x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
+plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
+
 # DAPC ####
 par(mfrow = c(1,1))
-library(adegenet)
-library(vcfR)
-library(poppr, parallel)
 tryhard = read.vcfR("data_vcf/tryhard.vcf", checkFile = T)
 tryhard2 = vcfR2genlight(tryhard, n.cores = 7)
+tryhardind = vcfR2genind(tryhard)
+tryhard2 = tryhardind
 tryhard2@ind.names
 pop(tryhard2) <- as.factor(pop)
 
+
+# analyse pour genligth! ####
 myFreq <- glMean(tryhard2)
 hist(myFreq, proba=TRUE, col="gold", xlab="Allele frequencies",
      main="Distribution of (second) allele frequencies")
@@ -142,7 +105,7 @@ lines(temp$x, temp$y*2,lwd=3)
 
 pca1 <- glPca(tryhard2)
 scatter(pca1, posi="bottomleft")
-library(ape)
+
 tre <- nj(dist(as.matrix(tryhard2)))
 tre
 plot(tre, typ="fan", cex=0.7)
@@ -163,7 +126,7 @@ myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen")
 compoplot(dapc1, col=myCol,lab="", txt.leg=paste("group", 1:7), ncol=2)
 
 
-library( hierfstat)
+
 tryhard3 = vcfR2genind(tryhard)
 pop(tryhard3) <- as.factor(pop)
 fstat(tryhard3, fstonly=TRUE)
@@ -221,7 +184,7 @@ scatter(dapc1, posi.da="topright", bg="white",
 
 # PCAdapt analysis ####
 #install.packages("pcadapt")
-library(pcadapt)
+
 filename <- read.pcadapt("data_vcf/tryhard.vcf", type = "vcf")
 x <- pcadapt(input = filename, K = 15)
 plot(x, option = "screeplot")
@@ -261,17 +224,14 @@ spider = function(input,inFORM,output,outFORM) {
 
 spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.str","STRUCTURE")
 
-system("sed -i '1d' data_vcf/tryhard.str ")
+system("sed -i '1d' data_vcf/tryhard.str ") #ne marche pas car premiere ligne en trop
 
-library(LEA)
-library(ade4)
-library(vegan)
+
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 
 struct2geno(file = "data_vcf/tryhard.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/tryhard.geno")
-#ne marche pas car premiere ligne en trop
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
 obj  <- snmf("data_vcf/tryhard.geno", K = 1:14, entropy = T, ploidy = 2,
@@ -299,7 +259,7 @@ barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", yl
 par(mfrow = c(3,4))
 for (i in 1:12) Pop(i) ;beep(3)
 # adegenet ####
-library(parallel)
+
 
 
 # admixture ####

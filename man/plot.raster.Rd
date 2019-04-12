@@ -4,16 +4,16 @@
 \alias{plot.raster}
 \title{plot a raster}
 \usage{
-plot.raster(rast, ext, T.ext = F, line = F)
+plot.raster(rast, ext = extent(0, 0, 0, 0), line = F, raw = T)
 }
 \arguments{
 \item{rast}{the raster file}
 
 \item{ext}{the extent of this raster}
 
-\item{T.ext}{T if you want to crop with an extent}
-
 \item{line}{T if you want the water limit}
+
+\item{T.ext}{T if you want to crop with an extent}
 }
 \description{
 plot a raster
