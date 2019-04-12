@@ -79,17 +79,6 @@ h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-pop = c("apennina", "apennina"
-        ,"apennina"
-        ,"cottia","cottia","cottia"
-        ,"hirsuta"
-        ,"daonensis","daonensis"
-        ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
-        ,"pedemontana","pedemontana"
-        ,"villosa","villosa","villosa","villosa"
-        ,"valgau","valgau"
-)
-
 Eryth20 = subset.reorder(mincov20_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
 
 #permet de virer les lignes avec seulement un certain nombre de variants ####
@@ -104,31 +93,8 @@ save2vcf(Eryth20_t)
 x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
 plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
 
-# DAPC ####
-par(mfrow = c(1,1))
-tryhard = read.vcfR("data_vcf/tryhard.vcf", checkFile = T)
-tryhard2 = vcfR2genlight(tryhard, n.cores = 7)
-tryhardind = vcfR2genind(tryhard)
-tryhard2 = tryhardind
-tryhard2@ind.names
-pop(tryhard2) <- as.factor(pop)
-
-# analyse pour genind ####
-
+# adegenet ####
 Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
-Eryth20_g = vcfR2genind(Eryth20_v) ; Eryth20_g
-row.names(Eryth20_g$tab)
-
-assign.pop = function(genind) {
-  for (i in 1:length(row.names(Eryth20_g$tab))){
-
-  }
-  pop(Eryth20_g) <- as.factor(pop)
-  return(genind)
-}
-
-pop(Eryth20_g) <- as.factor(pop)
-
 pop = c("apennina", "apennina"
         ,"pedemontana","pedemontana"
         ,"valgau","valgau"
@@ -137,6 +103,20 @@ pop = c("apennina", "apennina"
         ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
         ,"daonensis","daonensis"
 )
+# analyse pour genind ####
+
+Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
+Eryth20_g = vcfR2genind(Eryth20_v) ; Eryth20_g
+row.names(Eryth20_g$tab)
+
+#assign.pop = function(genind) {
+#  for (i in 1:length(row.names(Eryth20_g$tab))){
+#  }
+#  pop(Eryth20_g) <- as.factor(pop)
+#  return(genind)
+#}
+
+pop(Eryth20_g) <- as.factor(pop)
 
 toto <- summary(Eryth20_g)
 names(toto)
@@ -153,6 +133,8 @@ fstat(Eryth20_g)
 
 #This table provides the three F statistics F st (pop/total), F it (Ind/total), and F is
 #(ind/pop). These are overall measures which take into account all genotypes and all loci.
+
+# excés d'He dans les espèces, donc on peut supposer écart a HW
 
 matFst <- pairwise.fst(Eryth20_g)
 matFst
@@ -178,8 +160,32 @@ col <- funky(15)
 s.class(pca1$li, pop(Eryth20_g),xax=1,yax=2, col=transp(col,.6), axesell=FALSE,
         cstar=0, cpoint=3, grid=FALSE)
 
+grp = find.clusters(Eryth20_g, max.n.clust = round(nInd(Eryth20_l))-1)#, n.pca = length(pop(Eryth20_l)))
+names(grp) ; grp$Kstat ; grp$stat ; grp$grp ; grp$size
+table(pop(Eryth20_g), grp$grp) ; table.value(table(pop(Eryth20_g), grp$grp), col.lab=paste("inf", 1:6),row.lab=paste("ori", 1:6))
+dapc1 <- dapc(Eryth20_g, grp$grp)
+dapc1 ; scatter(dapc1)
+
+dapc1 = dapc(Eryth20_g, var.contrib = TRUE, scale = FALSE, n.pca = length(pop(Eryth20_g)), n.da = nPop(Eryth20_g) - 1)
+
+dapc1 <- dapc(Eryth20_g)
+dapc1 ;
+
+assignplot(dapc1, only.grp=NULL, subset=NULL, new.pred=NULL, cex.lab=.75,pch=3)
+
+scatter(dapc1, posi.da="topleft", bg="white", pch=17:22)
+
+myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen","yellow","cyan")
+scatter(dapc1, posi.da="topright", bg="white",
+        pch=17:22, cstar=0, col=myCol, scree.pca=TRUE,
+        posi.pca="topleft")
+
+
 # analyse pour genligth! ####
-myFreq <- glMean(tryhard2)
+Eryth20_l = vcfR2genlight(Eryth20_v, n.cores = 7)
+pop(Eryth20_l) <- as.factor(pop)
+
+myFreq <- glMean(Eryth20_l)
 hist(myFreq, proba=TRUE, col="gold", xlab="Allele frequencies",
      main="Distribution of (second) allele frequencies")
 temp <- density(myFreq)
@@ -191,35 +197,27 @@ hist(myFreq, proba=TRUE, col="darkseagreen3", xlab="Allele frequencies",
 temp <- density(myFreq, bw=.05)
 lines(temp$x, temp$y*2,lwd=3)
 
-pca1 <- glPca(tryhard2)
+pca1 <- glPca(Eryth20_l)
 scatter(pca1, posi="bottomleft")
 
-tre <- nj(dist(as.matrix(tryhard2)))
+tre <- nj(dist(as.matrix(Eryth20_l)))
 tre
 plot(tre, typ="fan", cex=0.7)
 
 myCol <- colorplot(pca1$scores,pca1$scores, transp=TRUE, cex=4)
 abline(h=0,v=0, col="grey")
-add.scatter.eig(pca1$eig[1:40],2,1,2, posi="bottomleft", inset=.05, ratio=.3)
 plot(tre, typ="fan", show.tip=FALSE)
 tiplabels(pch=20, col=myCol, cex=4)
 title("NJ tree of the US influenza data")
 
-dapc1 <- dapc(tryhard2, n.pca=10, n.da=2)
+dapc1 <- dapc(Eryth20_l, n.pca=10, n.da=2)
 scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=TRUE,
         txt.leg=paste("group", 1:7))#, col=c("red","blue"))
 
 myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen")
 
-compoplot(dapc1, col=myCol,lab="", txt.leg=paste("group", 1:7), ncol=2)
-
-
-
-tryhard3 = vcfR2genind(tryhard)
-pop(tryhard3) <- as.factor(pop)
-fstat(tryhard3, fstonly=TRUE)
-
-pairwise.fst(tryhard3)
+compoplot(dapc1, col=myCol,lab="", txt.leg=paste("group", 1:7), ncol=2) ;popNames(Eryth20_l)
+# cottia et villosa sont peut-être encore très proches
 
 #While a large number of loci are nearly fixed (frequencies close to 0 or 1), there is an
 #appreciable number of alleles with intermediate frequencies and therefore susceptible to
@@ -241,24 +239,24 @@ pairwise.fst(tryhard3)
 #would be to get a matrix of 1 and 0 where '1' indicate NAs, and do the PCA of this.
 #If you obtain a structure, then this is a sign of problem - your NAs are not randomly distributed.
 
-
-popNames(tryhard2)
-ploidy(tryhard2) = 2
-glPlot(tryhard2, posi="topleft")
+ploidy(Eryth20_l) = 2
+glPlot(Eryth20_l, posi="topleft")
 
 #calcul de distance
-tryhard2.pop.dist <- poppr::bitwise.dist(tryhard2)
-tryhard2.pop.dist
+Eryth20_l.pop.dist <- poppr::bitwise.dist(Eryth20_l)
+Eryth20_l.pop.dist
 
-grp = find.clusters(tryhard2, max.n.clust = round(nInd(tryhard2))-1)#, n.pca = length(pop(tryhard2)))
+
+# dapc ##
+grp = find.clusters(Eryth20_l, max.n.clust = round(nInd(Eryth20_l))-1)
 names(grp) ; grp$Kstat ; grp$stat ; grp$grp ; grp$size
-table(pop(tryhard2), grp$grp) ; table.value(table(pop(tryhard2), grp$grp), col.lab=paste("inf", 1:6),row.lab=paste("ori", 1:6))
-dapc1 <- dapc(tryhard2, grp$grp)
+table(pop(Eryth20_l), grp$grp) ; table.value(table(pop(Eryth20_l), grp$grp), col.lab=paste("inf", 1:6),row.lab=paste("ori", 1:6))
+dapc1 <- dapc(Eryth20_l, grp$grp)
 dapc1 ; scatter(dapc1)
 
-dapc1 = dapc(tryhard2, var.contrib = TRUE, scale = FALSE, n.pca = length(pop(tryhard2)), n.da = nPop(tryhard2) - 1)
+dapc1 = dapc(Eryth20_l, var.contrib = TRUE, scale = FALSE, n.pca = length(pop(Eryth20_l)), n.da = nPop(Eryth20_l) - 1)
 
-dapc1 <- dapc(tryhard2)
+dapc1 <- dapc(Eryth20_l)
 dapc1 ;
 
 assignplot(dapc1, only.grp=NULL, subset=NULL, new.pred=NULL, cex.lab=.75,pch=3)
@@ -312,9 +310,17 @@ spider = function(input,inFORM,output,outFORM) {
 
 spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.str","STRUCTURE")
 
+
 system("sed -i '1d' data_vcf/tryhard.str ") #ne marche pas car premiere ligne en trop
 
+spider("data_vcf/Eryth20_t.vcf","VCF","data_vcf/Eryth20_t.str","STRUCTURE")
+system("sed -i '1d' data_vcf/Eryth20_t.str ")
 
+struct2geno(file = "data_vcf/Eryth20_t.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth20_t.geno")
+#permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
+
+obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1:14, entropy = T, ploidy = 2,
+             CPU = 7,repetitions = 10, project= "new", alpha=100)
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
@@ -346,9 +352,6 @@ barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", yl
 
 par(mfrow = c(3,4))
 for (i in 1:12) Pop(i) ;beep(3)
-# adegenet ####
-
-
 
 # admixture ####
 
