@@ -66,7 +66,7 @@ sort(row.names(mat)) ; length(row.names(mat))
 # recodes les noms pour extraire infos de position
 Appendix_table$Recode = Appendix_table$Code
 
-unmatch = sort(row.names(mat)[row.names(mat) %!in% Appendix_table$Recode])
+unmatch = sort(row.names(mat)[row.names(mat) %.in% Appendix_table$Recode])
 unmatch ; length(unmatch)
 # PVE == Primula veris, génome de référence
 for (i in 1:length(unmatch)) {

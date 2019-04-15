@@ -79,11 +79,18 @@ h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-Eryth20 = subset.reorder(mincov20_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
+Eryth20 = subset_reorder(mincov20_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
+
+Eryth20_r = rare(Eryth20, rare  = 0.05, r= T)
+
+par(mfrow = c(1,1))
+levels = apply(matrix,1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
+plot(levels)
+summary(as.factor(unlist(levels)))
 
 #permet de virer les lignes avec seulement un certain nombre de variants ####
 #fonction tri dans le package
-Eryth20_t = tri(data = Eryth20,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+Eryth20_t = tri(data = Eryth20_r,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
 colnames(Eryth20_t[,-c(1:9)])
 plot(log(Eryth20_t$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
 
@@ -319,8 +326,8 @@ system("sed -i '1d' data_vcf/Eryth20_t.str ")
 struct2geno(file = "data_vcf/Eryth20_t.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth20_t.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
-obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1:14, entropy = T, ploidy = 2,
-             CPU = 7,repetitions = 10, project= "new", alpha=100)
+obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1, entropy = T, ploidy = 2,
+             CPU = 7,repetitions = 1, project= "new", alpha=100)
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
@@ -343,15 +350,16 @@ qmatrix = Q(obj.snmf, K = 11)
 barplot(t(qmatrix), col = color, border = NA, space = 0, xlab = "Individuals", ylab = "Admixture coefficients",
         names.arg =ID, las = 2)
 
-Pop = function(K) {
-obj.snmf = snmf("data_vcf/tryhard.geno", K = K, alpha = 100, project = "new",iterations = 200,
+Pop = function(K, file,ID) {
+obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 200,
                 CPU = 7)
 qmatrix = Q(obj.snmf, K = K)
 barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
         names.arg =ID, las = 2)}
 
+
 par(mfrow = c(3,4))
-for (i in 1:12) Pop(i) ;beep(3)
+for (i in 1:12) Pop(i,"data_vcf/Eryth20_t.geno",  c(a[-2],p,c,v,h,d)) ;beep(3)
 
 # admixture ####
 

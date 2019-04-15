@@ -9,7 +9,7 @@
 #' @author JAUNATRE Maxime from (https://stackoverflow.com/questions/5831794/opposite-of-in)
 #'
 #' @export
-'%!in%' = function(x,y) {!('%in%'(x,y))}
+'%.in%' = function(x,y) {!('%in%'(x,y))}
 
 
 #' create documentation
@@ -60,6 +60,49 @@ clean = function(data) {
   end = data[which(compte == T),]
   #end = data[which(compte == F),]
   return(end)
+}
+
+#' rare
+#'
+#' @param data the csv from a vcf file
+#' @param rare percentage of presence needed for keeping the allele in the set
+#' @param r if the function return the data or the resume
+#' @param p if the function return the resume only
+#'
+#' delete the alleles with less than a "rare" percentage of presence in the dataset
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+rare = function(data,rare = 0,quiet = T, r= F,p = F) { # data est un data frame type inform_mincov10 , quiet est le rendu
+  n.col = dim(data)[2] ; n.row = dim(data)[1]
+  matrix = as.matrix(data[,10:n.col])
+
+  H. = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
+  H0 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "0")+sum(substr(as.character(matrix),3,3) == "0") )/H. >= rare
+  H1 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H. >= rare
+  H2 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "2")+sum(substr(as.character(matrix),3,3) == "2") )/H. >= rare
+  H3 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "3")+sum(substr(as.character(matrix),3,3) == "3") )/H. >= rare
+
+  Haplo1 = matrix(substr(as.character(matrix),1,1), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
+  Haplo2 = matrix(substr(as.character(matrix),3,3), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
+
+  matrix[Haplo1 == "0"& H0 == F | Haplo2 == "0" & H0 == F] = "."
+  matrix[Haplo1 == "1"& H1 == F | Haplo2 == "1" & H1 == F] = "."
+  matrix[Haplo1 == "2"& H2 == F | Haplo2 == "2" & H2 == F] = "."
+  matrix[Haplo1 == "3"& H3 == F | Haplo2 == "3" & H3 == F] = "."
+
+  data = cbind(data[,1:9],matrix)
+  data = clean(data)
+  final.row = dim(data)[1]
+
+  resum = c(n.site  =  final.row ,
+            discar.site = n.row - final.row,
+            p.discard = (n.row - final.row)/n.row )
+
+  if(quiet == F) print(resum)
+  if (r== T & p == F) return(data)
+  if (r== T & p == T) return(resum)
 }
 
 #' clean
@@ -120,7 +163,7 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
 #' @author JAUNATRE Maxime
 #'
 #' @export
-subset.reorder = function(data,list) {
+subset_reorder = function(data,list) {
   manus = data[,1:9]
   for (i in 1:length(list)) {
     manus = cbind(manus,data[,which(colnames(data) == list[i])])
@@ -144,3 +187,5 @@ save2vcf = function(csv) {
   write.table(csv, paste("data_vcf/",name,".csv",sep = ""),sep = "\t", quote = F, row.names=F)
   system(paste(" ./CSV_to_VCF.sh data_vcf/",name,".csv ; mv data_vcf/",name,".csv data_vcf/",name,".vcf",sep="") )
 }
+
+
