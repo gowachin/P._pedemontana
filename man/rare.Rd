@@ -9,7 +9,11 @@ rare(data, rare = 0, quiet = T, r = F, p = F)
 \arguments{
 \item{data}{the csv from a vcf file}
 
-\item{rare}{percentage of presence needed for keeping the allele in the set
+\item{rare}{percentage of presence needed for keeping the allele in the set}
+
+\item{r}{if the function return the data or the resume}
+
+\item{p}{if the function return the resume only
 
 delete the alleles with less than a "rare" percentage of presence in the dataset}
 }

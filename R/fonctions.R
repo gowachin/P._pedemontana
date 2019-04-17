@@ -189,3 +189,37 @@ save2vcf = function(csv) {
 }
 
 
+
+#' save to csv a vcf
+#'
+#' @param vcf the original vcf file
+#' @param head the txt file where to stock the head of the vcf
+#' @param csv the name of the final csv
+#'
+#' save as a csv file a vcf file, allowing to apply treshold on the data
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+vcf2csv = function(vcf, head, csv) {
+system(paste("./csv_makup.sh",vcf,head,csv, sep = " "))
+}
+
+#' save to vcf a csv
+#'
+#' @param obj name of the data frame to save
+#' @param name name for save
+#' @param head the txt file where is stock the head of the vcf
+#' @param vcf name of the final file
+#'
+#' save a dataframe as a vcf file, concatening the head of a vcf
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+tablobj2vcf = function(obj,name,head,vcf) {
+  write.table(obj, name ,sep = "\t", quote = F, row.names=F)
+  system(paste(" sed -i '1s/.*/#&/' ",name,sep = ""))
+  system(paste("cat ",head," ",name," > ",vcf, sep = ""))
+  system(paste("rm ",name,sep = ""))
+}

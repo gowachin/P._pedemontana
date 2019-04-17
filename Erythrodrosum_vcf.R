@@ -160,7 +160,7 @@ pca1 <- dudi.pca(X, scale = FALSE, scannf = FALSE, nf = 3)
 barplot(pca1$eig[1:20], main = "PCA eigenvalues", col = heat.colors(50))
 
 s.class(pca1$li, pop(Eryth20_g))
-title("PCA of microbov dataset\naxes 1-2")
+title("PCA of Primula Auricula")
 add.scatter.eig(pca1$eig[1:20], 3,1,2)
 
 col <- funky(15)
@@ -215,7 +215,7 @@ myCol <- colorplot(pca1$scores,pca1$scores, transp=TRUE, cex=4)
 abline(h=0,v=0, col="grey")
 plot(tre, typ="fan", show.tip=FALSE)
 tiplabels(pch=20, col=myCol, cex=4)
-title("NJ tree of the US influenza data")
+title("NJ tree ")
 
 dapc1 <- dapc(Eryth20_l, n.pca=10, n.da=2)
 scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=TRUE,

@@ -4,26 +4,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\documentclass[12pt,a4paper,titlepage]{report}
 \usepackage[utf8]{inputenc} %encodage
-\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage[square,sort,comma,numbers]{natbib} % bibliography
 \setcitestyle{authoryear}
 \renewcommand{\bibsection}{}
 
-\usepackage[french]{babel}
+\usepackage[french]{babel} % langue
+
 %mise en page générale
-\usepackage{geometry} 
+\usepackage{geometry}
 %\geometry{a4paper} % format de feuille
 \geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
 %Police
 \usepackage{mathptmx} % Times si compilateur pdfLatex
 %interligne
 \linespread{1.5}
-
 %en tete et pied de page
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \pagestyle{plain}
 
-
+\usepackage{hyperref} % lien cliquables
 \usepackage{url, lipsum} %Lorem ipsum
 
 \usepackage{wrapfig} %position d'images dans le texte
@@ -31,11 +31,10 @@
 \usepackage{graphicx, subcaption, setspace, booktabs}
 
 \usepackage{caption}
-\DeclareCaptionType{annexe}[Annexe][Liste d'annexes]
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour mettre des captions annexes
 
-\usepackage{lipsum}
+%\usepackage{lipsum}
 
-\usepackage{hyperref}
 \usepackage{subcaption}
 
 \usepackage[export]{adjustbox}
@@ -50,45 +49,34 @@
 \author{Maxime Jaunatre, Master 1 BEE Grenoble}
 \date{Mai 2019}
 
-
 \renewcommand*\contentsname{Table des matières}
 
 \begin{document}
 
 \begin{titlepage} %Page de garde!!
-
+%logos de page de garde
 \begin{figure}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{fig/UGA.jpg}
-  \label{fig:sub1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{fig/leca.jpg}
-  \label{fig:sub2}
 \end{subfigure}
 \label{fig:test}
 \end{figure}
-
+%titres
 \maketitle
-
+%image sympas
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=3]{fig/primulapedemontana_7.jpg}
+%	\caption{\textbf{reference de la photo}
+%	\label{frontpage}
 \end{center}
 \end{figure}
-
-%\begin{wrapfigure}{r}{0.50\textwidth}
-%	\vspace{-30pt}
-%	\begin{center}
-%		\includegraphics[width=0.49\textwidth]{ACP.png}
-%	\end{center}
-%	\vspace{-20pt}
-%	\caption{\textbf{Analyse en composante principale des variables biochimiques mesurées sur le sol des deux sites étudiés.} La représentation de l'axe 1/axe 2 permet d'observer 76.94\% de l'inertie totale comme représenté sur l'éboulis de valeur propre en haut à droite.}
-%	\label{ACPw}
-%\end{wrapfigure}
 
 \newpage
 \begin{abstract} %abstract!!!
@@ -100,36 +88,31 @@
 \end{abstract}
 
 \end{titlepage}
-
 \tableofcontents
 \newpage
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BODY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %Consignes pour rapport et soutenance du stage M1
 
 %Le rapport
 %Il doit comporter 12 pages (+/1page) figures comprises, sommaire et références biblio en plus, annexes déconseillées. Moins de 20 références bibliographiques, 12 lignes de résumé au dos de la couverture.
 %Le plan à adopter a priori est « Introduction / Matériel et méthodes / Résultats / Discussion » à moins qu’il ne soit pas adapté à votre travail (c’est rarement le cas).
 %Format : TIMES 12 points, avec un interligne 1,5. Le rapport peut être rédigé en Français ou en Anglais.
-%Les personnes qui font un stage long et concentrent leur rapport sur la mise au point de la méthodologie (c'est à dire n'ayant pas de résultats au moment de la soutenance) sont encouragées à expliquer ce contexte dans un court préambule d'une dizaine de lignes maximum. Les membres de jury sont informés de l'éventualité d'une telle situation. 
+%Les personnes qui font un stage long et concentrent leur rapport sur la mise au point de la méthodologie (c'est à dire n'ayant pas de résultats au moment de la soutenance) sont encouragées à expliquer ce contexte dans un court préambule d'une dizaine de lignes maximum. Les membres de jury sont informés de l'éventualité d'une telle situation.
 %Le rapport de stage est à rendre à votre responsable pédagogique de stage pour le :
 %Mardi 28 mai 2018 à 12 h au plus tard
 %Une version papier adressée par courrier ou déposée au secrétariat du LECA. Une version pdf envoyée par mail au tuteur de stage et au responsable du M1.
 %L’envoi uniquement au format électronique peut se faire à titre exceptionnel (stage à l’étranger nécessitant un long délai d’acheminement – contacter par email votre responsable pédagogique avant).
 
 %La soutenance
-%Modalités : 10 min de présentation + 5 min de questions devant un jury de 3 personnes. Le maître de stage est invité à venir écouter la soutenance s’il le souhaite. 
+%Modalités : 10 min de présentation + 5 min de questions devant un jury de 3 personnes. Le maître de stage est invité à venir écouter la soutenance s’il le souhaite.
 %Format de présentation : fichier pdf ou ppt sur clé USB. Les soutenances auront lieu la semaine du 3 Juin 2019. Un planning de soutenance vous sera communiqué fin mai. Les étudiants effectuant un stage long à l’étranger et ne rentrant pas en France peuvent soutenir par visioconférence.
 %Contacter votre responsable pédagogique par email mi mai pour fixer les modalités.
 
 %Fiche d’évaluation
 %La fiche d'évaluation doit être donnée à votre encadrant en début de stage. Elle sera renvoyée par email par le maître de stage au plus tard le 1 er juin 2019.
 %Attention : pour les stages longs à l'étranger prévoyez l'éventualité d'un retour à Grenoble en cas de rattrapage (seconde session d'examen deuxième quinzaine de juin première quinzaine de juillet).
-
 \section{Introduction}
 
 \lipsum[1-2]
@@ -155,7 +138,7 @@ Le jeu de données initial contient 90 individus pour les espèces échantillonn
 %parler du pipeline
 A partir des deux jeux de donnée initial, un pipeline est établis pour générer divers ensembles de données. Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. Les fonctions sont rassemblées en un package R hébergé sur Github (\autoref{app:github})
 Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction subset$\_$reorder, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. La fonction suivante, rare, permet de trier les alleles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de donnée et le loci pour l'individu présentant ce loci sont considéré comme une donnée manquante. Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information. Afin de ne garder que les loci polymorphiques, une fonction clean est donc appelée à la fin de la fonction rare, afin de supprimer les locis monomorphiques.
-Enfin une dernière fonction de tri est appelé pour supprimer les loci puis individus présentant trop de données manquantes. 
+Enfin une dernière fonction de tri est appelé pour supprimer les loci puis individus présentant trop de données manquantes.
 
 Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-selection d'individus et de loci est enregistrée sous format vcf, au moyen d'une fonction appelant un script bash.
 
@@ -193,15 +176,15 @@ Les analyses de génétique des populations ont été réalisés sous Rstudio.\c
 %	\multicolumn{1}{c}{Mesures} & {Valeur} & {Écart-type}  & {Valeur} & {Écart-type} & {Test} & {P-valeur} & {Df} & {Statistique} \\
 %	\midrule
 %	pH & 7.37 & 0.46 & 5.52 & 0.71 & Student-T & \(5.18.10^{-7}\) & 20 & -7.25\\
-	
+
 %	Teneur en eau & 20.63 & 7.26 & 32.93 & 12.57 & Mann-Whitney & \(8.11.10^{-4}\) & - & 112\\
-	
+
 %	Matière Organique & \textbf{6.63} & 0.89 & \textbf{9.19} & 1.87 & Welch-T & \(10^{-3}\) & 14.32 & 4.09\\
-	
+
 %	TDN & \textbf{32.60} & 6.48 & \textbf{64.63} & 19.39 & Welch-T & \(2.1.10^{-4}\) & 12.21 & 5.20\\
-	
+
 %	DON & \textbf{25.52} & 5.07 & \textbf{53.58} & 14.02 & Welch-T & \(3.48.10^{-5}\) & 12.57 & 6.24\\
-	
+
 %	Mineralisation & 3.42 & 1.54 & 5.59 & 2.39 & Student-T & \(2.10^{-2}\) & 20 & 2.53\\
 
  %   FDA & 4.35 & 1.41 & 6.86 & 1.62 & Student-T & \(10^{-4}\) & 18 & 3.70\\
@@ -270,8 +253,6 @@ Je remercie enfin Caroline Kebaili, \textbf{MEH?} et \textbf{MEH?}, stagiaires d
 
 \end{document}
 
-
-
 % SNIPPETS
 %-------------------------------------------------------------------------------
 %\begin{figure}[!ht]
@@ -308,7 +289,7 @@ Je remercie enfin Caroline Kebaili, \textbf{MEH?} et \textbf{MEH?}, stagiaires d
 %\usepackage{subcaption}
 %\begin{figure}[h]
 %\begin{subfigure}{0.5\textwidth}
-%\includegraphics[width=0.9\linewidth, height=5cm]{lion-logo} 
+%\includegraphics[width=0.9\linewidth, height=5cm]{lion-logo}
 %\caption{Caption1}
 %\label{fig:subim1}
 %\end{subfigure}
