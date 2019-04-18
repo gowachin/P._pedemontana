@@ -65,7 +65,6 @@ sort(row.names(mat)) ; length(row.names(mat))
 
 # recodes les noms pour extraire infos de position
 Appendix_table$Recode = Appendix_table$Code
-
 unmatch = sort(row.names(mat)[row.names(mat) %.in% Appendix_table$Recode])
 unmatch ; length(unmatch)
 # PVE == Primula veris, génome de référence
@@ -107,7 +106,6 @@ Pede_appendix = Appendix_table[Appendix_table$Recode %in% pedemontana,]
 plot.raster("data_carto/GRASSLANDS_10min.tif",Pedemonta.ext,line = T)
 tail = c(0.1,0.1,0.1,0.1) ; color = c("red","black","grey50","purple")
 for (i in 1:length(Repart)) {points(x = Repart[[i]]$lon , y = Repart[[i]]$lat, cex = tail[i], col=color[i]) }
-
 text(x = Pede_appendix$Latitude, y = Pede_appendix$Longitude, Pede_appendix$Recode, cex = 0.7, col = "blue") #text(x = 22, y = 30, "taille = 22 : seuil de 5%", col = "red", cex = 1.5)
 #points(x = Sub_appendix$Latitude, y = Sub_appendix$Longitude)
 

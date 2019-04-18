@@ -8,6 +8,7 @@ library(hierfstat)
 library(pcadapt)
 library(LEA)
 library(vegan)
+library(pegas)
 library(Pedemontana)
 
 # creation sous jeu de donnees ####
@@ -70,7 +71,7 @@ Erythv = c(vcf,Eryth)
 # charger subser Eryth ####
 
 mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
-mincov20_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+#mincov20_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
 
 a = c('AMB','AML','AOL') #apenina
 c = c('CS1','CP1','CP4') #cottia
@@ -79,30 +80,38 @@ h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-Eryth20 = subset_reorder(mincov20_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
+Eryth10 = subset_reorder(mincov10_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
 
-Eryth20_r = rare(Eryth20, rare  = 0.05, r= T)
+Eryth10_r = rare(Eryth10, rare  = 0.05, r= T)
 
 par(mfrow = c(1,1))
-levels = apply(matrix,1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
-plot(levels)
+levels = apply(Eryth10[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
 summary(as.factor(unlist(levels)))
+
+par(mfrow = c(1,1))
+levels = apply(Eryth10_r[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
+summary(as.factor(unlist(levels)))
+
+#tri selon QUAL in vcf
+plot(log(Eryth10_r$QUAL), cex = 0.1, ylim = c(log(0.0000001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
+abline(h = log(20), col = "green")
+Eryth10_r = Eryth10_r[which(Eryth10_r$QUAL >= 20),]
+dim(Eryth10_r[which(Eryth10_r$QUAL >= 20),])
 
 #permet de virer les lignes avec seulement un certain nombre de variants ####
 #fonction tri dans le package
-Eryth20_t = tri(data = Eryth20_r,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
-colnames(Eryth20_t[,-c(1:9)])
-plot(log(Eryth20_t$QUAL), cex = 0.1, ylim = c(log(0.001),20)) # virer des points avec pas assez bon Phred??? qu'est-ce qu'il représente??
+Eryth10_t = tri(data = Eryth10_r,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+colnames(Eryth10_t[,-c(1:9)])
 
-save2vcf(Eryth20_t)
+save2vcf(Eryth10_t)
 
 # analyse des positions le long du genome ####
-x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
-plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
+#x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
+#plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
 
 # adegenet ####
 Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
-pop = c("apennina", "apennina"
+pop = c("apennina", "apennina","apennina"
         ,"pedemontana","pedemontana"
         ,"valgau","valgau"
         ,"cottia","cottia","cottia"
@@ -110,8 +119,8 @@ pop = c("apennina", "apennina"
         ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
         ,"daonensis","daonensis"
 )
-# analyse pour genind ####
 
+# analyse pour genind ####
 Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
 Eryth20_g = vcfR2genind(Eryth20_v) ; Eryth20_g
 row.names(Eryth20_g$tab)
@@ -132,6 +141,12 @@ barplot(toto$loc.n.all, ylab="Number of alleles",
         main="Number of alleles per locus")
 barplot(toto$Hexp-toto$Hobs, main="Heterozygosity: expected-observed",
         ylab="Hexp - Hobs")
+
+#Is mean observed H significantly lower than mean expected H ? Nope
+bartlett.test(list(toto$Hexp,toto$Hobs))
+t.test(toto$Hexp,toto$Hobs,pair=T,var.equal=TRUE,alter="greater")
+
+Eryth20_g_hwt <- hw.test(Eryth20_g, B=0) # KEZAKO??
 
 fstat(Eryth20_g)
 #     pop         Ind
@@ -278,7 +293,7 @@ scatter(dapc1, posi.da="topright", bg="white",
 # PCAdapt analysis ####
 #install.packages("pcadapt")
 
-filename <- read.pcadapt("data_vcf/tryhard.vcf", type = "vcf")
+filename <- read.pcadapt("data_vcf/Eryth10_t.vcf", type = "vcf")
 x <- pcadapt(input = filename, K = 15)
 plot(x, option = "screeplot")
 plot(x, option = "scores", pop = pop)
@@ -326,8 +341,8 @@ system("sed -i '1d' data_vcf/Eryth20_t.str ")
 struct2geno(file = "data_vcf/Eryth20_t.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth20_t.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
-obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1, entropy = T, ploidy = 2,
-             CPU = 7,repetitions = 1, project= "new", alpha=100)
+obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1:14, entropy = T, ploidy = 2,
+             CPU = 7,repetitions = 10, project= "new", alpha=100)
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
@@ -351,15 +366,17 @@ barplot(t(qmatrix), col = color, border = NA, space = 0, xlab = "Individuals", y
         names.arg =ID, las = 2)
 
 Pop = function(K, file,ID) {
-obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 200,
-                CPU = 7)
-qmatrix = Q(obj.snmf, K = K)
-barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
-        names.arg =ID, las = 2)}
+  obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
+                  CPU = 7)
+  ce=cross.entropy(obj,K=K)
+  best = which.min(ce)
+  qmatrix = Q(obj.snmf, K = K, run = best)
+  barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
+          names.arg =ID, las = 2)}
 
 
 par(mfrow = c(3,4))
-for (i in 1:12) Pop(i,"data_vcf/Eryth20_t.geno",  c(a[-2],p,c,v,h,d)) ;beep(3)
+for (i in 1:12) Pop(i,"data_vcf/Eryth10_t.geno",  c(a,p,c,v,h,d)) ;beep(3)
 
 # admixture ####
 

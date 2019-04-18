@@ -1,0 +1,23 @@
+Species &Locality &Code &Morph &Collector &Date &Longitude &Latitude &Altitude&Reads raw &Reads trimmed &Voucher
+P. apennina* &Sella del Marmagna, Italy &AMB &Short-styled &F. Boucher/L. Gallien &30/05/14 & 10.00575 & 44.3978 &1610&6885928&6486849&Photo
+P. apennina &Monte Marmagna, Italy &AML &Long-styled &F. Boucher/L. Gallien &30/05/14 & 9.99731 & 44.39672 &1825&1856867&1663377&Photo
+P. apennina &Monte Orsaro, Italy &AOL &Long-styled &F. Boucher/L. Gallien &30/05/14 & 9.99666 & 44.39883 &1818&3494081&3230296&Photo
+P. cottia &Below locus classicus, Italy &CS1 & NA &F. Boucher &23/07/14 & 7.0716 & 44.9271 &1159&5127416&4814386&Photo
+P. cottia &Prali, locus classicus, Italy &CP1 & NA &F. Boucher &23/07/14 & 7.06583 & 44.9186 &1407&3160322&2941542&Photo
+P. cottia &Prali, locus classicus, Italy &CP4 & NA &F. Boucher &23/07/14 & 7.06583 & 44.9186 &1407&3482252&3201012&Photo
+P. daonensis &Passo di Gavia, Italy &DGB &Short-styled &F. Boucher/L. Gallien &27/05/14 & 10.49701 & 46.31843 &2219&6095146&5757485&Photo
+P. daonensis &Ritorto, Italy &DRL &Long-styled &F. Boucher/L. Gallien &27/05/14 & 10.80429 & 46.23149 &2083&4607717&4299840&Photo
+P. hirsuta &Malga Bordolona, Italy &DMB &Short-styled &F. Boucher &09/06/14 & 10.87383 & 46.43412 &2214&6073360&5722516&Photo
+P. hirsuta &Refuge du Couvercle, France &HC1 & NA &C. Dentant &15/07/14 & 6.9656 & 45.9103 &2649&2639620&2384576& NA
+P. hirsuta &Grand Chat, France &HGL &Long-styled &F. Boucher/L. Gallien &18/05/14 & 6.2147 & 45.4467 &1986&4583323&4270118&Photo
+P. hirsuta &Steibensee, Switzerland &HS2 & NA &F. Boucher &07/09/14 & 8.17 & 46.45 &2414&2891228&2643122&Photo
+P. hirsuta &Pic du Midi d'Ossau, France &HP1 & NA &C. Roquet &15/08/14 & -0.4381 & 42.8431 &2739&1881282&1772502& NA
+P. hirsuta &Passo del Bernina, Switzerland &HPB &Short-styled &F. Boucher &09/06/14 & 10.02717 & 46.41069 &2328&6566463&6195227&Photo
+P. pedemontana &Barrage de Tignes, France &PT1 & NA &F. Boucher &27/07/14 & 6.94633 & 45.4805 &1836&6515454&6086010&YES
+P. pedemontana &Vallon d'Avérole, France &PV1 & NA &F. Boucher &27/07/14 & 7.08707 & 45.29356 &2144&6480484&6100355&YES
+P. sp. Lauzon Valley &Lauzon Valley, France &GA2 & NA &P. Salomé/R. Bonet/F. Boucher &25/07/14 & 6.2784 & 44.8418 &1732&4150458&3873470&YES
+P. sp. Lauzon Valley &Lauzon Valley, France &GA4 & NA &P. Salomé/R. Bonet/F. Boucher &25/07/14 & 6.2773 & 44.8366 &1899&4796528&4489119&YES
+P. villosa ssp. irmingardis &Rappolt Kogel, Austria &VR3 &Short-styled &F. Boucher &07/06/14 & 14.88541 & 47.08313 &1871&4722814&4234314&Photo
+P. villosa ssp. irmingardis &Rappolt Kogel, Austria &VR1 &Long-styled &F. Boucher &07/06/14 & 14.88541 & 47.08313 &1871&4789459&4283316&Photo
+P. villosa ssp. villosa &Turracher Hohe, Austria &VL2 &Long-styled &F. Boucher &07/06/14 & 13.87581 & 46.91273 &1801&3227112&2776420&Photo
+P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher &07/06/14 & 13.87581 & 46.91273 &1801&3004397&2708593&Photo

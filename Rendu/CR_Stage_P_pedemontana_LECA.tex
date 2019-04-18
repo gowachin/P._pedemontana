@@ -30,10 +30,12 @@
 %\usepackage[myheadings]{fullpage}
 \usepackage{graphicx, subcaption, setspace, booktabs}
 
+\usepackage[table]{xcolor}
+
 \usepackage{caption}
 \DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour mettre des captions annexes
 
-%\usepackage{lipsum}
+\usepackage{lscape}
 
 \usepackage{subcaption}
 
@@ -123,7 +125,7 @@
 
 \subsection{Échantillonnage}
 
-Les données génétiques utilisés lors de cette étude ont été produite dans le cadre de l'étude précédente de \citet{Boucher2016a}. L'identification taxonomique des individus a été réalisé sur le terrain.
+Les données génétiques utilisés lors de cette étude ont été produite dans le cadre de l'étude précédente de \citet{Boucher2016a}. L'identification taxonomique des individus a été réalisé sur le terrain. Cependant un individu a du être réattribué après analyse génétique au taxon \textit{P. hirsuta}.
 
 Les SNPs sont issus de séquences obtenus par séquençage via sondes RAD. Cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions. En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome. La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par séquençage ddRAD.
 
@@ -133,10 +135,10 @@ Les SNPs sont issus de séquences obtenus par séquençage via sondes RAD. Cette
 
 \subsection{Bioinformatique}
 
-Le jeu de données initial contient 90 individus pour les espèces échantillonnées initialement au sein de la section Auricula. Pour chacun de ces individus, l'information consiste en une séquence de SNPs appellés par Freebayes. Les analyses ont été porté sur deux jeux de données différents car extrait de Freebayes sous des seuils différents.
+Le jeu de données initial contient 90 individus pour les espèces échantillonnées initialement au sein de la section Auricula. Pour chacun de ces individus, l'information consiste en une séquence de SNPs appellés par Freebayes. Les analyses ont été porté sur deux jeux de données différents car extrait de Freebayes sous des seuils différents : mincov10 et mincov20 .
 
 %parler du pipeline
-A partir des deux jeux de donnée initial, un pipeline est établis pour générer divers ensembles de données. Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. Les fonctions sont rassemblées en un package R hébergé sur Github (\autoref{app:github})
+A partir des deux jeux de donnée initials, un pipeline est établis pour générer divers ensembles de données. Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. Les fonctions sont rassemblées en un package R hébergé sur Github (\autoref{app:github})
 Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction subset$\_$reorder, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. La fonction suivante, rare, permet de trier les alleles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de donnée et le loci pour l'individu présentant ce loci sont considéré comme une donnée manquante. Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information. Afin de ne garder que les loci polymorphiques, une fonction clean est donc appelée à la fin de la fonction rare, afin de supprimer les locis monomorphiques.
 Enfin une dernière fonction de tri est appelé pour supprimer les loci puis individus présentant trop de données manquantes.
 
@@ -148,7 +150,9 @@ Le nombre d'individus étant faible, il faut optimiser le nombre de SNP par indi
 
 \subsection{Génétique des populations}
 
-Les analyses de génétique des populations ont été réalisés sous Rstudio.\citep{RTeam2017}
+Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. Le package a été utilisé pour inférer les fst, le package LEA pour etudier la structure de la population
+
+admixture aussi a peut etre été utilisé pour ça.
 
 \section{Résultats}
 
@@ -156,6 +160,88 @@ Les analyses de génétique des populations ont été réalisés sous Rstudio.\c
 
 \lipsum[1-2]
 
+\subsection{Clade Hirsuta}
+
+\lipsum[1]
+
+\subsection{Complexe ouest alpin}
+
+\lipsum[1]
+
+\section{Discussion}
+
+\lipsum[1-4]
+
+\paragraph{Remerciements}
+Je tiens enfin à remercier sincèrement les personnes qui m'ont aidé durant ce stage.
+Tout d'abord Florian Boucher qui, en qualité de maître de stage, m'a accueilli au sein du LECA parmi l'équipe \textbf{EQUIPE???} et confié ses données.
+Ce stage m'a permis de me confronter à un sujet d'étude passionnant et je tiens donc à lui témoigner ma plus grande reconnaissance, en particulier pour sa patience, sa disponibilité et ses explications. Je remercie également Stéphanie Sherpa qui m'aura guidé durant mes recherches en génétique des populations.
+
+Je n’oublie pas les autres membres du LECA, qui auront contribué à rendre mon stage agréable par leur attitude chaleureuse et bienveillante à mon égard.
+Je remercie enfin Caroline Kebaili, \textbf{MEH?} et \textbf{MEH?}, stagiaires de M2, avec qui j’ai partagé la salle 308 durant ces deux mois et qui ont toujours répondu présent à la moindre de mes questions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Références
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Bibliographie}
+\bibliographystyle{authordate1}
+\bibliography{Primula}
+
+\section{Ressources}
+\url{https://github.com/gowachin/Pedemontana}\label{app:github}
+
+\newpage
+\begin{landscape}
+	
+\begin{annexe}
+	\centering
+\rowcolors{2}{white}{gray!25}
+\resizebox{27cm}{!}{%
+	\begin{tabular}{cccccccccccc}
+	\toprule
+Species &Locality &Code &Morph &Collector &Date &Longitude &Latitude &Altitude&Reads raw &Reads trimmed &Voucher \\
+	\midrule
+P. apennina* &Sella del Marmagna, Italy &AMB &Short-styled &F. Boucher/L. Gallien &30/05/14 & 10.00575 & 44.3978 &1610&6885928&6486849&Photo \\
+P. apennina &Monte Marmagna, Italy &AML &Long-styled &F. Boucher/L. Gallien &30/05/14 & 9.99731 & 44.39672 &1825&1856867&1663377&Photo \\
+P. apennina &Monte Orsaro, Italy &AOL &Long-styled &F. Boucher/L. Gallien &30/05/14 & 9.99666 & 44.39883 &1818&3494081&3230296&Photo \\
+P. cottia &Below locus classicus, Italy &CS1 & NA &F. Boucher &23/07/14 & 7.0716 & 44.9271 &1159&5127416&4814386&Photo \\
+P. cottia &Prali, locus classicus, Italy &CP1 & NA &F. Boucher &23/07/14 & 7.06583 & 44.9186 &1407&3160322&2941542&Photo \\
+P. cottia &Prali, locus classicus, Italy &CP4 & NA &F. Boucher &23/07/14 & 7.06583 & 44.9186 &1407&3482252&3201012&Photo \\
+P. daonensis &Passo di Gavia, Italy &DGB &Short-styled &F. Boucher/L. Gallien &27/05/14 & 10.49701 & 46.31843 &2219&6095146&5757485&Photo \\
+P. daonensis &Ritorto, Italy &DRL &Long-styled &F. Boucher/L. Gallien &27/05/14 & 10.80429 & 46.23149 &2083&4607717&4299840&Photo \\
+P. hirsuta &Malga Bordolona, Italy &DMB &Short-styled &F. Boucher &09/06/14 & 10.87383 & 46.43412 &2214&6073360&5722516&Photo \\
+P. hirsuta &Refuge du Couvercle, France &HC1 & NA &C. Dentant &15/07/14 & 6.9656 & 45.9103 &2649&2639620&2384576& NA \\
+P. hirsuta &Grand Chat, France &HGL &Long-styled &F. Boucher/L. Gallien &18/05/14 & 6.2147 & 45.4467 &1986&4583323&4270118&Photo \\
+P. hirsuta &Steibensee, Switzerland &HS2 & NA &F. Boucher &07/09/14 & 8.17 & 46.45 &2414&2891228&2643122&Photo \\
+P. hirsuta &Pic du Midi d'Ossau, France &HP1 & NA &C. Roquet &15/08/14 & -0.4381 & 42.8431 &2739&1881282&1772502& NA \\
+P. hirsuta &Passo del Bernina, Switzerland &HPB &Short-styled &F. Boucher &09/06/14 & 10.02717 & 46.41069 &2328&6566463&6195227&Photo \\
+P. pedemontana &Barrage de Tignes, France &PT1 & NA &F. Boucher &27/07/14 & 6.94633 & 45.4805 &1836&6515454&6086010&YES \\
+P. pedemontana &Vallon d'Avérole, France &PV1 & NA &F. Boucher &27/07/14 & 7.08707 & 45.29356 &2144&6480484&6100355&YES \\
+P. sp. Lauzon Valley &Lauzon Valley, France &GA2 & NA &P. Salomé/R. Bonet/F. Boucher &25/07/14 & 6.2784 & 44.8418 &1732&4150458&3873470&YES \\
+P. sp. Lauzon Valley &Lauzon Valley, France &GA4 & NA &P. Salomé/R. Bonet/F. Boucher &25/07/14 & 6.2773 & 44.8366 &1899&4796528&4489119&YES \\
+P. villosa ssp. irmingardis &Rappolt Kogel, Austria &VR3 &Short-styled &F. Boucher &07/06/14 & 14.88541 & 47.08313 &1871&4722814&4234314&Photo \\
+P. villosa ssp. irmingardis &Rappolt Kogel, Austria &VR1 &Long-styled &F. Boucher &07/06/14 & 14.88541 & 47.08313 &1871&4789459&4283316&Photo \\
+P. villosa ssp. villosa &Turracher Hohe, Austria &VL2 &Long-styled &F. Boucher &07/06/14 & 13.87581 & 46.91273 &1801&3227112&2776420&Photo \\
+P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher &07/06/14 & 13.87581 & 46.91273 &1801&3004397&2708593&Photo \\
+	\bottomrule
+	\end{tabular}}
+	\caption{\textbf{Individus séquencés pour cette étude} lorem ipsum}
+	\label{table_ind}
+\end{annexe}
+\end{landscape}
+
+%\begin{annexe}
+%\centering
+%\includegraphics[height=\textwidth , angle=270]{dessin_collembole.png}
+%\caption{Dessin d'observation de Collembole}
+%\label{collembole}
+%\centering
+%\end{annexe}
+
+\end{document}
+
+% SNIPPETS
 %\begin{wrapfigure}{r}{0.50\textwidth}
 %	\vspace{-30pt}
 %	\begin{center}
@@ -203,57 +289,7 @@ Les analyses de génétique des populations ont été réalisés sous Rstudio.\c
 %\end{figure}
 
 
-\subsection{Clade Hirsuta}
 
-\lipsum[1]
-
-\subsection{Complexe ouest alpin}
-
-\lipsum[1]
-
-\section{Discussion}
-
-\lipsum[1-4]
-
-\paragraph{Remerciements}
-Je tiens enfin à remercier sincèrement les personnes qui m'ont aidé durant ce stage.
-Tout d'abord Florian Boucher qui, en qualité de maître de stage, m'a accueilli au sein du LECA parmi l'équipe \textbf{EQUIPE???} et confié ses données.
-Ce stage m'a permis de me confronter à un sujet d'étude passionnant et je tiens donc à lui témoigner ma plus grande reconnaissance, en particulier pour sa patience, sa disponibilité et ses explications. Je remercie également Stéphanie Sherpa qui m'aura guidé durant mes recherches en génétique des populations.
-
-Je n’oublie pas les autres membres du LECA, qui auront contribué à rendre mon stage agréable par leur attitude chaleureuse et bienveillante à mon égard.
-Je remercie enfin Caroline Kebaili, \textbf{MEH?} et \textbf{MEH?}, stagiaires de M2, avec qui j’ai partagé la salle 308 durant ces deux mois et qui ont toujours répondu présent à la moindre de mes questions.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Références
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Bibliographie}
-\bibliographystyle{authordate1}
-\bibliography{Primula}
-
-\section{Ressources}
-\url{https://github.com/gowachin/Pedemontana}\label{app:github}
-
-%\newpage
-%\begin{annexe}
-%\centering
-%\includegraphics[height=\textwidth , angle=270]{dessin_acarien.png}
-%\caption{Dessin d'observation d'Acarien}
-%\label{acarien}
-%\centering
-%\end{annexe}
-
-%\begin{annexe}
-%\centering
-%\includegraphics[height=\textwidth , angle=270]{dessin_collembole.png}
-%\caption{Dessin d'observation de Collembole}
-%\label{collembole}
-%\centering
-%\end{annexe}
-
-\end{document}
-
-% SNIPPETS
 %-------------------------------------------------------------------------------
 %\begin{figure}[!ht]
 %	\centering
