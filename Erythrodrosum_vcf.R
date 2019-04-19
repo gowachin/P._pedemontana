@@ -203,6 +203,7 @@ scatter(dapc1, posi.da="topright", bg="white",
         posi.pca="topleft")
 
 
+
 # analyse pour genligth! ####
 Eryth20_l = vcfR2genlight(Eryth20_v, n.cores = 7)
 pop(Eryth20_l) <- as.factor(pop)
@@ -382,7 +383,7 @@ for (i in 1:12) Pop(i,"data_vcf/Eryth10_t.geno",  c(a,p,c,v,h,d)) ;beep(3)
 
 #install.packages("bedr")
 library(bedr)
-tryhard.vcf = read.vcf("data_vcf/tryhard.vcf")
+tryhard.vcf = read.vcf("data_vcf/Eryth20_t.vcf")
 tryhard.bed = vcf2bed(tryhard.vcf)
 
 # je n'arrive pas à faire de fichier .bed
@@ -395,8 +396,13 @@ tryhard.bed = vcf2bed(tryhard.vcf)
   print(command)
   system(command)
 }
- spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.ped","PED")
-admixture("data_vcf/tryhard.ped",7)
+ spider("data_vcf/Eryth20_t.vcf","VCF","data_vcf/Eryth20_t.ped","PED")
+admixture("data_vcf/Eryth20_t.ped",7)
+
+# hybridation ####
+#introgression
+#voir avec différents K sous structure
+#-buerkley h index (droit qu'a deux lignées parentales) et introgress (est-ce qu'il y a eu de l'introgression)
 
 # plot de l'évolution du pourcentage de données en fonction des seuils ####
 par(mfrow = c(2,2))

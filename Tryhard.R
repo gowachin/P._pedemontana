@@ -12,15 +12,39 @@ manual()
 
 #sudo apt-get install libfreetype6-dev
 devtools::install_github('bomeara/phrapl')
+
+
+if(!require("ape")){install.packages("ape",repos="http://cran.rstudio.com")}
+if(!require("partitions")){install.packages("partitions",repos="http://cran.rstudio.com")}
+if(!require("lattice")){install.packages("lattice",repos="http://cran.rstudio.com")}
+if(!require("polynom")){install.packages("polynom",repos="http://cran.rstudio.com")}
+if(!require("gmp")){install.packages("gmp",repos="http://cran.rstudio.com")}
+if(!require("rgenoud")){install.packages("rgenoud",repos="http://cran.rstudio.com")}
+if(!require("parallel")){install.packages("parallel",repos="http://cran.rstudio.com")}
+if(!require("optimx")){install.packages("optimx",repos="http://cran.rstudio.com")}
+if(!require("igraph")){install.packages("igraph",repos="http://cran.rstudio.com")}
+if(!require("numDeriv")){install.packages("numDeriv",repos="http://cran.rstudio.com")}
+if(!require("nloptr")){install.packages("nloptr",repos="http://cran.rstudio.com")}
+if(!require("Matrix")){install.packages("Matrix",repos="http://cran.rstudio.com")}
+if(!require("rgl")){install.packages("rgl",repos="http://cran.rstudio.com")}
+if(!require("RColorBrewer")){install.packages("RColorBrewer",repos="http://cran.rstudio.com")}
+if(!require("igraph")){install.packages("igraph",repos="http://cran.rstudio.com")}
+if(!require("diagram")){install.packages("diagram",repos="http://cran.rstudio.com")}
+if(!require("binom")){install.packages("binom",repos="http://cran.rstudio.com")}
+if(!require("P2C2M")){install.packages("P2C2M",repos="http://cran.rstudio.com")}
+
 library(phrapl)
 library(rgl)
 
 data(TestData)
-migrationArray[[3]]
+migrationArray[[4]]
 
-PlotModel( migrationIndividual=migrationArray[[3]] )
-trees[[1]]
+#rajout des growth map car le jeu de base ne les contient pas!!!
+for (i in 1:6) {
+migrationArray[[i]]$growthMap = matrix(c(0,0,0,0,NA,0),ncol =2)
+}
 
+PlotModel( migrationArray[[4]])
 
 # full matrix ####
 
