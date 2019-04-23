@@ -185,6 +185,36 @@ scatter(dapc1, posi.da="topright", bg="white",
 
 compoplot(dapc1,lab="", ncol=2)
 
+# vcfR ###
+library(reshape2)
+library(ggplot2)
+
+myDiff <- genetic_diff(Pedemo10_5r_9s_8i_v, pops = as.factor(pop), method = 'nei')
+#knitr::kable(head(myDiff[,1:15]))
+dpf <- melt(myDiff[,c(8,14:17)], varnames=c('Index', 'Sample'), value.name = 'Depth', na.rm=TRUE)
+colnames(myDiff)
+
+ggplot(dpf, aes(x=variable, y=Depth)) + geom_violin(fill="#2ca25f", adjust = 1.2) + xlab("") + ylab("") + theme_bw()
+
+# DAPC ####
+
+set.seed(999)
+pramx <- xvalDapc(tab(Pedemo10_5r_9s_8i_g, NA.method = "mean"), pop(Pedemo10_5r_9s_8i_g))
+# mais c'est que c'est très moche dit donc...
+set.seed(999)
+system.time(pramx <- xvalDapc(tab(Pedemo10_5r_9s_8i_g, NA.method = "mean"), pop(Pedemo10_5r_9s_8i_g),
+                              n.pca = 1:6, n.rep = 1000,
+                              parallel = "multicore", ncpus = 7))
+# utilisateur     système      écoulé
+# 1221.338      17.356     196.886
+
+names(pramx)
+pramx[-1]
+
+scatter(pramx$DAPC, cex = 2, legend = TRUE,
+        clabel = FALSE, posi.leg = "bottomleft", scree.pca = TRUE,
+        posi.pca = "topleft", cleg = 0.75, xax = 1, yax = 2, inset.solid = 1)
+
 # PCAdapt analysis ####
 #install.packages("pcadapt")
 
@@ -259,6 +289,70 @@ par(mfrow = c(3,4))
 for (i in 1:11) Pop(i,"data_vcf/Pedemo10_5r_9s_8i.geno",  ID ) ;beep(3)
 
 
+
 # introgress ####
+library(introgress)
+
+mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
+
+c = c('CS1','CP1','CP4') #cottia
+h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
+p = c('PT1','PV1','GA2','GA4') #pedemontana
+
+PedeHirsu10 = subset_reorder(mincov10_Eryth_CSV, c(c,p,h)) ; colnames(PedeHirsu10)
+PedeHirsu10_5r = rare(PedeHirsu10, rare  = 0.05, r= T) ; colnames(PedeHirsu10_5r)
+PedeHirsu10_5r = PedeHirsu10_5r[which(PedeHirsu10_5r$QUAL >= 20),]
+PedeHirsu10_5r_9s_8i = tri(data = PedeHirsu10_5r,n.r=1,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+save2vcf(PedeHirsu10_5r_9s_8i)
+
+# python2 convert_vcf2introgress_genotypes.py data_vcf/PedeHirsu10_5r_9s_8i.vcf  > data_vcf/PedeHirsu10_5r_9s_8i.introgress
+# python2 convert_vcf2introgress_loci.py data_vcf/PedeHirsu10_5r_9s_8i.vcf  > data_vcf/PedeHirsu10_5r_9s_8i.loci
+
+vcf2csv("data_vcf/PedeHirsu10_5r_9s_8i.vcf","data_vcf/PedeHirsu10_5r_9s_8i.head","data_vcf/PedeHirsu10_5r_9s_8i.csv")
+PedeHirsu10_5r_9s_8i <- read_delim("data_vcf/PedeHirsu10_5r_9s_8i.csv", "\t", escape_double = FALSE, trim_ws = TRUE)
+
+LociData = PedeHirsu10_5r_9s_8i[,c(1,2)]
+LociData$locus = paste("c",substr(LociData$CHROM,7,10),".",LociData$POS, sep = "")
+LociData$type = "C"
+LociData$lg = substr(LociData$CHROM,7,10)
+LociData = as.data.frame(LociData[,-c(1,2)])
+
+LociData[1,]
+
+AdmixData = PedeHirsu10_5r_9s_8i[,-c(1:9)]
+AdmixData = sapply(AdmixData, substring, 1, 3)
+NAs = AdmixData == "." ; AdmixData[NAs == T] = "NA/NA" ; rm(NAs)
+
+Pop = c("Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop3","Pop3","Pop3","Pop3","Pop3","Pop3")
+Ind = colnames(AdmixData)
+AdmixData = rbind(Pop,Ind,AdmixData)
+colnames(AdmixData) = NULL
+
+Parent_1 = AdmixData[-c(1,2),c(1:4)] ; rownames(Parent_1) = LociData[,1]
+Parent_2 = AdmixData[-c(1,2),-c(1:6)] ; rownames(Parent_2) = LociData[,1]
+
+count.matrix = prepare.data(admix.gen = AdmixData,
+                            loci.data = LociData, fixed = F,
+                            parental1 = Parent_1 , parental2 = Parent_2,
+                            pop.id = T, ind.id = T)
+hi.index.sim = est.h(introgress.data = count.matrix,
+                     loci.data = LociData)
+mk.image(introgress.data = count.matrix, loci.data = LociData,
+         marker.order = NULL,hi.index = hi.index.sim,ylab.image = "Individuals",
+         xlab.h = "population 2 ancestry", pdf = F)
+abline(h= c(5,6,7), col = "red", lty = 3)
+text(x = hi.index.sim[c(5,6,7),2],y = c(5,6,7), Ind[5:7], pos = c(4,2,2))
+rownames(hi.index.sim) = Ind
+hi.index.sim
+
+# meh
+#gen.out = genomic.clines(introgress.data = count.matrix,hi.index = hi.index.sim, loci.data = LociData, sig.test = T, method = "permutation")
+
+#gen.out$Summary.data
+beep(3)
+
+#clines.plot(cline.data = gen.out, rplots = 3, cplots = 3, pdf = F)
+
+
 
 
