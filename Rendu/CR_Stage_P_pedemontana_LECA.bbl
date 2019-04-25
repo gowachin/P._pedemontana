@@ -13,10 +13,18 @@ Nazareno, Alison~G., Bemmels, Jordan~B., Dick, Christopher~W., \& Lohmann,
   from an Amazonian plant species}.
 \newblock {\em Molecular Ecology Resources}, {\bf 17}(6), 1136--1147.
 
-\bibitem[\protect\citename{Team, }2017]{RTeam2017}
-Team, R. 2017.
+\bibitem[\protect\citename{R.Team, }2017]{RTeam2017}
+R.Team. 2017.
 \newblock {R: A language and environment for statistical computing (Version
   3.4. 2)[Computer software]}.
 \newblock {\em Vienna, Austria: R Foundation for Statistical Computing}.
+
+\bibitem[\protect\citename{Suchan {\em et~al.\ }\relax, }2016]{Suchan2016}
+Suchan, Tomasz, Pitteloud, Camille, Gerasimova, Nadezhda~S., Kostikova, Anna,
+  Schmid, Sarah, Arrigo, Nils, Pajkovic, Mila, Ronikier, Michal, \& Alvarez,
+  Nadir. 2016.
+\newblock {Hybridization capture using RAD probes (hyRAD), a new tool for
+  performing genomic analyses on collection specimens}.
+\newblock {\em PLoS ONE}, {\bf 11}(3), 1--22.
 
 \end{thebibliography}

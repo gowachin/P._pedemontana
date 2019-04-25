@@ -12,9 +12,8 @@ library(pegas)
 library(Pedemontana)
 
 # creation sous jeu de donnees ####
-
-# #vcf.cov10.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf", checkFile = F)
-# #vcf.cov20.fullmat.SNP = read.vcfR("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf", checkFile = F)
+#system("cp data_vcf/freebayes_-F0.3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_onlyCSV.csv")
+#system("cp data_vcf/freebayes_-F0.3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_onlyCSV.csv")
 
 #mincov10_90samples_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_90samples_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
 #mincov20_90samples_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_90samples_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
@@ -68,7 +67,11 @@ Erythv = c(vcf,Eryth)
 #write.table(inform_mincov10,"data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv",sep = "\t", quote = F, row.names=F)
 #write.table(inform_mincov20,"data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv",sep = "\t", quote = F, row.names=F)
 
+#rm(inform_mincov10,inform_mincov20)
+
 # charger subser Eryth ####
+
+
 
 mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
 #mincov20_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
@@ -80,7 +83,7 @@ h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-Eryth10 = subset_reorder(mincov10_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth20)
+Eryth10 = subset_reorder(mincov10_Eryth_CSV, c(a,p,c,v,h,d)) ; colnames(Eryth10)
 
 Eryth10_r = rare(Eryth10, rare  = 0.05, r= T)
 
@@ -88,7 +91,7 @@ par(mfrow = c(1,1))
 levels = apply(Eryth10[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
 summary(as.factor(unlist(levels)))
 
-par(mfrow = c(1,1))
+
 levels = apply(Eryth10_r[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
 summary(as.factor(unlist(levels)))
 
@@ -98,20 +101,26 @@ abline(h = log(20), col = "green")
 Eryth10_r = Eryth10_r[which(Eryth10_r$QUAL >= 20),]
 dim(Eryth10_r[which(Eryth10_r$QUAL >= 20),])
 
+levels = apply(Eryth10_r[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
+summary(as.factor(unlist(levels)))
+
 #permet de virer les lignes avec seulement un certain nombre de variants ####
 #fonction tri dans le package
-Eryth10_t = tri(data = Eryth10_r,n.r=0.9,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
+Eryth10_t = tri(data = Eryth10_r,n.r=0.8,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
 colnames(Eryth10_t[,-c(1:9)])
 
-save2vcf(Eryth10_t)
+# supprime les positions trop proches sur un contig
+data = Eryth10_t ; n = 1e4
+manus = c(1)
+for (i in 2:dim(data)[1]){   if (data$CHROM[i] == data$CHROM[i-1] & (data$POS[i]-data$POS[i-1]) < n ){} else {manus = c(manus,i)} }
+Eryth10_t = Eryth10_t[manus,]
+dim(Eryth10_t)
 
-# analyse des positions le long du genome ####
-#x = as.numeric(paste(substr(as.character(inform_mincov20$CHROM),7,20) ,  as.character(inform_mincov20$POS) ,sep="."))
-#plot(x = log(x), y= log(inform_mincov20$QUAL) ,cex =0.1)
+#save2vcf(Eryth10_t)
+tablobj2vcf(Eryth10_t,"data_vcf/Eryth10_r5q20_t8i8_pos1e4.csv","data_vcf/freebayes_vcf.head","data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf")
 
 # adegenet ####
-Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
-pop = c("apennina", "apennina","apennina"
+pop = c("apennina", "apennina"#,"apennina"
         ,"pedemontana","pedemontana"
         ,"valgau","valgau"
         ,"cottia","cottia","cottia"
@@ -121,7 +130,7 @@ pop = c("apennina", "apennina","apennina"
 )
 
 # analyse pour genind ####
-Eryth20_v = read.vcfR("data_vcf/Eryth20_t.vcf", checkFile = T) ; Eryth20_v
+Eryth20_v = read.vcfR("data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf", checkFile = T) ; Eryth20_v
 Eryth20_g = vcfR2genind(Eryth20_v) ; Eryth20_g
 row.names(Eryth20_g$tab)
 
@@ -182,7 +191,7 @@ col <- funky(15)
 s.class(pca1$li, pop(Eryth20_g),xax=1,yax=2, col=transp(col,.6), axesell=FALSE,
         cstar=0, cpoint=3, grid=FALSE)
 
-grp = find.clusters(Eryth20_g, max.n.clust = round(nInd(Eryth20_l))-1)#, n.pca = length(pop(Eryth20_l)))
+grp = find.clusters(Eryth20_g, max.n.clust = round(nInd(Eryth20_g))-1)#, n.pca = length(pop(Eryth20_l)))
 names(grp) ; grp$Kstat ; grp$stat ; grp$grp ; grp$size
 table(pop(Eryth20_g), grp$grp) ; table.value(table(pop(Eryth20_g), grp$grp), col.lab=paste("inf", 1:6),row.lab=paste("ori", 1:6))
 dapc1 <- dapc(Eryth20_g, grp$grp)
@@ -294,7 +303,7 @@ scatter(dapc1, posi.da="topright", bg="white",
 # PCAdapt analysis ####
 #install.packages("pcadapt")
 
-filename <- read.pcadapt("data_vcf/Eryth10_t.vcf", type = "vcf")
+filename <- read.pcadapt("data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf", type = "vcf")
 x <- pcadapt(input = filename, K = 15)
 plot(x, option = "screeplot")
 plot(x, option = "scores", pop = pop)
@@ -314,70 +323,37 @@ plot(x, option = "scores", i = 3, j = 4, pop = pop)
 
 # LEA analysis ####
 # PGDSpider
+# si java merde : system("sudo update-alternatives --config java")
 system("cd ; cd Téléchargements/PGDSpider_2.1.1.5/ ; ./PGDSpider2.sh")
 
-spider = function(input,inFORM,output,outFORM) {
-  #realise cette commande ci :
-  #system("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.vcf -inputformat VCF -outputfile Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.str -outputformat STRUCTURE -spid Bureau/BEE/Stage/Pedemontana/data_vcf/Spid_VCF_STRUCTURE.spid")
+spider("data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf","VCF","data_vcf/Eryth10_r5q20_t8i8_pos1e4.str","STRUCTURE")
+system("sed -i '1d' data_vcf/Eryth10_r5q20_t8i8_pos1e4.str ")
 
-  if (inFORM == "VCF" & outFORM == "STRUCTURE") {spid = "Spid_VCF_STRUCTURE.spid"}
-  if (inFORM == "VCF" & outFORM == "PED") {spid = "Spid_VCF_PED.spid"}
-
-
-  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
-                  input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/Pedemontana/", output, " -outputformat ", outFORM ,
-                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/",spid,sep = "")
-  print(command)
-  system(command)
-}
-
-spider("data_vcf/tryhard.vcf","VCF","data_vcf/tryhard.str","STRUCTURE")
-
-
-system("sed -i '1d' data_vcf/tryhard.str ") #ne marche pas car premiere ligne en trop
-
-spider("data_vcf/Eryth20_t.vcf","VCF","data_vcf/Eryth20_t.str","STRUCTURE")
-system("sed -i '1d' data_vcf/Eryth20_t.str ")
-
-struct2geno(file = "data_vcf/Eryth20_t.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth20_t.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
-
-obj  <- snmf("data_vcf/Eryth20_t.geno", K = 1:14, entropy = T, ploidy = 2,
-             CPU = 7,repetitions = 10, project= "new", alpha=100)
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 
-struct2geno(file = "data_vcf/tryhard.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/tryhard.geno")
+struct2geno(file = "data_vcf/Eryth10_r5q20_t8i8_pos1e4.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
-obj  <- snmf("data_vcf/tryhard.geno", K = 1:14, entropy = T, ploidy = 2,
+obj  <- snmf("data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno", K = 1:14, entropy = T, ploidy = 2,
              CPU = 7,repetitions = 10, project= "new", alpha=100)
 # Choix du K optimal (20 runs)
-ID =Eryth
+ID =Eryth[-2]
 
 par(mfrow = c(1,1))
 plot(obj, col = "blue", pch=1,cex=0.5)
 beep(3)
 color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","black","yellow","darkgreen")
 
-obj.snmf = snmf("data_vcf/tryhard.geno", K = 11, alpha = 100, project = "new")
+obj.snmf = snmf("data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno", K = 11, alpha = 100, project = "new")
 qmatrix = Q(obj.snmf, K = 11)
 barplot(t(qmatrix), col = color, border = NA, space = 0, xlab = "Individuals", ylab = "Admixture coefficients",
         names.arg =ID, las = 2)
 
-Pop = function(K, file,ID) {
-  obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
-                  CPU = 7)
-  ce=cross.entropy(obj,K=K)
-  best = which.min(ce)
-  qmatrix = Q(obj.snmf, K = K, run = best)
-  barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
-          names.arg =ID, las = 2)}
-
-
 par(mfrow = c(3,4))
-for (i in 1:12) Pop(i,"data_vcf/Eryth10_t.geno",  c(a,p,c,v,h,d)) ;beep(3)
+for (i in 1:12) Pop(i,"data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno",  c(a[-2],p,c,v,h,d)) ;beep(3)
 
 # admixture ####
 

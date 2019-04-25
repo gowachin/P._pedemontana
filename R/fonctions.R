@@ -89,8 +89,11 @@ rare = function(data,rare = 0,quiet = T, r= F,p = F) { # data est un data frame 
 
   matrix[Haplo1 == "0"& H0 == F | Haplo2 == "0" & H0 == F] = "."
   matrix[Haplo1 == "1"& H1 == F | Haplo2 == "1" & H1 == F] = "."
-  matrix[Haplo1 == "2"& H2 == F | Haplo2 == "2" & H2 == F] = "."
-  matrix[Haplo1 == "3"& H3 == F | Haplo2 == "3" & H3 == F] = "."
+  # matrix[Haplo1 == "2"& H2 == F | Haplo2 == "2" & H2 == F] = "."
+  # matrix[Haplo1 == "3"& H3 == F | Haplo2 == "3" & H3 == F] = "."
+  #tri considerant allele > 1 comme erreurs
+  matrix[Haplo1 == "2" | Haplo2 == "2"] = "."
+  matrix[Haplo1 == "3" | Haplo2 == "3"] = "."
 
   data = cbind(data[,1:9],matrix)
   data = clean(data)
@@ -178,10 +181,10 @@ subset_reorder = function(data,list) {
 #' @param csv the dataframe with the information to save inside a vcf file
 #'
 #' save as a vcf file but need to be a vcf troncated at the origine
+#' hide because tablobj2vcf is way better
 #'
 #' @author JAUNATRE Maxime
 #'
-#' @export
 save2vcf = function(csv) {
   name = deparse(substitute(csv))
   write.table(csv, paste("data_vcf/",name,".csv",sep = ""),sep = "\t", quote = F, row.names=F)
@@ -222,4 +225,48 @@ tablobj2vcf = function(obj,name,head,vcf) {
   system(paste(" sed -i '1s/.*/#&/' ",name,sep = ""))
   system(paste("cat ",head," ",name," > ",vcf, sep = ""))
   system(paste("rm ",name,sep = ""))
+}
+
+#' str barplot
+#'
+#' @param k the K to test
+#' @param the file use in cross entropy (.geno)
+#' @param ID  individual tags
+#'
+#' barplot the structure of the geno file
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+Pop = function(K, file,ID) {
+  obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
+                  CPU = 7)
+  ce=cross.entropy(obj,K=K)
+  best = which.min(ce)
+  qmatrix = Q(obj.snmf, K = K, run = best)
+  barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
+          names.arg =ID, las = 2)}
+
+#' PGDSpider from r
+#'
+#' @param input the name of the entry file
+#' @param inFORM the type of entry file
+#' @param output the name of the exit file
+#' @param outFORM the type of exit file
+#'
+#' push file from a type to another using pgdspider.
+#' For now, just working with VCF to structure, because it need a .spid done for the software
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+spider = function(input,inFORM,output,outFORM) {
+  if (inFORM == "VCF" & outFORM == "STRUCTURE") {spid = "Spid_VCF_STRUCTURE.spid"}
+  if (inFORM == "VCF" & outFORM == "PED") {spid = "Spid_VCF_PED.spid"}
+
+  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
+                  input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/Pedemontana/", output, " -outputformat ", outFORM ,
+                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/",spid,sep = "")
+  print(command)
+  system(command)
 }

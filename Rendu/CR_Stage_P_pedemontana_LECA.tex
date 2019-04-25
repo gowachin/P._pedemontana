@@ -5,7 +5,7 @@
 %\documentclass[12pt,a4paper,titlepage]{report}
 \usepackage[utf8]{inputenc} %encodage
 \usepackage[square,sort,comma,numbers]{natbib} % bibliography
-\setcitestyle{authoryear}
+\setcitestyle{authoryear,open={(},close={)}}
 \renewcommand{\bibsection}{}
 
 \usepackage[french]{babel} % langue
@@ -35,6 +35,8 @@
 \usepackage{caption}
 \DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour mettre des captions annexes
 
+\DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
+
 \usepackage{lscape}
 
 \usepackage{subcaption}
@@ -47,9 +49,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page de garde et table des matières
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{TITRE}
+\title{\textbf{Délimitation d'espèces au sein du complexe de plantes des Alpes, \textit{Primula pedemontana s.l.}}}
 \author{Maxime Jaunatre, Master 1 BEE Grenoble}
-\date{Mai 2019}
+\date{1 Avril - 31 Mai 2019  |  Soutenance : juin 2019 }
 
 \renewcommand*\contentsname{Table des matières}
 
@@ -58,27 +60,49 @@
 \begin{titlepage} %Page de garde!!
 %logos de page de garde
 \begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{fig/UGA.jpg}
+\begin{subfigure}{0.4\textwidth}
+  %\centering
+  \includegraphics[width=0.7\linewidth,left]{fig/UGA.jpg}
 \end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.8\linewidth]{fig/leca.jpg}
+\begin{subfigure}{.4\textwidth}
+  %\centering
+  \includegraphics[width=0.7\linewidth,right]{fig/leca.jpg}
 \end{subfigure}
 \label{fig:test}
 \end{figure}
 %titres
 \maketitle
+
+
+\noindent
+\begin{minipage}{1.3in}
+\textbf{\underline{Enseignant référent:}} \\
+Éric Coissac
+\end{minipage}
+\hfill
+\begin{minipage}{1.3in}
+\textbf{\underline{Tuteur de stage:}} \\
+Florian Boucher
+\end{minipage}
+\hfill
+\begin{minipage}{1.3in}
+\textbf{\underline{Équipe:}} \\
+DivAdapt
+\end{minipage}
+
 %image sympas
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=3]{fig/primulapedemontana_7.jpg}
-%	\caption{\textbf{reference de la photo}
+%	\caption{reference de la photo}
 %	\label{frontpage}
+
 \end{center}
 \end{figure}
+\thispagestyle{empty}
+
+{\let\thefootnote\relax\footnote{{Crédit photo : Florian Boucher}}}
 
 \newpage
 \begin{abstract} %abstract!!!
@@ -88,9 +112,11 @@
 
 \end{center}
 \end{abstract}
+\thispagestyle{empty}
 
 \end{titlepage}
 \tableofcontents
+
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BODY
@@ -125,9 +151,9 @@
 
 \subsection{Échantillonnage}
 
-Les données génétiques utilisés lors de cette étude ont été produite dans le cadre de l'étude précédente de \citet{Boucher2016a}. L'identification taxonomique des individus a été réalisé sur le terrain. Cependant un individu a du être réattribué après analyse génétique au taxon \textit{P. hirsuta}.
+Les données génétiques utilisés lors de cette étude ont été produite dans le cadre de l'étude précédente de \citet{Boucher2016a}. Il s'agit d'un jeu de donnée composé de 90 individus des espèces composant la section \textit{Auricula}, au sein du genre \textit{Primula}. Ces individus ont été prélevés à travers les alpes entre avril et septembre 2014. L'identification taxonomique des individus a été réalisé sur le terrain, mais un individu a du être réattribué après analyse génétique au taxon \textit{P. hirsuta}.
 
-Les SNPs sont issus de séquences obtenus par séquençage via sondes RAD. Cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions. En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome. La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par séquençage ddRAD.
+Les SNPs sont issus de séquençage haut débit via hyRAD \citep{Suchan2016}. Cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions. En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome. La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD. 
 
 %We employ a newly developed next-generation-sequencing protocol, involving sequence capture with RAD probes, and map reads to the reference genome of Primula veris to obtain DNA matrices with thousands of SNPs
 
@@ -135,14 +161,15 @@ Les SNPs sont issus de séquences obtenus par séquençage via sondes RAD. Cette
 
 \subsection{Bioinformatique}
 
-Le jeu de données initial contient 90 individus pour les espèces échantillonnées initialement au sein de la section Auricula. Pour chacun de ces individus, l'information consiste en une séquence de SNPs appellés par Freebayes. Les analyses ont été porté sur deux jeux de données différents car extrait de Freebayes sous des seuils différents : mincov10 et mincov20 .
+Pour chacun des individus, l'information consiste en une séquence de SNPs appellés par Freebayes, exporté sous format VCF. Les analyses ont été porté sur deux jeux de données différents car filtrés sous des seuils différents.
+Le premier jeu de donnée ('\verb|m30_-q20_mincov20|') est issus de filtres très strict, avec un score de qualité (Phred) requis de 30 et une couverture minimale de 20 par site. Afin de ne pas biaiser l'analyse par des seuils favorisant les régions conservées, le second jeu de données ('\verb|m13_-q20_mincov10|') est quant à lui produit avec un Phred minimal de 13 et une couverture de 10. A partir de ces séquences, les SNPs ont été isolés par Freebayes, avec un score de Phred minimal de 20 et un support de lecture de 30\% minimum par allèle.
 
 %parler du pipeline
-A partir des deux jeux de donnée initials, un pipeline est établis pour générer divers ensembles de données. Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. Les fonctions sont rassemblées en un package R hébergé sur Github (\autoref{app:github})
-Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction subset$\_$reorder, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. La fonction suivante, rare, permet de trier les alleles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de donnée et le loci pour l'individu présentant ce loci sont considéré comme une donnée manquante. Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information. Afin de ne garder que les loci polymorphiques, une fonction clean est donc appelée à la fin de la fonction rare, afin de supprimer les locis monomorphiques.
+A partir des deux jeux de donnée initials, un pipeline est établis pour générer divers ensembles de données. Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. Les fonctions sont rassemblées en un package R hébergé sur Github (Web \ref{github})
+Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction \verb|subset_reorder|, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. La fonction suivante, rare, permet de trier les alleles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de donnée et le loci pour l'individu présentant ce loci sont considéré comme une donnée manquante. Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information. Afin de ne garder que les loci polymorphiques, une fonction clean est donc appelée à la fin de la fonction rare, afin de supprimer les locis monomorphiques.
 Enfin une dernière fonction de tri est appelé pour supprimer les loci puis individus présentant trop de données manquantes.
 
-Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-selection d'individus et de loci est enregistrée sous format vcf, au moyen d'une fonction appelant un script bash.
+Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-selection d'individus et de loci est enregistrée sous format vcf, au moyen d'une fonction appelant un script bash. 
 
 
 Chaque seuil est choisis après vérification que la décision n'impacte que peu les résultats de diversité génétique.
@@ -150,7 +177,7 @@ Le nombre d'individus étant faible, il faut optimiser le nombre de SNP par indi
 
 \subsection{Génétique des populations}
 
-Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. Le package a été utilisé pour inférer les fst, le package LEA pour etudier la structure de la population
+Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. Le package a été utilisé pour inférer les fst, le package LEA pour étudier la structure de la population, package Introgress pour mesurer les introgressions entre P. pedemontana et P. hirsuta.
 
 admixture aussi a peut etre été utilisé pour ça.
 
@@ -174,7 +201,7 @@ admixture aussi a peut etre été utilisé pour ça.
 
 \paragraph{Remerciements}
 Je tiens enfin à remercier sincèrement les personnes qui m'ont aidé durant ce stage.
-Tout d'abord Florian Boucher qui, en qualité de maître de stage, m'a accueilli au sein du LECA parmi l'équipe \textbf{EQUIPE???} et confié ses données.
+Tout d'abord Florian Boucher qui, en qualité de maître de stage, m'a accueilli au sein du LECA parmi l'équipe DivAdapt et confié ses données.
 Ce stage m'a permis de me confronter à un sujet d'étude passionnant et je tiens donc à lui témoigner ma plus grande reconnaissance, en particulier pour sa patience, sa disponibilité et ses explications. Je remercie également Stéphanie Sherpa qui m'aura guidé durant mes recherches en génétique des populations.
 
 Je n’oublie pas les autres membres du LECA, qui auront contribué à rendre mon stage agréable par leur attitude chaleureuse et bienveillante à mon égard.
@@ -189,7 +216,10 @@ Je remercie enfin Caroline Kebaili, \textbf{MEH?} et \textbf{MEH?}, stagiaires d
 \bibliography{Primula}
 
 \section{Ressources}
-\url{https://github.com/gowachin/Pedemontana}\label{app:github}
+\begin{web}[h]
+	\caption{\url{https://github.com/gowachin/Pedemontana}}
+	\label{github}
+\end{web}
 
 \newpage
 \begin{landscape}

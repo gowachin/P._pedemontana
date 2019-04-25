@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.5)  18 APR 2019 15:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.5)  24 APR 2019 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -701,6 +701,10 @@ Package newfloat Info: New float `annexe' with options `' on input line 36.
 \newfloat@ftype=\count122
 Package newfloat Info: float type `annexe'=8 on input line 36.
 \c@subannexe=\count123
+Package newfloat Info: New float `web' with options `' on input line 38.
+\c@web=\count124
+Package newfloat Info: float type `web'=16 on input line 38.
+\c@subweb=\count125
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/lscape.sty
 Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
@@ -716,7 +720,7 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 \XKV@toks=\toks22
 \XKV@tempa@toks=\toks23
 )
-\XKV@depth=\count124
+\XKV@depth=\count126
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/adjustbox/adjcalc.sty
@@ -746,45 +750,45 @@ File: tc-pdftex.def 2012/05/13 v1.0 Clipping driver for pdftex
 
 (/usr/share/texlive/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count125
+\c@checkoddpage=\count127
 )
 (/usr/share/texlive/texmf-dist/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@box=\box28
-\sift@deathcycles=\count126
+\sift@deathcycles=\count128
 \@vwid@loff=\dimen152
 \@vwid@roff=\dimen153
 ))
 (./CR_Stage_P_pedemontana_LECA.aux)
 \openout1 = `CR_Stage_P_pedemontana_LECA.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 56.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 58.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
-LaTeX Info: Redefining \degres on input line 56.
-LaTeX Info: Redefining \dots on input line 56.
-LaTeX Info: Redefining \up on input line 56.
+LaTeX Info: Redefining \degres on input line 58.
+LaTeX Info: Redefining \dots on input line 58.
+LaTeX Info: Redefining \up on input line 58.
 
 
 Package french.ldf Warning: OT1 encoding should not be used for French.
 (french.ldf)                Add \usepackage[T1]{fontenc} to the preamble
-(french.ldf)                of your document; reported on input line 56.
+(french.ldf)                of your document; reported on input line 58.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -823,20 +827,20 @@ Package french.ldf Warning: OT1 encoding should not be used for French.
 \big@size=\dimen154
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 56.
+(lastpage)             ! on input line 58.
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring OFF on input line 56.
+Package hyperref Info: Link coloring OFF on input line 58.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count127
+\c@section@level=\count129
 )
-LaTeX Info: Redefining \ref on input line 56.
-LaTeX Info: Redefining \pageref on input line 56.
-LaTeX Info: Redefining \nameref on input line 56.
+LaTeX Info: Redefining \ref on input line 58.
+LaTeX Info: Redefining \pageref on input line 58.
+LaTeX Info: Redefining \nameref on input line 58.
 
 (./CR_Stage_P_pedemontana_LECA.out) (./CR_Stage_P_pedemontana_LECA.out)
 \@outlinefile=\write3
@@ -845,16 +849,16 @@ LaTeX Info: Redefining \nameref on input line 56.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count128
+\scratchcounter=\count130
 \scratchdimen=\dimen155
 \scratchbox=\box30
-\nofMPsegments=\count129
-\nofMParguments=\count130
+\nofMPsegments=\count131
+\nofMParguments=\count132
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count131
+\MPscratchCnt=\count133
 \MPscratchDim=\dimen156
-\MPnumerator=\count132
-\makeMPintoPDFobject=\count133
+\MPnumerator=\count134
+\makeMPintoPDFobject=\count135
 \everyMPtoPDFconversion=\toks25
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -878,61 +882,71 @@ Package caption Info: End \AtBeginDocument code.
 <fig/UGA.jpg, id=52, 400.49625pt x 213.79875pt>
 File: fig/UGA.jpg Graphic file (type jpg)
 <use fig/UGA.jpg>
-Package pdftex.def Info: fig/UGA.jpg  used on input line 64.
-(pdftex.def)             Requested size: 182.09833pt x 97.21007pt.
-LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 65
+Package pdftex.def Info: fig/UGA.jpg  used on input line 66.
+(pdftex.def)             Requested size: 127.46584pt x 68.04509pt.
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 67
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ztmcm.fd
 File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 65
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 67
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlztmcm.fd
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 65
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 67
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsztmcm.fd
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 65
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 67
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omxztmcm.fd
 File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
 <fig/leca.jpg, id=53, 216.81pt x 69.1383pt>
 File: fig/leca.jpg Graphic file (type jpg)
 <use fig/leca.jpg>
-Package pdftex.def Info: fig/leca.jpg  used on input line 68.
-(pdftex.def)             Requested size: 182.09833pt x 58.07155pt.
+Package pdftex.def Info: fig/leca.jpg  used on input line 70.
+(pdftex.def)             Requested size: 127.46584pt x 40.64775pt.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 76.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20.74> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 76.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 75.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 76.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 75.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 76.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 75.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 76.
+
+Overfull \hbox (14.47958pt too wide) in paragraph at lines 80--82
+[]$[]$ 
+ []
+
 <fig/primulapedemontana_7.jpg, id=54, 144.54pt x 96.36pt>
 File: fig/primulapedemontana_7.jpg Graphic file (type jpg)
 <use fig/primulapedemontana_7.jpg>
-Package pdftex.def Info: fig/primulapedemontana_7.jpg  used on input line 77.
+Package pdftex.def Info: fig/primulapedemontana_7.jpg  used on input line 97.
 (pdftex.def)             Requested size: 433.61888pt x 289.07922pt.
- [1
+[1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./fig/UGA.jpg> <./fig/leca
 .jpg> <./fig/primulapedemontana_7.jpg>] [2]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 93.
- (./CR_Stage_P_pedemontana_LECA.toc)
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 118.
+
+(./CR_Stage_P_pedemontana_LECA.toc)
 \tf@toc=\write4
 \openout4 = `CR_Stage_P_pedemontana_LECA.toc'.
 
@@ -940,49 +954,61 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.94 \newpage
-              [1]pdfTeX warning (ext4): destination with the same identifier (n
-ame{page.2}) has been already used, duplicate ignored
+l.120 \newpage
+               [1]pdfTeX warning (ext4): destination with the same identifier (
+name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.136 \subsection
-                 {Bioinformatique} [2] [3] [4] [5] [6]
-(./CR_Stage_P_pedemontana_LECA.bbl) [7]
-Overfull \hbox (65.43196pt too wide) in paragraph at lines 200--229
+l.157 
+       [2]
+Overfull \hbox (4.72304pt too wide) in paragraph at lines 164--166
+\OT1/ptm/m/n/12 diff[]erents car filtr[]es sous des seuils diff[]erents. Le pre
+-mier jeu de donn[]ee ('[][]\OT1/cmtt/m/n/12 m30_-q20_mincov20[]\OT1/ptm/m/n/12
+ ')
+ []
+
+[3] [4] [5] [6] [7] (./CR_Stage_P_pedemontana_LECA.bbl)
+Package hyperref Info: bookmark level for unknown web defaults to 0 on input li
+ne 220.
+ [8]
+Overfull \hbox (65.43196pt too wide) in paragraph at lines 230--259
  [][] 
  []
 
 Package hyperref Info: bookmark level for unknown annexe defaults to 0 on input
- line 229.
-[8] 
+ line 259.
+[9] 
 AED: lastpage setting LastPage
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 242.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 242.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 272.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 272.
 (./CR_Stage_P_pedemontana_LECA.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 242.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 242.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 272.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 272.
 Package rerunfilecheck Info: File `CR_Stage_P_pedemontana_LECA.out' has not cha
 nged.
 (rerunfilecheck)             Checksum: F5DAB045774D6ED2CA2AC8D1A066AD3F;712.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 242.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 272.
  ) 
 Here is how much of TeX's memory you used:
- 10485 strings out of 492982
- 154978 string characters out of 6134897
- 409597 words of memory out of 5000000
- 13840 multiletter control sequences out of 15000+600000
- 33297 words of font info for 67 fonts, out of 8000000 for 9000
+ 10542 strings out of 492982
+ 155563 string characters out of 6134897
+ 410092 words of memory out of 5000000
+ 13890 multiletter control sequences out of 15000+600000
+ 37566 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,11n,77p,1888b,486s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
-tmri8a.pfb>
-Output written on CR_Stage_P_pedemontana_LECA.pdf (10 pages, 340270 bytes).
+ 42i,11n,77p,1888b,523s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exi
+st, replaced by a fixed one
+
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
+mr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on CR_Stage_P_pedemontana_LECA.pdf (11 pages, 353110 bytes).
 PDF statistics:
- 154 PDF objects out of 1000 (max. 8388607)
- 133 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
+ 170 PDF objects out of 1000 (max. 8388607)
+ 146 compressed objects within 2 object streams
+ 33 named destinations out of 1000 (max. 500000)
  112 words of extra memory for PDF output out of 10000 (max. 10000000)
 

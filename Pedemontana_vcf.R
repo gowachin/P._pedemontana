@@ -43,6 +43,14 @@ Pedemo10_5r_9s_8i = tri(data = Pedemo10_5r,n.r=1,n.c = 0.8, r = T) # avec ces se
 colnames(Pedemo10_5r_9s_8i[,-c(1:9)])
 dim(Pedemo10_5r_9s_8i)
 
+# supprime les positions trop proches sur un contig
+data = Pedemo10_5r_9s_8i ; n = 1e4
+manus = c(1)
+for (i in 2:dim(data)[1]){   if (data$CHROM[i] == data$CHROM[i-1] & (data$POS[i]-data$POS[i-1]) < n ){} else {manus = c(manus,i)} }
+Pedemo10_5r_9s_8i = Pedemo10_5r_9s_8i[manus,]
+dim(Pedemo10_5r_9s_8i)
+
+
 v= list() ; He = c()
 homo = c("0/0","1/1","2/2","3/3")
 hetero = c("0/1","0/2","0/3","1/2","1/3","2/3")
@@ -62,7 +70,9 @@ text(x = c(1:length(He)), y = He, names(He), pos = 3)
 summary(He)
 
 
-save2vcf(Pedemo10_5r_9s_8i)
+
+#save2vcf(Eryth10_t)
+tablobj2vcf(Eryth10_t,"data_vcf/Pedemo10_5r_9s_8i_pos1e4.csv","data_vcf/freebayes_vcf.head","data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf")
 
 pop = c("apennina", "apennina"#, "apennina"
         ,"cottia","cottia","cottia"
@@ -72,7 +82,7 @@ pop = c("apennina", "apennina"#, "apennina"
 )
 
 # analyse pour genind ####
-Pedemo10_5r_9s_8i_v = read.vcfR("data_vcf/Pedemo10_5r_9s_8i.vcf", checkFile = T) ; Pedemo10_5r_9s_8i_v
+Pedemo10_5r_9s_8i_v = read.vcfR("data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf", checkFile = T) ; Pedemo10_5r_9s_8i_v
 Pedemo10_5r_9s_8i_g = vcfR2genind(Pedemo10_5r_9s_8i_v) ; Pedemo10_5r_9s_8i_g
 row.names(Pedemo10_5r_9s_8i_g$tab)
 
@@ -218,7 +228,7 @@ scatter(pramx$DAPC, cex = 2, legend = TRUE,
 # PCAdapt analysis ####
 #install.packages("pcadapt")
 
-filename <- read.pcadapt("data_vcf/Pedemo10_5r_9s_8i.vcf", type = "vcf")
+filename <- read.pcadapt("data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf", type = "vcf")
 x <- pcadapt(input = filename, K = 5)
 plot(x, option = "screeplot")
 plot(x, option = "scores", pop = pop)
@@ -239,25 +249,15 @@ plot(x, option = "scores", i = 3, j = 4, pop = pop)
 
 # LEA analysis ####
 # PGDSpider
-spider = function(input,inFORM,output,outFORM) {
-  if (inFORM == "VCF" & outFORM == "STRUCTURE") {spid = "Spid_VCF_STRUCTURE.spid"}
-  if (inFORM == "VCF" & outFORM == "PED") {spid = "Spid_VCF_PED.spid"}
-
-  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
-                  input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/Pedemontana/", output, " -outputformat ", outFORM ,
-                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/",spid,sep = "")
-  print(command)
-  system(command)
-}
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
 
-spider("data_vcf/Pedemo10_5r_9s_8i.vcf","VCF","data_vcf/Pedemo10_5r_9s_8i.str","STRUCTURE")
-system("sed -i '1d' data_vcf/Pedemo10_5r_9s_8i.str ") #ne marche pas car premiere ligne en trop
+spider("data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf","VCF","data_vcf/Pedemo10_5r_9s_8i_pos1e4.str","STRUCTURE")
+system("sed -i '1d' data_vcf/Pedemo10_5r_9s_8i_pos1e4.str ") #ne marche pas car premiere ligne en trop
 
-struct2geno(file = "data_vcf/Pedemo10_5r_9s_8i.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Pedemo10_5r_9s_8i.geno")
+struct2geno(file = "data_vcf/Pedemo10_5r_9s_8i_pos1e4.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Pedemo10_5r_9s_8i.geno")
 
-obj  <- snmf("data_vcf/Pedemo10_5r_9s_8i.geno", K = 1:8, entropy = T, ploidy = 2,
+obj  <- snmf("data_vcf/Pedemo10_5r_9s_8i_pos1e4.geno", K = 1:8, entropy = T, ploidy = 2,
              CPU = 7,repetitions = 10, project= "new", alpha=100)
 
 # Choix du K optimal (20 runs)
@@ -268,7 +268,7 @@ plot(obj, col = "blue", pch=1,cex=0.5)
 beep(3)
 color = c("orange","violet","lightgreen","red","blue","green","grey","black")
 
-obj.snmf = snmf("data_vcf/Pedemo10_5r_9s_8i.geno", K = K, alpha = 100, project = "new", repetition = 10)
+obj.snmf = snmf("data_vcf/Pedemo10_5r_9s_8i_pos1e4.geno", K = K, alpha = 100, project = "new", repetition = 10)
 ce=cross.entropy(obj,K=K)
 best = which.min(ce)
 qmatrix = Q(obj.snmf, K = K, run = best)
@@ -286,13 +286,11 @@ Pop = function(K, file,ID) {
 
 
 par(mfrow = c(3,4))
-for (i in 1:11) Pop(i,"data_vcf/Pedemo10_5r_9s_8i.geno",  ID ) ;beep(3)
+for (i in 1:11) Pop(i,"data_vcf/Pedemo10_5r_9s_8i_pos1e4.geno",  ID ) ;beep(3)
 
 
 
 # introgress ####
-library(introgress)
-
 mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
 
 c = c('CS1','CP1','CP4') #cottia
@@ -303,7 +301,17 @@ PedeHirsu10 = subset_reorder(mincov10_Eryth_CSV, c(c,p,h)) ; colnames(PedeHirsu1
 PedeHirsu10_5r = rare(PedeHirsu10, rare  = 0.05, r= T) ; colnames(PedeHirsu10_5r)
 PedeHirsu10_5r = PedeHirsu10_5r[which(PedeHirsu10_5r$QUAL >= 20),]
 PedeHirsu10_5r_9s_8i = tri(data = PedeHirsu10_5r,n.r=1,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
-save2vcf(PedeHirsu10_5r_9s_8i)
+# supprime les positions trop proches sur un contig
+data = PedeHirsu10_5r_9s_8i ; n = 1e4
+manus = c(1)
+for (i in 2:dim(data)[1]){   if (data$CHROM[i] == data$CHROM[i-1] & (data$POS[i]-data$POS[i-1]) < n ){} else {manus = c(manus,i)} }
+PedeHirsu10_5r_9s_8i = PedeHirsu10_5r_9s_8i[manus,]
+dim(PedeHirsu10_5r_9s_8i )
+tablobj2vcf(PedeHirsu10_5r_9s_8i,"data_vcf/PedeHirsu10_5r_9s_8i.csv","data_vcf/freebayes_vcf.head","data_vcf/PedeHirsu10_5r_9s_8i.vcf")
+
+
+levels = apply(PedeHirsu10_5r_9s_8i[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
+summary(as.factor(unlist(levels)))
 
 # python2 convert_vcf2introgress_genotypes.py data_vcf/PedeHirsu10_5r_9s_8i.vcf  > data_vcf/PedeHirsu10_5r_9s_8i.introgress
 # python2 convert_vcf2introgress_loci.py data_vcf/PedeHirsu10_5r_9s_8i.vcf  > data_vcf/PedeHirsu10_5r_9s_8i.loci
@@ -323,13 +331,13 @@ AdmixData = PedeHirsu10_5r_9s_8i[,-c(1:9)]
 AdmixData = sapply(AdmixData, substring, 1, 3)
 NAs = AdmixData == "." ; AdmixData[NAs == T] = "NA/NA" ; rm(NAs)
 
-Pop = c("Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop3","Pop3","Pop3","Pop3","Pop3","Pop3")
+Pop = c("Pop1","Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop3","Pop3","Pop3","Pop3","Pop3","Pop3")
 Ind = colnames(AdmixData)
 AdmixData = rbind(Pop,Ind,AdmixData)
 colnames(AdmixData) = NULL
 
-Parent_1 = AdmixData[-c(1,2),c(1:4)] ; rownames(Parent_1) = LociData[,1]
-Parent_2 = AdmixData[-c(1,2),-c(1:6)] ; rownames(Parent_2) = LociData[,1]
+Parent_1 = AdmixData[-c(1,2),c(1:5)] ; rownames(Parent_1) = LociData[,1]
+Parent_2 = AdmixData[-c(1,2),-c(1:7)] ; rownames(Parent_2) = LociData[,1]
 
 count.matrix = prepare.data(admix.gen = AdmixData,
                             loci.data = LociData, fixed = F,
@@ -341,12 +349,12 @@ mk.image(introgress.data = count.matrix, loci.data = LociData,
          marker.order = NULL,hi.index = hi.index.sim,ylab.image = "Individuals",
          xlab.h = "population 2 ancestry", pdf = F)
 abline(h= c(5,6,7), col = "red", lty = 3)
-text(x = hi.index.sim[c(5,6,7),2],y = c(5,6,7), Ind[5:7], pos = c(4,2,2))
+text(x = hi.index.sim[c(5,6,7),2],y = c(5,6,7), Ind[5:7], pos = c(4,4,4))
 rownames(hi.index.sim) = Ind
 hi.index.sim
 
 # meh
-#gen.out = genomic.clines(introgress.data = count.matrix,hi.index = hi.index.sim, loci.data = LociData, sig.test = T, method = "permutation")
+gen.out = genomic.clines(introgress.data = count.matrix,hi.index = hi.index.sim, loci.data = LociData, sig.test = T, method = "permutation")
 
 #gen.out$Summary.data
 beep(3)

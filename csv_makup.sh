@@ -16,8 +16,3 @@ sed -i '1 s/^.\{1\}//' $csv
 #cat vcf_head.txt $name.csv > tryhard.vcf # recolle l'entete supprimé avant
 
 
-
-
-
-#mv tryhard.csv tryhard.vcf ; ls
-
