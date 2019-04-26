@@ -130,11 +130,11 @@ h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-fiches = dataset(ind= c(a,p,c,v,h,d)
+Eryth.file = dataset(ind= c(a,p,c,v,h,d)
                  ,popfile= "Populations.csv"
                  ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
-                 ,name = "data_vcf/TROLL"
-                 ,rare= 0.05,qual= 20,missLoci= 0.8,missInd= 0.8,LD= 1e4)
+                 ,name = "data_vcf/Eryth"
+                 ,rare= 0.05,qual= 20,missLoci= 0.9,missInd= 0.8,LD= 1e4)
 beep(3)
 
 x =c("barplotCoeff", "barplotFromPops", "correlation",

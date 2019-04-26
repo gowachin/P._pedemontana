@@ -298,16 +298,16 @@ files = function(obj,name,ind,pop, head= NULL) {
 
 if( is.null(head) ) {head="data_vcf/freebayes_vcf.head"} else {}
 
-print("writing VCF")
+cat("\n");cat("writing VCF")
 tablobj2vcf(obj, .csv , head , .vcf)
-print("VCF done, writing STR")
+cat("\n");cat("VCF done, writing STR")
 spider( .vcf ,"VCF", .str ,"STRUCTURE")
 system(paste("sed -i '1d' ", .str , sep=""))
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
 
-print("STR done, writing GENO")
+cat("\n");cat("STR done, writing GENO")
 struct2geno(file = .str , TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output =  .geno)
 
 x =c("barplotCoeff", "barplotFromPops", "correlation",
@@ -318,10 +318,10 @@ x =c("barplotCoeff", "barplotFromPops", "correlation",
      "mapsMethodMax", "struct2geno")
 rm(list = x, envir = .GlobalEnv)
 
-print("GENO done, writing SNP")
+cat("\n");cat("GENO done, writing SNP")
 temp.geno = read.geno( .geno )
 temp.geno= rbind(rep("A",dim(temp.geno)[2]),temp.geno)
-temp.geno = cbind(c("IND",ind),c("SEX",rep("9",dim(temp.geno)[1]-1)),c("POP",pop),temp.geno)
+temp.geno = cbind(c("IND",as.character(ind)),c("SEX",rep("9",dim(temp.geno)[1]-1)),c("POP",as.character(pop)),temp.geno)
 colnames(temp.geno) = NULL
 write.table(temp.geno, .snp ,sep = "\t", quote = F, row.names=F, col.names = F)
 system(paste("sed -i '1 i\ <NM=1NF>' ", .snp ,sep=""))
@@ -376,37 +376,40 @@ subset_ord_pop = function(population,sub) {
 #' @export
 dataset = function(ind,popfile,entryfile,name,rare,qual,missLoci,missInd,LD) {
 
-print("reading file")
+cat("\n");cat("reading file \n")
 lecture <- readr::read_delim(entryfile,"\t", escape_double = FALSE, trim_ws = TRUE)
 
-print("reordering data")
+cat("\n");cat("reordering data \n")
 reorder = subset_reorder(lecture, ind )
 
-print("deleting rare allele")
+cat("\n");cat("deleting rare allele \n")
 Rare = rare(reorder, rare  = rare, r= T)
 
-print("deleting poor quality SNP")
+cat("\n");cat("deleting poor quality SNP \n")
 quality = Rare[which(Rare$QUAL >= qual),]
 
-print("applying treshold to missing data")
+cat("\n");cat("applying treshold to missing data \n")
 missingdata = tri(data = quality,n.r=missLoci,n.c = missInd, r = T)
 
-print("deleting loci with narrow positions")
+cat("\n");cat("deleting loci with narrow positions \n")
 manus = c(1)
 for (i in 2:dim(missingdata)[1]){   if (missingdata$CHROM[i] == missingdata$CHROM[i-1] & (missingdata$POS[i]-missingdata$POS[i-1]) < LD ){} else {manus = c(manus,i)} }
 final = missingdata[manus,]
 
-print("reading pop file")
+cat("\n");cat("reading pop file \n")
 Populations <- as.data.frame(read.csv(popfile))
 colnames(Populations) = c("ind","pop")
-final_pop = subset_ord_pop(Populations,c(colnames(final[,-c(1:9)])))
+final_pop = subset_ord_pop(population =Populations,sub=c(colnames(final[,-c(1:9)])))
 
 resum = list(individuals = colnames(final[,-c(1:9)]), file_dim = dim(final))
-print(resum)
 
-print("saving files")
-name= paste(name,"_r",rare,"_q",qual,"_mL",missLoci,"_mI",missInd,"_LD",LD,sep="")
-fichier = files(final,name,final_pop$ind,final_pop$pop)
+cat("\n")
+print(resum)
+cat("\n");cat("saving files \n")
+name= paste(name,"_r",rare,"_q",qual,"_mL",missLoci,"_mI",missInd,"_LD1e",log10(LD),sep="")
+fichier = files(obj =final, name=name, ind=final_pop$ind, pop=final_pop$pop)
+
+cat("\n");cat("DONE :) \n\n")
 
 return(fichier)
 }
