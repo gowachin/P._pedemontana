@@ -72,7 +72,7 @@ summary(He)
 
 
 #save2vcf(Eryth10_t)
-tablobj2vcf(Eryth10_t,"data_vcf/Pedemo10_5r_9s_8i_pos1e4.csv","data_vcf/freebayes_vcf.head","data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf")
+tablobj2vcf(Pedemo10_5r_9s_8i,"data_vcf/Pedemo10_5r_9s_8i_pos1e4.csv","data_vcf/freebayes_vcf.head","data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf")
 
 pop = c("apennina", "apennina"#, "apennina"
         ,"cottia","cottia","cottia"
