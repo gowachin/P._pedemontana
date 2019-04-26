@@ -69,9 +69,7 @@ Erythv = c(vcf,Eryth)
 
 #rm(inform_mincov10,inform_mincov20)
 
-# charger subser Eryth ####
-
-
+# charger subser Eryth hardcore ####
 
 mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
 #mincov20_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m30_-q20_mincov20_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
@@ -104,7 +102,7 @@ dim(Eryth10_r[which(Eryth10_r$QUAL >= 20),])
 levels = apply(Eryth10_r[,-c(1:9)],1, function(data) levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."])
 summary(as.factor(unlist(levels)))
 
-#permet de virer les lignes avec seulement un certain nombre de variants ####
+#permet de virer les lignes avec seulement un certain nombre de variants #
 #fonction tri dans le package
 Eryth10_t = tri(data = Eryth10_r,n.r=0.8,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
 colnames(Eryth10_t[,-c(1:9)])
@@ -116,18 +114,38 @@ for (i in 2:dim(data)[1]){   if (data$CHROM[i] == data$CHROM[i-1] & (data$POS[i]
 Eryth10_t = Eryth10_t[manus,]
 dim(Eryth10_t)
 
-#save2vcf(Eryth10_t)
-tablobj2vcf(Eryth10_t,"data_vcf/Eryth10_r5q20_t8i8_pos1e4.csv","data_vcf/freebayes_vcf.head","data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf")
+Populations <- as.data.frame(read_csv("Populations.csv")) ; colnames(Populations) = c("ind","pop")
+
+Eryth10_t_pop= subset_ord_pop(Populations,c(colnames(Eryth10_t[,-c(1:9)])))
+
+fichiers = files(Eryth10_t,"tryhard_Eryth10",Eryth10_t_pop$ind,Eryth10_t_pop$pop)
+fichiers
+
+# routine ####
+
+a = c('AMB','AML','AOL') #apenina
+c = c('CS1','CP1','CP4') #cottia
+d = c('DGB','DRL') #daonensis
+h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
+p = c('PT1','PV1','GA2','GA4') #pedemontana
+v = c('VR3','VR1','VL2','VB1') #villosa
+
+fiches = dataset(ind= c(a,p,c,v,h,d)
+                 ,popfile= "Populations.csv"
+                 ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                 ,name = "data_vcf/TROLL"
+                 ,rare= 0.05,qual= 20,missLoci= 0.8,missInd= 0.8,LD= 1e4)
+beep(3)
+
+x =c("barplotCoeff", "barplotFromPops", "correlation",
+     "correlationFromPops", "createGrid", "createGridFromAsciiRaster",
+     "defaultPalette", "displayLegend", "fst",
+     "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients",
+     "loadPkg", "maps", "mapsFromPops",
+     "mapsMethodMax", "struct2geno")
+rm(list = x)
 
 # adegenet ####
-pop = c("apennina", "apennina"#,"apennina"
-        ,"pedemontana","pedemontana"
-        ,"valgau","valgau"
-        ,"cottia","cottia","cottia"
-        ,"villosa","villosa","villosa","villosa"
-        ,"hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta"
-        ,"daonensis","daonensis"
-)
 
 # analyse pour genind ####
 Eryth20_v = read.vcfR("data_vcf/Eryth10_r5q20_t8i8_pos1e4.vcf", checkFile = T) ; Eryth20_v
@@ -332,10 +350,19 @@ system("sed -i '1d' data_vcf/Eryth10_r5q20_t8i8_pos1e4.str ")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
-source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R")
+suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
+
 
 struct2geno(file = "data_vcf/Eryth10_r5q20_t8i8_pos1e4.str", TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output = "data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno")
 #permet de créer le fichier format geno 23 individuals and 25086 markers. (SNP)
+
+x =c("barplotCoeff", "barplotFromPops", "correlation",
+     "correlationFromPops", "createGrid", "createGridFromAsciiRaster",
+     "defaultPalette", "displayLegend", "fst",
+     "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients",
+     "loadPkg", "maps", "mapsFromPops",
+     "mapsMethodMax", "struct2geno")
+rm(list = x, envir = .GlobalEnv)
 
 obj  <- snmf("data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno", K = 1:14, entropy = T, ploidy = 2,
              CPU = 7,repetitions = 10, project= "new", alpha=100)

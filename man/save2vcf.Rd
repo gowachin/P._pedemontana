@@ -9,7 +9,8 @@ save2vcf(csv)
 \arguments{
 \item{csv}{the dataframe with the information to save inside a vcf file
 
-save as a vcf file but need to be a vcf troncated at the origine}
+save as a vcf file but need to be a vcf troncated at the origine
+hide because tablobj2vcf is way better}
 }
 \description{
 save to vcf a csv

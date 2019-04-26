@@ -270,3 +270,143 @@ spider = function(input,inFORM,output,outFORM) {
   print(command)
   system(command)
 }
+
+
+#' files creation
+#'
+#' @param obj the data frame originaly made from a vcf file
+#' @param name the name of the file to output
+#' @param ind the list of individuals
+#' @param pop the list of population assignations
+#' @param head a txt file with the vcf head to take from
+#'
+#' create files for the population genetic analysis
+#' .vcf
+#' .str (structure)
+#' .geno (genotype for LEA)
+#' .snp (for DIYABC)
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+files = function(obj,name,ind,pop, head= NULL) {
+.csv = paste(name,".csv",sep="")
+.vcf = paste(name,".vcf",sep="")
+.str = paste(name,".str",sep="")
+.geno = paste(name,".geno",sep="")
+.snp = paste(name,".snp",sep="")
+
+if( is.null(head) ) {head="data_vcf/freebayes_vcf.head"} else {}
+
+print("writing VCF")
+tablobj2vcf(obj, .csv , head , .vcf)
+print("VCF done, writing STR")
+spider( .vcf ,"VCF", .str ,"STRUCTURE")
+system(paste("sed -i '1d' ", .str , sep=""))
+
+source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
+suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
+
+print("STR done, writing GENO")
+struct2geno(file = .str , TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output =  .geno)
+
+x =c("barplotCoeff", "barplotFromPops", "correlation",
+     "correlationFromPops", "createGrid", "createGridFromAsciiRaster",
+     "defaultPalette", "displayLegend", "fst",
+     "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients",
+     "loadPkg", "maps", "mapsFromPops",
+     "mapsMethodMax", "struct2geno")
+rm(list = x, envir = .GlobalEnv)
+
+print("GENO done, writing SNP")
+temp.geno = read.geno( .geno )
+temp.geno= rbind(rep("A",dim(temp.geno)[2]),temp.geno)
+temp.geno = cbind(c("IND",ind),c("SEX",rep("9",dim(temp.geno)[1]-1)),c("POP",pop),temp.geno)
+colnames(temp.geno) = NULL
+write.table(temp.geno, .snp ,sep = "\t", quote = F, row.names=F, col.names = F)
+system(paste("sed -i '1 i\ <NM=1NF>' ", .snp ,sep=""))
+
+fichiers = list(  .vcf = paste(name,".vcf",sep=""),
+                  .str = paste(name,".str",sep=""),
+                  .geno = paste(name,".geno",sep=""),
+                  .snp = paste(name,".snp",sep="") )
+return(fichiers)
+}
+
+#' reorder and subset the population assignement
+#'
+#' @param population a dataframe with two column ind and pop, row is an individual and its population assignement
+#' @param sub a vector with the individuals to subset
+#'
+#' reorder and subset the population assignement
+#'
+#' return a data.frame
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+subset_ord_pop = function(population,sub) {
+  manus = data.frame()
+  data = population[which(population$ind %in% sub),]
+  for(i in 1:length(sub)){
+    manus = rbind(manus,data[which(data$ind == sub[i]),])
+  }
+  return(as.data.frame(manus))
+}
+
+
+#' create de dataset files
+#'
+#' @param ind vector of individuals
+#' @param popfile csv file with population assignement
+#' @param entryfile csv file originally a vcf
+#' @param name basic name and location of the files to (character chain)
+#' @param rare numeric for the percentage of presence minimal for an allele to be retain (ex 0.05)
+#' @param qual numeric for the quality of a loci to be retain (ex 20)
+#' @param missLoci numeric for the percentage of missing data of an allele to be retain (ex 0.8)
+#' @param missInd numeric for the percentage of missing data of an individual to be retain (ex 0.8)
+#' @param LD numeric, minimal distance between two loci on a contig (ex 1e4)
+#'
+#' create all thes files for population genetic
+#'
+#' return a list with all the files created for this analysis
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+dataset = function(ind,popfile,entryfile,name,rare,qual,missLoci,missInd,LD) {
+
+print("reading file")
+lecture <- readr::read_delim(entryfile,"\t", escape_double = FALSE, trim_ws = TRUE)
+
+print("reordering data")
+reorder = subset_reorder(lecture, ind )
+
+print("deleting rare allele")
+Rare = rare(reorder, rare  = rare, r= T)
+
+print("deleting poor quality SNP")
+quality = Rare[which(Rare$QUAL >= qual),]
+
+print("applying treshold to missing data")
+missingdata = tri(data = quality,n.r=missLoci,n.c = missInd, r = T)
+
+print("deleting loci with narrow positions")
+manus = c(1)
+for (i in 2:dim(missingdata)[1]){   if (missingdata$CHROM[i] == missingdata$CHROM[i-1] & (missingdata$POS[i]-missingdata$POS[i-1]) < LD ){} else {manus = c(manus,i)} }
+final = missingdata[manus,]
+
+print("reading pop file")
+Populations <- as.data.frame(read.csv(popfile))
+colnames(Populations) = c("ind","pop")
+final_pop = subset_ord_pop(Populations,c(colnames(final[,-c(1:9)])))
+
+resum = list(individuals = colnames(final[,-c(1:9)]), file_dim = dim(final))
+print(resum)
+
+print("saving files")
+name= paste(name,"_r",rare,"_q",qual,"_mL",missLoci,"_mI",missInd,"_LD",LD,sep="")
+fichier = files(final,name,final_pop$ind,final_pop$pop)
+
+return(fichier)
+}

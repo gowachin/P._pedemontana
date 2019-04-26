@@ -20,8 +20,8 @@ ind=c("IND","AMB", "AOL",#"AML",
       "DGB", "DRL")
 test.geno = cbind(ind,c("SEX",rep("9",dim(test.geno)[1]-1)),pop,test.geno)
 colnames(test.geno) = NULL
-name = "data_vcf/Eryth10_r5q20_t8i8_pos1e4.snp"
-write.table(test.geno, name ,sep = "\t", quote = F, row.names=F, col.names = F)
+name = "tryhard_Eryth10" ; .snp = paste(name,".snp",sep="")
+write.table(test.geno, .snp ,sep = "\t", quote = F, row.names=F, col.names = F)
 # coller la première
-system(paste("sed -i '1 i\ <NM=1NF>' ",name,sep=""))
+system(paste("sed -i '1 i\ <NM=1NF>' ",.snp,sep=""))
 
