@@ -2,14 +2,15 @@
 % Please edit documentation in R/fonctions.R
 \name{dataset}
 \alias{dataset}
-\title{create de dataset files}
+\title{create all thes files for population genetic}
 \usage{
-dataset(ind, popfile, entryfile, name, rare, qual, missLoci, missInd, LD)
+dataset(ind, popfile, entryfile, name, rare = 0, qual = 0,
+  missLoci = 0, missInd = 0, LD = 0)
 }
 \arguments{
 \item{ind}{vector of individuals}
 
-\item{popfile}{csv file with population assignement}
+\item{popfile}{csv file with population assignement, first column with individual ID, second column with population ID}
 
 \item{entryfile}{csv file originally a vcf}
 
@@ -23,14 +24,13 @@ dataset(ind, popfile, entryfile, name, rare, qual, missLoci, missInd, LD)
 
 \item{missInd}{numeric for the percentage of missing data of an individual to be retain (ex 0.8)}
 
-\item{LD}{numeric, minimal distance between two loci on a contig (ex 1e4)
-
-create all thes files for population genetic
-
-return a list with all the files created for this analysis}
+\item{LD}{numeric, minimal distance between two loci on a contig (ex 1e4)}
+}
+\value{
+a list with all the files created for this analysis
 }
 \description{
-create de dataset files
+create all thes files for population genetic
 }
 \author{
 JAUNATRE Maxime

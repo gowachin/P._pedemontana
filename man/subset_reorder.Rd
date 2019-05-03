@@ -2,19 +2,17 @@
 % Please edit documentation in R/fonctions.R
 \name{subset_reorder}
 \alias{subset_reorder}
-\title{subset and reorder}
+\title{subset the main information with the list of individual and clean the dataset for monomorphic loci}
 \usage{
 subset_reorder(data, list)
 }
 \arguments{
-\item{data}{the csv from a vcf file}
+\item{data}{a data frame from a vcf file (without the hashtag lignes)}
 
-\item{list}{list of individual to maintain in this subset
-
-subset the main information with the list of individual and clean the dataset for monomorphic loci}
+\item{list}{vector of individual to maintain in this subset (individual ID must be the same as the colnames in the dataframe)}
 }
 \description{
-subset and reorder
+subset the main information with the list of individual and clean the dataset for monomorphic loci
 }
 \author{
 JAUNATRE Maxime

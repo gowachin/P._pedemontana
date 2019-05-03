@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.5)  24 APR 2019 11:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.5)  2 MAY 2019 16:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -879,7 +879,7 @@ e
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-<fig/UGA.jpg, id=52, 400.49625pt x 213.79875pt>
+<fig/UGA.jpg, id=56, 400.49625pt x 213.79875pt>
 File: fig/UGA.jpg Graphic file (type jpg)
 <use fig/UGA.jpg>
 Package pdftex.def Info: fig/UGA.jpg  used on input line 66.
@@ -914,7 +914,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
-<fig/leca.jpg, id=53, 216.81pt x 69.1383pt>
+<fig/leca.jpg, id=57, 216.81pt x 69.1383pt>
 File: fig/leca.jpg Graphic file (type jpg)
 <use fig/leca.jpg>
 Package pdftex.def Info: fig/leca.jpg  used on input line 70.
@@ -934,7 +934,7 @@ Overfull \hbox (14.47958pt too wide) in paragraph at lines 80--82
 []$[]$ 
  []
 
-<fig/primulapedemontana_7.jpg, id=54, 144.54pt x 96.36pt>
+<fig/primulapedemontana_7.jpg, id=58, 144.54pt x 96.36pt>
 File: fig/primulapedemontana_7.jpg Graphic file (type jpg)
 <use fig/primulapedemontana_7.jpg>
 Package pdftex.def Info: fig/primulapedemontana_7.jpg  used on input line 97.
@@ -959,9 +959,9 @@ l.120 \newpage
 name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.157 
+l.173 
        [2]
-Overfull \hbox (4.72304pt too wide) in paragraph at lines 164--166
+Overfull \hbox (4.72304pt too wide) in paragraph at lines 180--182
 \OT1/ptm/m/n/12 diff[]erents car filtr[]es sous des seuils diff[]erents. Le pre
 -mier jeu de donn[]ee ('[][]\OT1/cmtt/m/n/12 m30_-q20_mincov20[]\OT1/ptm/m/n/12
  ')
@@ -969,34 +969,34 @@ Overfull \hbox (4.72304pt too wide) in paragraph at lines 164--166
 
 [3] [4] [5] [6] [7] (./CR_Stage_P_pedemontana_LECA.bbl)
 Package hyperref Info: bookmark level for unknown web defaults to 0 on input li
-ne 220.
+ne 250.
  [8]
-Overfull \hbox (65.43196pt too wide) in paragraph at lines 230--259
+Overfull \hbox (65.43196pt too wide) in paragraph at lines 260--289
  [][] 
  []
 
 Package hyperref Info: bookmark level for unknown annexe defaults to 0 on input
- line 259.
+ line 289.
 [9] 
 AED: lastpage setting LastPage
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 272.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 272.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 302.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 302.
 (./CR_Stage_P_pedemontana_LECA.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 272.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 272.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 302.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 302.
 Package rerunfilecheck Info: File `CR_Stage_P_pedemontana_LECA.out' has not cha
 nged.
-(rerunfilecheck)             Checksum: F5DAB045774D6ED2CA2AC8D1A066AD3F;712.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 272.
+(rerunfilecheck)             Checksum: AE41E9E61078FFC0613BED6639B62E03;787.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 302.
  ) 
 Here is how much of TeX's memory you used:
- 10542 strings out of 492982
- 155563 string characters out of 6134897
+ 10559 strings out of 492982
+ 155842 string characters out of 6134897
  410092 words of memory out of 5000000
- 13890 multiletter control sequences out of 15000+600000
- 37566 words of font info for 73 fonts, out of 8000000 for 9000
+ 13902 multiletter control sequences out of 15000+600000
+ 39250 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,11n,77p,1888b,523s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,11n,77p,4182b,523s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exi
 st, replaced by a fixed one
 
@@ -1005,10 +1005,10 @@ texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
 mr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on CR_Stage_P_pedemontana_LECA.pdf (11 pages, 353110 bytes).
+Output written on CR_Stage_P_pedemontana_LECA.pdf (11 pages, 357713 bytes).
 PDF statistics:
- 170 PDF objects out of 1000 (max. 8388607)
- 146 compressed objects within 2 object streams
- 33 named destinations out of 1000 (max. 500000)
- 112 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 187 PDF objects out of 1000 (max. 8388607)
+ 163 compressed objects within 2 object streams
+ 37 named destinations out of 1000 (max. 500000)
+ 120 words of extra memory for PDF output out of 10000 (max. 10000000)
 

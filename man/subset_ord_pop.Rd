@@ -9,11 +9,10 @@ subset_ord_pop(population, sub)
 \arguments{
 \item{population}{a dataframe with two column ind and pop, row is an individual and its population assignement}
 
-\item{sub}{a vector with the individuals to subset
-
-reorder and subset the population assignement
-
-return a data.frame}
+\item{sub}{a vector with the individuals to subset}
+}
+\value{
+a data.frame
 }
 \description{
 reorder and subset the population assignement

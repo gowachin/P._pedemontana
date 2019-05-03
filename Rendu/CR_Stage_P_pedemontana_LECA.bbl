@@ -6,6 +6,26 @@ Boucher, F.~C., Casazza, G., Sz{\"{o}}v{\'{e}}nyi, P., \& Conti, E. 2016.
   relationships and species boundaries in Primula sect. Auricula}.
 \newblock {\em Molecular Phylogenetics and Evolution}, {\bf 104}, 60--72.
 
+\bibitem[\protect\citename{Cornuet {\em et~al.\ }\relax, }2014]{Cornuet2014}
+Cornuet, Jean~Marie, Pudlo, Pierre, Veyssier, Julien, Dehne-Garcia, Alexandre,
+  Gautier, Mathieu, Leblois, Rapha{\"{e}}l, Marin, Jean~Michel, \& Estoup,
+  Arnaud. 2014.
+\newblock {DIYABC v2.0: A software to make approximate Bayesian computation
+  inferences about population history using single nucleotide polymorphism, DNA
+  sequence and microsatellite data}.
+\newblock {\em Bioinformatics}, {\bf 30}(8), 1187--1189.
+
+\bibitem[\protect\citename{Frichot \& Fran{\c{c}}ois, }2015]{Frichot2015}
+Frichot, Eric, \& Fran{\c{c}}ois, Olivier. 2015.
+\newblock {LEA : An Rpackage for landscape and ecological association studies}.
+\newblock {\em Methods in Ecology and Evolution}, {\bf 6}(8), 925--929.
+
+\bibitem[\protect\citename{Lischer \& Excoffier, }2012]{Lischer2012}
+Lischer, H. E~L, \& Excoffier, L. 2012.
+\newblock {PGDSpider: An automated data conversion tool for connecting
+  population genetics and genomics programs}.
+\newblock {\em Bioinformatics}, {\bf 28}(2), 298--299.
+
 \bibitem[\protect\citename{Nazareno {\em et~al.\ }\relax, }2017]{Nazareno2017}
 Nazareno, Alison~G., Bemmels, Jordan~B., Dick, Christopher~W., \& Lohmann,
   L{\'{u}}cia~G. 2017.

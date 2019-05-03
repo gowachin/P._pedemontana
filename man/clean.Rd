@@ -7,12 +7,13 @@
 clean(data)
 }
 \arguments{
-\item{data}{the csv from a vcf file
-
-delete the monomorphic loci of a vcf file imported as a CSV#'}
+\item{data}{a data frame from a vcf file (without the hashtag lignes)}
+}
+\value{
+a data frame
 }
 \description{
-clean
+delete the monomorphic loci of a vcf file imported as a CSV
 }
 \author{
 JAUNATRE Maxime

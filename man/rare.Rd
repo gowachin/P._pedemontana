@@ -2,23 +2,23 @@
 % Please edit documentation in R/fonctions.R
 \name{rare}
 \alias{rare}
-\title{rare}
+\title{delete the alleles with less than a "rare" percentage of presence in the dataset
+delete the other variants, apart the two main allele (O and 1)}
 \usage{
 rare(data, rare = 0, quiet = T, r = F, p = F)
 }
 \arguments{
-\item{data}{the csv from a vcf file}
+\item{data}{a data frame from a vcf file (without the hashtag lignes)}
 
-\item{rare}{percentage of presence needed for keeping the allele in the set}
+\item{rare}{percentage of presence needed for keeping the allele in the set (expressed as "0.05" for 5\%)}
 
-\item{r}{if the function return the data or the resume}
+\item{r}{if the function return something : the data or the resume (dimension of the final dataframe, \% of deletion)}
 
-\item{p}{if the function return the resume only
-
-delete the alleles with less than a "rare" percentage of presence in the dataset}
+\item{p}{if the function return the resume only}
 }
 \description{
-rare
+delete the alleles with less than a "rare" percentage of presence in the dataset
+delete the other variants, apart the two main allele (O and 1)
 }
 \author{
 JAUNATRE Maxime

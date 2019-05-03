@@ -2,12 +2,12 @@
 % Please edit documentation in R/fonctions.R
 \name{tri}
 \alias{tri}
-\title{clean}
+\title{delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data}
 \usage{
 tri(data, n.r = 0, n.c = 0, quiet = F, r = F, p = F)
 }
 \arguments{
-\item{data}{the csv from a vcf file}
+\item{data}{a data frame from a vcf file (without the hashtag lignes)}
 
 \item{n.r}{percentage of row containing information (1-missing data)}
 
@@ -15,14 +15,12 @@ tri(data, n.r = 0, n.c = 0, quiet = F, r = F, p = F)
 
 \item{r}{if the function return the data or the resume}
 
-\item{p}{if the function return the resume only
-
-delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data}
+\item{p}{if the function return the resume only}
 
 \item{c.r}{idem but for individuals}
 }
 \description{
-clean
+delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data
 }
 \author{
 JAUNATRE Maxime

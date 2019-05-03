@@ -86,13 +86,6 @@ Pedemo10_5r_9s_8i_v = read.vcfR("data_vcf/Pedemo10_5r_9s_8i_pos1e4.vcf", checkFi
 Pedemo10_5r_9s_8i_g = vcfR2genind(Pedemo10_5r_9s_8i_v) ; Pedemo10_5r_9s_8i_g
 row.names(Pedemo10_5r_9s_8i_g$tab)
 
-#assign.pop = function(genind) {
-#  for (i in 1:length(row.names(Pedemo10_5r_9s_8i_g$tab))){
-#  }
-#  pop(Pedemo10_5r_9s_8i_g) <- as.factor(pop)
-#  return(genind)
-#}
-
 pop(Pedemo10_5r_9s_8i_g) <- as.factor(pop)
 
 toto <- summary(Pedemo10_5r_9s_8i_g)
@@ -292,12 +285,12 @@ for (i in 1:11) Pop(i,"data_vcf/Pedemo10_5r_9s_8i_pos1e4.geno",  ID ) ;beep(3)
 
 # introgress ####
 mincov10_Eryth_CSV <- readr::read_delim("data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv","\t", escape_double = FALSE, trim_ws = TRUE)
-
+a = c('AMB','AML','AOL') #apenina
 c = c('CS1','CP1','CP4') #cottia
 h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
 p = c('PT1','PV1','GA2','GA4') #pedemontana
 
-PedeHirsu10 = subset_reorder(mincov10_Eryth_CSV, c(c,p,h)) ; colnames(PedeHirsu10)
+PedeHirsu10 = subset_reorder(mincov10_Eryth_CSV, c(a,c,p,h)) ; colnames(PedeHirsu10)
 PedeHirsu10_5r = rare(PedeHirsu10, rare  = 0.05, r= T) ; colnames(PedeHirsu10_5r)
 PedeHirsu10_5r = PedeHirsu10_5r[which(PedeHirsu10_5r$QUAL >= 20),]
 PedeHirsu10_5r_9s_8i = tri(data = PedeHirsu10_5r,n.r=1,n.c = 0.8, r = T) # avec ces seuils on vire l'individu AML car trop d'info manquantes pour cet individu
@@ -317,7 +310,7 @@ summary(as.factor(unlist(levels)))
 # python2 convert_vcf2introgress_loci.py data_vcf/PedeHirsu10_5r_9s_8i.vcf  > data_vcf/PedeHirsu10_5r_9s_8i.loci
 
 vcf2csv("data_vcf/PedeHirsu10_5r_9s_8i.vcf","data_vcf/PedeHirsu10_5r_9s_8i.head","data_vcf/PedeHirsu10_5r_9s_8i.csv")
-PedeHirsu10_5r_9s_8i <- read_delim("data_vcf/PedeHirsu10_5r_9s_8i.csv", "\t", escape_double = FALSE, trim_ws = TRUE)
+PedeHirsu10_5r_9s_8i <- readr::read_delim("data_vcf/PedeHirsu10_5r_9s_8i.csv", "\t", escape_double = FALSE, trim_ws = TRUE)
 
 LociData = PedeHirsu10_5r_9s_8i[,c(1,2)]
 LociData$locus = paste("c",substr(LociData$CHROM,7,10),".",LociData$POS, sep = "")
@@ -331,13 +324,13 @@ AdmixData = PedeHirsu10_5r_9s_8i[,-c(1:9)]
 AdmixData = sapply(AdmixData, substring, 1, 3)
 NAs = AdmixData == "." ; AdmixData[NAs == T] = "NA/NA" ; rm(NAs)
 
-Pop = c("Pop1","Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop3","Pop3","Pop3","Pop3","Pop3","Pop3")
+Pop = c("Pop1","Pop1","Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop2","Pop2","Pop3","Pop3","Pop3","Pop3","Pop3","Pop3")
 Ind = colnames(AdmixData)
 AdmixData = rbind(Pop,Ind,AdmixData)
 colnames(AdmixData) = NULL
 
-Parent_1 = AdmixData[-c(1,2),c(1:5)] ; rownames(Parent_1) = LociData[,1]
-Parent_2 = AdmixData[-c(1,2),-c(1:7)] ; rownames(Parent_2) = LociData[,1]
+Parent_1 = AdmixData[-c(1,2),c(1:8)] ; rownames(Parent_1) = LociData[,1]
+Parent_2 = AdmixData[-c(1,2),-c(1:10)] ; rownames(Parent_2) = LociData[,1]
 
 count.matrix = prepare.data(admix.gen = AdmixData,
                             loci.data = LociData, fixed = F,
@@ -348,8 +341,8 @@ hi.index.sim = est.h(introgress.data = count.matrix,
 mk.image(introgress.data = count.matrix, loci.data = LociData,
          marker.order = NULL,hi.index = hi.index.sim,ylab.image = "Individuals",
          xlab.h = "population 2 ancestry", pdf = F)
-abline(h= c(5,6,7), col = "red", lty = 3)
-text(x = hi.index.sim[c(5,6,7),2],y = c(5,6,7), Ind[5:7], pos = c(4,4,4))
+abline(h= c(7:10), col = "red", lty = 3)
+text(x = hi.index.sim[c(7:10),2],y = c(7:10), Ind[7:10], pos = c(rep(4,4)))
 rownames(hi.index.sim) = Ind
 hi.index.sim
 

@@ -2,18 +2,17 @@
 % Please edit documentation in R/fonctions.R
 \name{save2vcf}
 \alias{save2vcf}
-\title{save to vcf a csv}
+\title{save as a vcf file but need to be a vcf troncated at the origine
+hide because tablobj2vcf is way better}
 \usage{
 save2vcf(csv)
 }
 \arguments{
-\item{csv}{the dataframe with the information to save inside a vcf file
-
-save as a vcf file but need to be a vcf troncated at the origine
-hide because tablobj2vcf is way better}
+\item{csv}{the dataframe with the information to save inside a vcf file}
 }
 \description{
-save to vcf a csv
+save as a vcf file but need to be a vcf troncated at the origine
+hide because tablobj2vcf is way better
 }
 \author{
 JAUNATRE Maxime

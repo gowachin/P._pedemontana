@@ -2,7 +2,11 @@
 % Please edit documentation in R/fonctions.R
 \name{files}
 \alias{files}
-\title{files creation}
+\title{create files for the population genetic analysis
+.vcf
+.str (structure)
+.geno (genotype for LEA)
+.snp (for DIYABC)}
 \usage{
 files(obj, name, ind, pop, head = NULL)
 }
@@ -15,16 +19,14 @@ files(obj, name, ind, pop, head = NULL)
 
 \item{pop}{the list of population assignations}
 
-\item{head}{a txt file with the vcf head to take from
-
+\item{head}{a txt file with the vcf head to take from}
+}
+\description{
 create files for the population genetic analysis
 .vcf
 .str (structure)
 .geno (genotype for LEA)
-.snp (for DIYABC)}
-}
-\description{
-files creation
+.snp (for DIYABC)
 }
 \author{
 JAUNATRE Maxime

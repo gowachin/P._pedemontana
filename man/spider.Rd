@@ -2,7 +2,8 @@
 % Please edit documentation in R/fonctions.R
 \name{spider}
 \alias{spider}
-\title{PGDSpider from r}
+\title{push file from a type to another using pgdspider.
+For now, just working with VCF to structure, because it need a .spid done for the software}
 \usage{
 spider(input, inFORM, output, outFORM)
 }
@@ -13,13 +14,11 @@ spider(input, inFORM, output, outFORM)
 
 \item{output}{the name of the exit file}
 
-\item{outFORM}{the type of exit file
-
-push file from a type to another using pgdspider.
-For now, just working with VCF to structure, because it need a .spid done for the software}
+\item{outFORM}{the type of exit file}
 }
 \description{
-PGDSpider from r
+push file from a type to another using pgdspider.
+For now, just working with VCF to structure, because it need a .spid done for the software
 }
 \author{
 JAUNATRE Maxime

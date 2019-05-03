@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{vcf2csv}
 \alias{vcf2csv}
-\title{save to csv a vcf}
+\title{save as a csv file a vcf file, allowing to apply treshold on the data}
 \usage{
 vcf2csv(vcf, head, csv)
 }
@@ -11,12 +11,10 @@ vcf2csv(vcf, head, csv)
 
 \item{head}{the txt file where to stock the head of the vcf}
 
-\item{csv}{the name of the final csv
-
-save as a csv file a vcf file, allowing to apply treshold on the data}
+\item{csv}{the name of the final csv}
 }
 \description{
-save to csv a vcf
+save as a csv file a vcf file, allowing to apply treshold on the data
 }
 \author{
 JAUNATRE Maxime

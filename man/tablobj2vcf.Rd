@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{tablobj2vcf}
 \alias{tablobj2vcf}
-\title{save to vcf a csv}
+\title{save a dataframe as a vcf file, concatening the head of a vcf}
 \usage{
 tablobj2vcf(obj, name, head, vcf)
 }
@@ -13,12 +13,10 @@ tablobj2vcf(obj, name, head, vcf)
 
 \item{head}{the txt file where is stock the head of the vcf}
 
-\item{vcf}{name of the final file
-
-save a dataframe as a vcf file, concatening the head of a vcf}
+\item{vcf}{name of the final file}
 }
 \description{
-save to vcf a csv
+save a dataframe as a vcf file, concatening the head of a vcf
 }
 \author{
 JAUNATRE Maxime

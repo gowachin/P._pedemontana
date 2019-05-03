@@ -134,16 +134,24 @@ Eryth.file = dataset(ind= c(a,p,c,v,h,d)
                  ,popfile= "Populations.csv"
                  ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                  ,name = "data_vcf/Eryth"
-                 ,rare= 0.05,qual= 20,missLoci= 0.9,missInd= 0.8,LD= 1e4)
+                 ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
 beep(3)
 
-x =c("barplotCoeff", "barplotFromPops", "correlation",
-     "correlationFromPops", "createGrid", "createGridFromAsciiRaster",
-     "defaultPalette", "displayLegend", "fst",
-     "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients",
-     "loadPkg", "maps", "mapsFromPops",
-     "mapsMethodMax", "struct2geno")
-rm(list = x)
+
+PedeHirsu.file = dataset(ind= c(a,p,c,h)
+                     ,popfile= "Populations.csv"
+                     ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                     ,name = "data_vcf/PedeHirsu"
+                     ,rare= 0.00,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
+beep(3)
+
+
+PedeHirsu.file = dataset(ind= c(a,p,c,h)
+                         ,popfile= "Populations_concat.csv"
+                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                         ,name = "data_vcf/PedeHirsu"
+                         ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
+beep(3)
 
 # adegenet ####
 
@@ -382,30 +390,52 @@ barplot(t(qmatrix), col = color, border = NA, space = 0, xlab = "Individuals", y
 par(mfrow = c(3,4))
 for (i in 1:12) Pop(i,"data_vcf/Eryth10_r5q20_t8i8_pos1e4.geno",  c(a[-2],p,c,v,h,d)) ;beep(3)
 
-# admixture ####
+# taille de pop ####
 
-#install.packages("bedr")
-library(bedr)
-tryhard.vcf = read.vcf("data_vcf/Eryth20_t.vcf")
-tryhard.bed = vcf2bed(tryhard.vcf)
+# pegas
 
-# je n'arrive pas à faire de fichier .bed
 
- admixture = function(input,K) {
-  #realise cette commande ci :
-  #system(" cd ; Téléchargements/admixture_linux-1.3.0/admixture Bureau/BEE/Stage/Pedemontana/data_vcf/tryhard.ped 7 ")
-  command = paste("cd ; Téléchargements/admixture_linux-1.3.0/admixture Bureau/BEE/Stage/Pedemontana/",
-                  input, " ", K,sep = "")
-  print(command)
-  system(command)
-}
- spider("data_vcf/Eryth20_t.vcf","VCF","data_vcf/Eryth20_t.ped","PED")
-admixture("data_vcf/Eryth20_t.ped",7)
+Eryth_v = read.vcfR(Eryth.file$.vcf, checkFile = T) ; Eryth_v
+Eryth_dna = vcfR2DNAbin(Eryth_v, consensus = T, extract.haps = F)
 
-# hybridation ####
-#introgression
-#voir avec différents K sous structure
-#-buerkley h index (droit qu'a deux lignées parentales) et introgress (est-ce qu'il y a eu de l'introgression)
+rownames(Eryth_dna)
+tajima.test(Eryth_dna[c(1:3,8:10),]) # cott-app
+tajima.test(Eryth_dna[c(4:7),]) # pede
+tajima.test(Eryth_dna[c(15:20),]) # hirsuta
+tajima.test(Eryth_dna[c(11:15),]) # villosa
+tajima.test(Eryth_dna)
+
+a = c("apennina", "apennina","apennina")
+c = c("cottia","cottia","cottia")
+d = c("daonensis","daonensis")
+hi = c("hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta")
+p = c("pedemontana","pedemontana")
+v = c("villosa","villosa","villosa","villosa")
+va = c("valgau","valgau")
+
+
+
+# haplotype network ####
+d = Eryth_dna
+e <- dist.dna(d)
+h <- pegas::haplotype(d)
+h <- sort(h, what = "label")
+(net <- pegas::haploNet(h))
+ind.hap<-with(
+  stack(setNames(attr(h, "index"), rownames(h))),
+  table(hap=ind, pop=rownames(d)[values])
+)
+plot(net, size=attr(net, "freq"), scale.ratio=0.01, pie=ind.hap2, labels = T, lwd = 1, fast = T)
+legend("topleft", colnames(ind.hap), col=rainbow(ncol(ind.hap)), pch=19, ncol=2)
+
+wrong.pop<-c(a,p,va,c,v,hi,d)
+ind.hap2<-with(
+  stack(setNames(attr(h, "index"), rownames(h))),
+  table(hap=ind, pop=wrong.pop[values])
+)
+plot(net, size=attr(net, "freq"), scale.ratio = 0.02, cex = 0.8, pie=ind.hap2)
+legend("topleft", colnames(ind.hap2), col=rainbow(ncol(ind.hap2)), pch=20)
+
 
 # plot de l'évolution du pourcentage de données en fonction des seuils ####
 par(mfrow = c(2,2))

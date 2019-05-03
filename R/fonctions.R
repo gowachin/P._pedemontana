@@ -1,49 +1,14 @@
-#' not in
-#'
-#' @param x one object
-#' @param y second object
-#'
-#' The negate of the %in% function :
-#' match returns a vector of the positions of (first) matches of its first argument NOT in its second.
-#'
-#' @author JAUNATRE Maxime from (https://stackoverflow.com/questions/5831794/opposite-of-in)
-#'
-#' @export
-'%.in%' = function(x,y) {!('%in%'(x,y))}
-
-
-#' create documentation
-#'
-#' @author JAUNATRE Maxime
-#'
-#' @export
-manual = function() {
-  library("devtools")
-  document()
-}
-
-#' plot a raster
-#'
-#' @param rast the raster file
-#' @param ext the extent of this raster
-#' @param T.ext T if you want to crop with an extent
-#' @param line T if you want the water limit
-#'
-#' @author JAUNATRE Maxime
-#'
-#' @export
-plot.raster = function(rast,ext=extent (0,0,0,0),line = F,raw =T) {
-  if(raw == T) {rast=raster(rast)}
-  if (ext != extent (0,0,0,0)) {plot(crop(rast, ext)) } else {plot(rast) }
-  if(line==T){lines(read.table("data_carto/WORLD_lowres.dat"))}
-}
-
-
 #' clean
 #'
-#' @param data the csv from a vcf file
+#' delete the monomorphic loci of a vcf file imported as a dataframe
 #'
-#' delete the monomorphic loci of a vcf file imported as a CSV#'
+#' delete row when there is only one genotype exept the missing data. Use an apply function by row, on the data.frame[,10:n.col], because it expect the file to be a vcf originally, with the first 9 column to be informativ about the loci.
+#' It only use the first 3 letters from each cell, expecting "0/0" format, and compute for levels(as.factor("the_row_itself")). In "0/0", each 0 is an allele, with the first allele before the slash and the second after.
+#'
+#' @param data a data frame from a vcf file (without the hashtag lignes)
+#'
+#' @return same data.frame as beginning, whithout the monomorphic rows
+#' @return print some data about the percentage of data deleted by this function
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -62,14 +27,39 @@ clean = function(data) {
   return(end)
 }
 
+#' subset_reorder
+#'
+#' subset the main information with the list of individual and clean the dataset for monomorphic loci
+#'
+#' bind columns in the same order that the list put them, with a for() loop. Begin with the same 9 column because the file is expected to be a vcf.
+#'
+#' @param data a data frame from a vcf file (without the hashtag lignes)
+#' @param list vector of individual to maintain in this subset (individual ID must be the same as the colnames in the dataframe)
+#'
+#' @return same data.frame, but columns are not in the same order, after the 9th column.
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+subset_reorder = function(data,list) {
+  manus = data[,1:9]
+  for (i in 1:length(list)) {
+    manus = cbind(manus,data[,which(colnames(data) == list[i])])
+  }
+  manus = clean(manus)
+  return(manus)
+}
+
 #' rare
 #'
-#' @param data the csv from a vcf file
-#' @param rare percentage of presence needed for keeping the allele in the set
-#' @param r if the function return the data or the resume
+#' delete the alleles with less than a "rare" percentage of presence in the dataset
+#' delete the other variants, apart the two main allele (O and 1)
+#'
+#' @param data a data frame from a vcf file (without the hashtag lignes)
+#' @param rare percentage of presence needed for keeping the allele in the set (expressed as "0.05" for 5\%)
+#' @param r if the function return something : the data or the resume (dimension of the final dataframe, \% of deletion)
 #' @param p if the function return the resume only
 #'
-#' delete the alleles with less than a "rare" percentage of presence in the dataset
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -108,16 +98,16 @@ rare = function(data,rare = 0,quiet = T, r= F,p = F) { # data est un data frame 
   if (r== T & p == T) return(resum)
 }
 
-#' clean
+#' tri
 #'
-#' @param data the csv from a vcf file
+#' delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data
+#'
+#' @param data a data frame from a vcf file (without the hashtag lignes)
 #' @param n.r percentage of row containing information (1-missing data)
 #' @param c.r idem but for individuals
 #' @param quiet if the function print information at the end about percentage of data discarded
 #' @param r if the function return the data or the resume
 #' @param p if the function return the resume only
-#'
-#' delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -156,32 +146,15 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
 }
 
 
-#' subset and reorder
-#'
-#' @param data the csv from a vcf file
-#' @param list list of individual to maintain in this subset
-#'
-#' subset the main information with the list of individual and clean the dataset for monomorphic loci
-#'
-#' @author JAUNATRE Maxime
-#'
-#' @export
-subset_reorder = function(data,list) {
-  manus = data[,1:9]
-  for (i in 1:length(list)) {
-    manus = cbind(manus,data[,which(colnames(data) == list[i])])
-  }
-  manus = clean(manus)
-  return(manus)
-}
 
 
-#' save to vcf a csv
-#'
-#' @param csv the dataframe with the information to save inside a vcf file
+#' save2vcf
 #'
 #' save as a vcf file but need to be a vcf troncated at the origine
 #' hide because tablobj2vcf is way better
+#'
+#'
+#' @param csv the dataframe with the information to save inside a vcf file
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -193,13 +166,15 @@ save2vcf = function(csv) {
 
 
 
-#' save to csv a vcf
+
+#' vcf2csv
+#'
+#' save as a csv file a vcf file, allowing to apply treshold on the data
 #'
 #' @param vcf the original vcf file
 #' @param head the txt file where to stock the head of the vcf
 #' @param csv the name of the final csv
 #'
-#' save as a csv file a vcf file, allowing to apply treshold on the data
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -208,14 +183,16 @@ vcf2csv = function(vcf, head, csv) {
 system(paste("./csv_makup.sh",vcf,head,csv, sep = " "))
 }
 
-#' save to vcf a csv
+
+#' tablobj2vcf
+#'
+#' save a dataframe as a vcf file, concatening the head of a vcf
 #'
 #' @param obj name of the data frame to save
 #' @param name name for save
 #' @param head the txt file where is stock the head of the vcf
 #' @param vcf name of the final file
 #'
-#' save a dataframe as a vcf file, concatening the head of a vcf
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -227,6 +204,8 @@ tablobj2vcf = function(obj,name,head,vcf) {
   system(paste("rm ",name,sep = ""))
 }
 
+#' Pop
+#'
 #' str barplot
 #'
 #' @param k the K to test
@@ -247,15 +226,16 @@ Pop = function(K, file,ID) {
   barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
           names.arg =ID, las = 2)}
 
-#' PGDSpider from r
+
+#' spider
+#'
+#' push file from a type to another using pgdspider.
+#' For now, just working with VCF to structure, because it need a .spid done for the software
 #'
 #' @param input the name of the entry file
 #' @param inFORM the type of entry file
 #' @param output the name of the exit file
 #' @param outFORM the type of exit file
-#'
-#' push file from a type to another using pgdspider.
-#' For now, just working with VCF to structure, because it need a .spid done for the software
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -272,7 +252,14 @@ spider = function(input,inFORM,output,outFORM) {
 }
 
 
-#' files creation
+
+#' files
+#'
+#' create files for the population genetic analysis
+#' .vcf
+#' .str (structure)
+#' .geno (genotype for LEA)
+#' .snp (for DIYABC)
 #'
 #' @param obj the data frame originaly made from a vcf file
 #' @param name the name of the file to output
@@ -280,11 +267,6 @@ spider = function(input,inFORM,output,outFORM) {
 #' @param pop the list of population assignations
 #' @param head a txt file with the vcf head to take from
 #'
-#' create files for the population genetic analysis
-#' .vcf
-#' .str (structure)
-#' .geno (genotype for LEA)
-#' .snp (for DIYABC)
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -298,16 +280,16 @@ files = function(obj,name,ind,pop, head= NULL) {
 
 if( is.null(head) ) {head="data_vcf/freebayes_vcf.head"} else {}
 
-cat("\n");cat("writing VCF")
+cat("\n");cat("writing VCF \n")
 tablobj2vcf(obj, .csv , head , .vcf)
-cat("\n");cat("VCF done, writing STR")
+cat("\n");cat("VCF done, writing STR \n")
 spider( .vcf ,"VCF", .str ,"STRUCTURE")
 system(paste("sed -i '1d' ", .str , sep=""))
 
 source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
 suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
 
-cat("\n");cat("STR done, writing GENO")
+cat("\n");cat("STR done, writing GENO \n")
 struct2geno(file = .str , TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output =  .geno)
 
 x =c("barplotCoeff", "barplotFromPops", "correlation",
@@ -318,7 +300,7 @@ x =c("barplotCoeff", "barplotFromPops", "correlation",
      "mapsMethodMax", "struct2geno")
 rm(list = x, envir = .GlobalEnv)
 
-cat("\n");cat("GENO done, writing SNP")
+cat("\n");cat("GENO done, writing SNP \n")
 temp.geno = read.geno( .geno )
 temp.geno= rbind(rep("A",dim(temp.geno)[2]),temp.geno)
 temp.geno = cbind(c("IND",as.character(ind)),c("SEX",rep("9",dim(temp.geno)[1]-1)),c("POP",as.character(pop)),temp.geno)
@@ -333,14 +315,16 @@ fichiers = list(  .vcf = paste(name,".vcf",sep=""),
 return(fichiers)
 }
 
+
+#' subset_ord_pop
+#'
 #' reorder and subset the population assignement
 #'
 #' @param population a dataframe with two column ind and pop, row is an individual and its population assignement
 #' @param sub a vector with the individuals to subset
 #'
-#' reorder and subset the population assignement
 #'
-#' return a data.frame
+#' @return a data.frame
 #'
 #' @author JAUNATRE Maxime
 #'
@@ -355,10 +339,13 @@ subset_ord_pop = function(population,sub) {
 }
 
 
-#' create de dataset files
+
+#' dataset
+#'
+#' create all thes files for population genetic
 #'
 #' @param ind vector of individuals
-#' @param popfile csv file with population assignement
+#' @param popfile csv file with population assignement, first column with individual ID, second column with population ID
 #' @param entryfile csv file originally a vcf
 #' @param name basic name and location of the files to (character chain)
 #' @param rare numeric for the percentage of presence minimal for an allele to be retain (ex 0.05)
@@ -367,14 +354,13 @@ subset_ord_pop = function(population,sub) {
 #' @param missInd numeric for the percentage of missing data of an individual to be retain (ex 0.8)
 #' @param LD numeric, minimal distance between two loci on a contig (ex 1e4)
 #'
-#' create all thes files for population genetic
 #'
-#' return a list with all the files created for this analysis
+#' @return a list with all the files created for this analysis
 #'
 #' @author JAUNATRE Maxime
 #'
 #' @export
-dataset = function(ind,popfile,entryfile,name,rare,qual,missLoci,missInd,LD) {
+dataset = function(ind,popfile,entryfile,name,rare=0,qual=0,missLoci=0,missInd=0,LD=0) {
 
 cat("\n");cat("reading file \n")
 lecture <- readr::read_delim(entryfile,"\t", escape_double = FALSE, trim_ws = TRUE)
