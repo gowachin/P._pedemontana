@@ -1,5 +1,68 @@
 manual()
 
+library(pbapply) # uberclass but maybe not usefull
+
+# abba baba ####
+
+table = data.frame(AML = c("A","A","B","A"),
+                   PT1 = c("A","B","A","B"),
+                   VL2 = c("A","B","B","A"),
+                   HS3 = c("B","A","A","B"))
+table
+
+ab_ba = function(table) {
+  r = "no.inf"
+  if ( table[1] == table[4] & table[2] == table[3] & table[1] != table[2] ) {r = "abba"
+  } else if ( table[1] == table[3] & table[2] == table[4] & table[1] != table[2] ) {r = "baba"
+  } #else {r = NA}
+  return(r)
+}
+
+x = as.factor(unlist(apply(table, 1, function(table) ab_ba(table))))
+
+abba = sum(x == "abba") ; abba
+baba = sum(x == "baba") ; baba
+x
+
+d <- (abba - baba) / (abba + baba) ; d
+
+
+file$.csv
+y = file$.pop ; y
+
+
+table = substr(as.matrix(readr::read_delim(file$.csv,"\t", escape_double = FALSE, trim_ws = TRUE)[,-c(1:9)]),1,3)
+colnames(table)
+file$.ind
+
+table = rbind(as.character(file$.pop),table)
+
+
+c1 = sample(colnames(table[,which(table[1,]=="apennina")]),1) ;c1
+c2 = sample(colnames(table[,which(table[1,]=="pedemontana")]),1) ;c2
+c3 = sample(colnames(table[,which(table[1,]=="valgau")]),1) ;c3
+root = sample(colnames(table[,which(table[1,]=="cottia")]),1) ; root
+
+manus = cbind(table[,which(colnames(table) == c1 )],
+              table[,which(colnames(table) == c2 )],
+              table[,which(colnames(table) == c3 )],
+              table[,which(colnames(table) == root )] )
+colnames(manus) = c(c1,c2,c3,root)
+head(manus)
+
+hap1 = substr(as.matrix(manus),1,1)
+hap2 = substr(as.matrix(manus),3,3)
+homo = hap1 == hap2
+homo
+manus = manus[]
+manus[which(homo==F)] = "."
+manus = as.data.frame(manus)
+manus$inf = as.factor(unlist(apply(manus, 1, function(manus) ab_ba(manus))))
+summary(manus$inf)
+
+
+
+
 # assign("a",get("x"))
 
 # phrapl ####

@@ -15,8 +15,8 @@
 #' @export
 clean = function(data) {
   n.col= dim(data)[2]
-  compte = apply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
-  #exterminate = apply(data[,10:n.col],1,paste,collapse ="")
+  compte = pbapply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
+  #exterminate = pbapply(data[,10:n.col],1,paste,collapse ="")
   #compte = exterminate == paste(rep(".",23),collapse = "")
   print(summary(compte))
   resum = c(pourc.clean = (1-sum(compte)/length(compte) )*100)
@@ -68,11 +68,11 @@ rare = function(data,rare = 0,quiet = T, r= F,p = F) { # data est un data frame 
   n.col = dim(data)[2] ; n.row = dim(data)[1]
   matrix = as.matrix(data[,10:n.col])
 
-  H. = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
-  H0 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "0")+sum(substr(as.character(matrix),3,3) == "0") )/H. >= rare
-  H1 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H. >= rare
-  H2 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "2")+sum(substr(as.character(matrix),3,3) == "2") )/H. >= rare
-  H3 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "3")+sum(substr(as.character(matrix),3,3) == "3") )/H. >= rare
+  H. = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
+  H0 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "0")+sum(substr(as.character(matrix),3,3) == "0") )/H. >= rare
+  H1 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H. >= rare
+  H2 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "2")+sum(substr(as.character(matrix),3,3) == "2") )/H. >= rare
+  H3 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "3")+sum(substr(as.character(matrix),3,3) == "3") )/H. >= rare
 
   Haplo1 = matrix(substr(as.character(matrix),1,1), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
   Haplo2 = matrix(substr(as.character(matrix),3,3), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
@@ -118,7 +118,7 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   matrix = data[,10:n.col]
   matrix = matrix == "."
 
-  row  = apply(matrix,1,sum)
+  row  = pbapply(matrix,1,sum)
   row = 1-row/(n.col-9) >= n.r
 
   data = data[which(row == T),]
@@ -128,7 +128,7 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   matrix = data[,10:n.col]
   matrix = matrix == "."
 
-  col  = apply(matrix,2,sum)
+  col  = pbapply(matrix,2,sum)
   col = 1-col/(n.row) >= n.c
 
   matrix = data[,10:n.col]
@@ -199,9 +199,11 @@ system(paste("./csv_makup.sh",vcf,head,csv, sep = " "))
 #' @export
 tablobj2vcf = function(obj,name,head,vcf) {
   write.table(obj, name ,sep = "\t", quote = F, row.names=F)
-  system(paste(" sed -i '1s/.*/#&/' ",name,sep = ""))
-  system(paste("cat ",head," ",name," > ",vcf, sep = ""))
-  system(paste("rm ",name,sep = ""))
+
+  system(paste(" cp ",name," ",name,".temp",sep = ""))
+  system(paste(" sed -i '1s/.*/#&/' ",name,".temp",sep = ""))
+  system(paste("cat ",head," ",name,".temp"," > ",vcf, sep = ""))
+  system(paste("rm ",name,".temp",sep = ""))
 }
 
 #' Pop
@@ -217,10 +219,10 @@ tablobj2vcf = function(obj,name,head,vcf) {
 #' @author JAUNATRE Maxime
 #'
 #' @export
-Pop = function(K, file,ID) {
-  obj.snmf = snmf(file, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
-                  CPU = 7)
-  ce=cross.entropy(obj,K=K)
+Pop = function(K, files,ID) {
+  obj.snmf = snmf(files, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
+                  CPU = 7, entropy = T)
+  ce=cross.entropy(obj.snmf,K=K)
   best = which.min(ce)
   qmatrix = Q(obj.snmf, K = K, run = best)
   barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
@@ -308,10 +310,13 @@ colnames(temp.geno) = NULL
 write.table(temp.geno, .snp ,sep = "\t", quote = F, row.names=F, col.names = F)
 system(paste("sed -i '1 i\ <NM=1NF>' ", .snp ,sep=""))
 
-fichiers = list(  .vcf = paste(name,".vcf",sep=""),
+fichiers = list(  .csv = paste(name,".csv",sep=""),
+                  .vcf = paste(name,".vcf",sep=""),
                   .str = paste(name,".str",sep=""),
                   .geno = paste(name,".geno",sep=""),
-                  .snp = paste(name,".snp",sep="") )
+                  .snp = paste(name,".snp",sep=""),
+                  .ind = ind,
+                  .pop = pop)
 return(fichiers)
 }
 
@@ -394,6 +399,9 @@ print(resum)
 cat("\n");cat("saving files \n")
 name= paste(name,"_r",rare,"_q",qual,"_mL",missLoci,"_mI",missInd,"_LD1e",log10(LD),sep="")
 fichier = files(obj =final, name=name, ind=final_pop$ind, pop=final_pop$pop)
+
+fichier$.ind = as.factor(as.character(fichier$.ind))
+fichier$.pop = as.factor(as.character(fichier$.pop))
 
 cat("\n");cat("DONE :) \n\n")
 
