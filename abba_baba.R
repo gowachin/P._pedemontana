@@ -19,15 +19,55 @@ x
 d <- (abba - baba) / (abba + baba) ; d
 
 
-file$.pop
-P1 = "pedemontana" ; P2 = "valgau" ; P3 = "hirsuta" ; Root = "daonensis"
+levels(file$.po)
+data.frame(P1 = "pedemontana",
+           P2 = "cottia",
+           P3 = "hirsuta",
+           Root = "daonensis")
 
-x =durand_D(file,P1,P2,P3,Root,1e3)
+Data=data.frame()
+P1=c("apennina","cottia","hirsuta","pedemontana","valgau")
+P2=c("apennina","cottia","hirsuta","pedemontana","valgau")
+P3=c("apennina","cottia","hirsuta","pedemontana","valgau")
+Root=c("daonensis","villosa")
+i=1
+pb <- txtProgressBar(min = 1, max = length(P1)*length(P2)*length(P3)*length(Root), style = 3)
+for (k in P1){
+  for (j in P2) {
+    for (l in P3) {
+      for (m in Root) {
+    cat(c(k,j,l,m),"\n")
+    Data[i,1]=k
+    Data[i,2]=j
+    Data[i,3]=l
+    Data[i,4]=m
+    N  = summary(file$.pop[which(file$.pop %in% c(k,j,l,m))]) ; N = prod(N[N>0])
+    cat(N,"\n")
+    D = summary(durand_D(file,k,j,l,m,N,pb=F)[[1]])
+    Data[i,5]= D[1]
+    Data[i,6]= D[4]
+    Data[i,7]= D[6]
+    setTxtProgressBar(pb, i)
+    i=i+1
+      }
+    }
+  }
+}
+close(pb)
+View(Data)
+
+length(summary(file$.pop))
+P1 = "pedemontana" ; P2 = "cottia" ; P3 = "hirsuta" ; Root = "daonensis"
+
+
+N  = summary(file$.pop[which(file$.pop %in% c(P1,P2,P3,Root))]) ; N = prod(N[N>0])
+x =durand_D(file,P1,P2,P3,Root,N)
 x[[2]]
 hist(x[[1]],nclass = 24)
-summary(x[[1]])
+summary(x[[1]])[6]
+t.test(x[[1]])
 
-durand_D = function(file,P1,P2,P3,Root,n) {
+durand_D = function(file,P1,P2,P3,Root,n,pb=T) {
 
   table = substr(as.matrix(readr::read_delim(file$.csv,"\t", escape_double = FALSE, trim_ws = TRUE)[,-c(1:9)]),1,3)
   table = rbind(as.character(file$.pop),table)
@@ -37,15 +77,15 @@ if (P2 %in% file$.pop == F ) {message("P2 is not in file$.pop")}
 if (P3 %in% file$.pop == F ) {message("P3 is not in file$.pop")}
 if (Root %in% file$.pop == F ) {message("Root is not in file$.pop")}
 
-if ( length(unique.default(c(P1,P2,P3,Root)))<4 ) {
-  forward = menu(c("yes","no"), title = "2 populations are the same, wish to continue?")
-  if (forward == 1) {} else {stop("Assign other populations")}
-  }
+#if ( length(unique.default(c(P1,P2,P3,Root)))<4 ) {
+#  forward = menu(c("yes","no"), title = "2 populations are the same, wish to continue?")
+#  if (forward == 1) {} else {stop("Assign other populations")}
+#  }
 
 D =c()
-pb <- txtProgressBar(min = 1, max = n, style = 3)
+if(pb == T) {pb <- txtProgressBar(min = 1, max = n, style = 3) }
 for (i in 1:n) {
-setTxtProgressBar(pb, i)
+  if(pb == T) {setTxtProgressBar(pb, i) }
 
 c1 = sample(colnames(table[,which(table[1,]==P1)]),1) ;c1
 c2 = sample(colnames(table[,which(table[1,]==P2)]),1) ;c2
@@ -72,7 +112,7 @@ baba = sum(manus$inf == "baba") ; baba
 d <- (abba - baba) / (abba + baba) ; d
 D[i] =d
 }
-close(pb)
+if(pb == T) {close(pb)}
 return(list(D,summary(manus$inf)))
 }
 
