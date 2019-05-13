@@ -4,6 +4,8 @@ table = data.frame(AML = c("A","A","B","A"),
                    HS3 = c("B","A","A","B"))
 table
 
+
+
 ab_ba = function(table) {
   r = "no.inf"
   if ( table[1] == table[4] & table[2] == table[3] & table[1] != table[2] ) {r = "abba"
@@ -20,7 +22,7 @@ d <- (abba - baba) / (abba + baba) ; d
 
 Data=data.frame()
 P1=c("apennina","cottia","pedemontana","valgau")
-P2=c("apennina","cottia","hirsuta","pedemontana","valgau")
+P2=c("apennina","cottia","pedemontana","valgau")
 P3=c("hirsuta")
 Root=c("daonensis","villosa")
 i=1
@@ -43,7 +45,7 @@ for (k in P1){
     Data[i,6]= D[4]
     Data[i,7]= D[6]
     if(Data[i,7] < 0 & k != l) {Data[i,8] = "BABA"} else if(Data[i,5] > 0 & j != l){Data[i,8] = "ABBA"} else {Data[i,8] = "___"}
-    if(length(d[[2]])> 1) {Data[i,9] = sum(d[[2]][-3]) } else {Data[i,9] = "miss_data"}
+    if(min(d[[2]][,3])> 1) {Data[i,9] = min(d[[2]][,3]) } else {Data[i,9] = "miss_data"}
     Data[i,10] = sum(d[[1]]>0)/length(d[[1]])
     Data[i,11] = sum(d[[1]]<0)/length(d[[1]])
 
@@ -66,7 +68,7 @@ P1 = "pedemontana" ; P2 = "valgau" ; P3 = "hirsuta" ; Root = "daonensis"
 
 N  = summary(file$.pop[which(file$.pop %in% c(P1,P2,P3,Root))]) ; N = prod(N[N>0])
 x =durand_D(file,P1,P2,P3,Root,N)
-x[[2]]
+x[[2]] ; summary(x[[2]]) ; hist(x[[2]][,3])
 hist(x[[1]],nclass = 24)
 summary(x[[1]])[6]
 t =t.test(x[[1]]) ; t
@@ -89,7 +91,7 @@ if (Root %in% file$.pop == F ) {message("Root is not in file$.pop")}
 #  if (forward == 1) {} else {stop("Assign other populations")}
 #  }
 
-D =c()
+D =c() ; Manus = matrix(ncol = 3,nrow=n)
 if(pbB == T) {pb <- txtProgressBar(min = 1, max = n, style = 3) }
 for (i in 1:n) {
   if(pbB == T) {setTxtProgressBar(pb, i) }
@@ -112,15 +114,21 @@ homo
 manus = manus[]
 manus[which(homo==F)] = "."
 manus = as.data.frame(manus)
+
+matrix = manus == "."
+matrix = apply(matrix,1,sum)
+manus = manus[which(matrix == 0),]
+
 manus$inf = as.factor(unlist(apply(manus, 1, function(manus) ab_ba(manus))))
 summary(manus$inf)
 abba = sum(manus$inf == "abba") ; abba
 baba = sum(manus$inf == "baba") ; baba
 d <- (abba - baba) / (abba + baba) ; d
+Manus[i,] = c(abba,baba,abba+baba)
 D[i] =d
 }
 if(pbB == T) {close(pb)}
-return(list(D,summary(manus$inf)))
+return(list(D,Manus))
 }
 
 
