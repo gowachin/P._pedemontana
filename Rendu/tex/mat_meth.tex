@@ -72,17 +72,17 @@ Les priors sont également proposés dans un grand intervalle et selon une distr
 \subsection{Admixture -ABBA-BABA-}
 
 Une autre approche de l'admixture entre plusieurs taxons du complexe de populations étudié est réalisé par le test "\verb|ABBA-BABA|". 
-Ce test d'admixture développé par \citet{Durand2011} propose une statistique basé sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier.
+Ce test d'admixture développé par \citet{Durand2011} propose une statistique (\verb|D|) basée sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier.
 Cette méthode étant initialement pensée pour des séquences haploïdes. 
 De fait la plupart des algorithmes présentés écartent les sites avec une ambiguïté (code IUPAC) ou alors résolvent l’ambiguïté par un tirage aléatoire entre deux bases.
 Il existe une méthode pour prendre en compte les sites hétérozygotes à partir des fréquences alléliques, comme présenté dans \citet{Durand2011}, mais la faible taille de populations biaiserais les résultats. Il est donc plus judicieux d'écarter les sites hétérozygotes, rendant le test plus conservateur.
 Considérant que les locis sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie. 
 Cette topologie [(((P1,P2),P3),O)] propose que "P1" et "P2" coalescent avant un autre événement de coalescence avec "P3", puis avec "O" l'outgroup.
-Sur cette topologie on attend deux allèles présents en fin de branche avec "A" l'allèle ancestral et "B" l'allèle alternatif.
+Sur cette topologie on attend deux allèles présents en fin de branche avec "A" l'allèle ancestral et "B" l'allèle alternatif porté par l'outgroup.
 Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA".
 Sous un modèle neutre, on attend des proportions équilibrées de sites portant ces deux configurations.
 L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par deux cas : une topologie autre ou alors une introgression de "P3" avec "P1" ou "P2".
-Un introgression entre "P3" et "P1" verrais donc une plus grande proportion de locis a la configuration "BABA". 
+Un introgression entre "P3" et "P1" verrais donc une plus grande proportion de locis à la configuration "BABA". 
 Cela aboutis à une valeur négative du "D", comme explicité par l'équation suivante :
 
 \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} C_{ABBA}(i)-C_{BABA}(i)}{\sum_{i=1}^{n} C_{ABBA}(i)+C_{BABA}(i)}\]

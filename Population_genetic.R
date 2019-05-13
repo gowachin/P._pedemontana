@@ -24,7 +24,7 @@ Eryth.file = dataset(ind= c(a,p,c,v,h,d)
                      ,popfile= "Populations.csv"
                      ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                      ,name = "data_vcf/Eryth"
-                     ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
+                     ,rare= 0.0,qual= 0,missLoci= 0.75,missInd= 0.8,LD= 1e4)
 beep(3)
 
 
