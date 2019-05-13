@@ -18,17 +18,10 @@ baba = sum(x == "baba") ; baba
 x
 d <- (abba - baba) / (abba + baba) ; d
 
-
-levels(file$.po)
-data.frame(P1 = "pedemontana",
-           P2 = "cottia",
-           P3 = "hirsuta",
-           Root = "daonensis")
-
 Data=data.frame()
-P1=c("apennina","cottia","hirsuta","pedemontana","valgau")
+P1=c("apennina","cottia","pedemontana","valgau")
 P2=c("apennina","cottia","hirsuta","pedemontana","valgau")
-P3=c("apennina","cottia","hirsuta","pedemontana","valgau")
+P3=c("hirsuta")
 Root=c("daonensis","villosa")
 i=1
 pb <- txtProgressBar(min = 1, max = length(P1)*length(P2)*length(P3)*length(Root), style = 3)
@@ -43,10 +36,17 @@ for (k in P1){
     Data[i,4]=m
     N  = summary(file$.pop[which(file$.pop %in% c(k,j,l,m))]) ; N = prod(N[N>0])
     cat(N,"\n")
-    D = summary(durand_D(file,k,j,l,m,N,pb=F)[[1]])
+    d = durand_D(file,k,j,l,m,N,pb=F)
+    D = summary(d[[1]])
+    t = t.test(d[[1]])
     Data[i,5]= D[1]
     Data[i,6]= D[4]
     Data[i,7]= D[6]
+    if(Data[i,7] < 0 & k != l) {Data[i,8] = "BABA"} else if(Data[i,5] > 0 & j != l){Data[i,8] = "ABBA"} else {Data[i,8] = "___"}
+    if(length(d[[2]])> 1) {Data[i,9] = sum(d[[2]][-3]) } else {Data[i,9] = "miss_data"}
+    Data[i,10] = sum(d[[1]]>0)/length(d[[1]])
+    Data[i,11] = sum(d[[1]]<0)/length(d[[1]])
+
     setTxtProgressBar(pb, i)
     i=i+1
       }
@@ -54,10 +54,14 @@ for (k in P1){
   }
 }
 close(pb)
+
+colnames(Data) = c("P1","P2","P3","Root",
+                   "SumMin","sumMean","SumMax",
+                   "Fullside","site.inf","sum>0","sum<0")
 View(Data)
 
 length(summary(file$.pop))
-P1 = "pedemontana" ; P2 = "cottia" ; P3 = "hirsuta" ; Root = "daonensis"
+P1 = "pedemontana" ; P2 = "valgau" ; P3 = "hirsuta" ; Root = "daonensis"
 
 
 N  = summary(file$.pop[which(file$.pop %in% c(P1,P2,P3,Root))]) ; N = prod(N[N>0])
@@ -65,9 +69,12 @@ x =durand_D(file,P1,P2,P3,Root,N)
 x[[2]]
 hist(x[[1]],nclass = 24)
 summary(x[[1]])[6]
-t.test(x[[1]])
+t =t.test(x[[1]]) ; t
 
-durand_D = function(file,P1,P2,P3,Root,n,pb=T) {
+sum(x[[1]]>0)/length(x[[1]])
+sum(x[[1]]<0)/length(x[[1]])
+
+durand_D = function(file,P1,P2,P3,Root,n,pbB=T) {
 
   table = substr(as.matrix(readr::read_delim(file$.csv,"\t", escape_double = FALSE, trim_ws = TRUE)[,-c(1:9)]),1,3)
   table = rbind(as.character(file$.pop),table)
@@ -83,9 +90,9 @@ if (Root %in% file$.pop == F ) {message("Root is not in file$.pop")}
 #  }
 
 D =c()
-if(pb == T) {pb <- txtProgressBar(min = 1, max = n, style = 3) }
+if(pbB == T) {pb <- txtProgressBar(min = 1, max = n, style = 3) }
 for (i in 1:n) {
-  if(pb == T) {setTxtProgressBar(pb, i) }
+  if(pbB == T) {setTxtProgressBar(pb, i) }
 
 c1 = sample(colnames(table[,which(table[1,]==P1)]),1) ;c1
 c2 = sample(colnames(table[,which(table[1,]==P2)]),1) ;c2
@@ -112,7 +119,7 @@ baba = sum(manus$inf == "baba") ; baba
 d <- (abba - baba) / (abba + baba) ; d
 D[i] =d
 }
-if(pb == T) {close(pb)}
+if(pbB == T) {close(pb)}
 return(list(D,summary(manus$inf)))
 }
 
