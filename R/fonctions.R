@@ -135,6 +135,8 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   matrix = matrix[,which(col == T)]
   data = cbind(data[,1:9],matrix)
 
+  data = clean(data)
+
   resum = c(r.pourc.end = sum(row)/length(row)*100 ,
             r.n.site = sum(row),
             c.pourc.end = sum(col)/length(col)*100 ,
@@ -373,19 +375,34 @@ lecture <- readr::read_delim(entryfile,"\t", escape_double = FALSE, trim_ws = TR
 cat("\n");cat("reordering data \n")
 reorder = subset_reorder(lecture, ind )
 
-cat("\n");cat("deleting rare allele \n")
-Rare = rare(reorder, rare  = rare, r= T)
+if(rare > 0) {
+  cat("\ndeleting rare allele \n")
+  Rare = rare(reorder, rare  = rare, r= T)} else {
+    cat("\nno rare filter \n")
+    Rare = reorder}
 
-cat("\n");cat("deleting poor quality SNP \n")
-quality = Rare[which(Rare$QUAL >= qual),]
+if(qual > 0) {
+  cat("\ndeleting poor quality SNP \n")
+  quality = Rare[which(Rare$QUAL >= qual),]} else {
+    cat("\nno qual filter \n")
+    quality = Rare}
 
-cat("\n");cat("applying treshold to missing data \n")
-missingdata = tri(data = quality,n.r=missLoci,n.c = missInd, r = T)
+if(missLoci > 0 | missInd > 0 ) {
+  cat("\napplying treshold to missing data \n")
+  missingdata = tri(data = quality,n.r=missLoci,n.c = missInd, r = T)} else {
+    cat("\nno missing data filter \n")
+    missingdata = quality}
 
-cat("\n");cat("deleting loci with narrow positions \n")
-manus = c(1)
-for (i in 2:dim(missingdata)[1]){   if (missingdata$CHROM[i] == missingdata$CHROM[i-1] & (missingdata$POS[i]-missingdata$POS[i-1]) < LD ){} else {manus = c(manus,i)} }
-final = missingdata[manus,]
+if(LD > 1) {
+  cat("\n");cat("deleting loci with narrow positions \n")
+  manus = c(1)
+  pb <- txtProgressBar(min = 2, max = dim(missingdata)[1], style = 3)
+  for (i in 2:dim(missingdata)[1]){   if (missingdata$CHROM[i] == missingdata$CHROM[i-1] & (missingdata$POS[i]-missingdata$POS[i-1]) < LD ){} else {manus = c(manus,i)}
+    setTxtProgressBar(pb, i)}
+  close(pb)
+  final = missingdata[manus,]} else {
+    cat("\nno LD filter \n")
+    final = missingdata}
 
 cat("\n");cat("reading pop file \n")
 Populations <- as.data.frame(read.csv(popfile))

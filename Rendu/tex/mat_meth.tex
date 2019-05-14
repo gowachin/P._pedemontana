@@ -54,14 +54,30 @@ Le nombre d'individus étant faible, il faut optimiser le nombre de SNPs par ind
 \subsection{Génétique des populations}
 
 Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. 
-Le package adegenet a été utilisé pour inférer les fst, le package LEA pour étudier la structure de la population, package Introgress pour mesurer les introgressions entre P. pedemontana et P. hirsuta.
 
-admixture aussi a peut etre été utilisé pour ça.
+Dans un premier temps, des statistiques F sont calculées avec le package adegenet \citep{Jombart2011}. Ces statistiques permettent de se faire une première idée du jeu de donnée.
+Ce package permet également de réaliser un analyse en composante principale discriminante.
+Cependant un clustering de nos individus a été réalisé avant, afin d'essayer d'attribuer des groupes sans a-priori de populations.
+Ce clustering fait par adegenet trouve les groupes pour lesquels la variance intergroupes est maximale quand la variance intragroupes est minimale.
+La DAPC a donc été réalisée avec ces groupes et sans afin d'observer les différences.
+
+La structure des populations de nos taxons a ensuite été étudié par le package LEA \citep{Frichot2015}.
+Ce package permet une implémentation dans R des analyses auparavant menées par le logiciel STRUCTURE.
+Pour cette étude, la structuration a été modélisée pour des structure de K populations allant de 1 à 15, avec 20 simulations par K, en ne retenant que la meilleurs simulation basée sur le critère de "cross-entropy
+
+Concernant l'hypothèse d'hybridation pour le taxon des Écrins, le package introgress \citep{Gompert2010} a été utilisé pour mesurer l'index h, index d'hybridation, entre deux taxons.
+Ce package requiert l'import des deux taxons parents présumés et des hybrides afin de mesurer un coefficient d'admixture (ou h-index).
+Ce coefficient basé sur une fonction de vraisemblance \citep{Buerkle2005}, où la proportion de chaque génome parental est mesurée dans l'individu hybride.
+Les marqueurs codominants utilisés ici n'étant pas fixés, le calcul du h-index se basera ici sur les fréquences alléliques.
+
+%, package Introgress pour mesurer les introgressions entre P. pedemontana et P. hirsuta.
+
+%admixture aussi a peut etre été utilisé pour ça.
 \todo{To do}
 
 \subsection{Inférences bayesiennes}
 
-Afin de caractériser l'admixture probable entre le taxon des Écrins et \textit{P. hirsuta}, une approche par approximate Bayesian computation (ABC) a été réalisée sur le logiciel DIYABC \cite{Cornuet2014}. 
+Afin de caractériser l'admixture probable entre le taxon des Écrins et \textit{P. hirsuta}, une approche par approximate Bayesian computation (ABC) a été réalisée sur le logiciel DIYABC \citep{Cornuet2014}. 
 Ce logiciel permet de simuler des jeux de données selon divers scénarios, en échantillonnant des paramètres entre des priors définis. 
 Les scénarios sont ensuite classés selon les probabilités a posteriori d'observer notre jeu de donnée initial selon les scénarios proposés. 
 Seuls quelques scénarios ont été étudiés ici, en prenant en compte le fait qu'ils sont à chaque fois supportés par peu d'individus. 
@@ -88,5 +104,11 @@ Cela aboutis à une valeur négative du "D", comme explicité par l'équation su
 \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} C_{ABBA}(i)-C_{BABA}(i)}{\sum_{i=1}^{n} C_{ABBA}(i)+C_{BABA}(i)}\]
 
 Il est important de souligner que ce test ne permet en aucun cas de proposer un sens d'introgression, ni son intensité.
+
+Devant le nombre réduit de sites informatifs, il a été décidé de calculer \verb|D| à partir des fréquences alléliques, comme décrit dessous. 
+\textit{$P_{ij}$} correspond à l'allèle alternatif.
+
+\[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})-P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})+P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}\]
+
 
 \todo{To check}

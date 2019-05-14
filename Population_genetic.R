@@ -24,7 +24,7 @@ Eryth.file = dataset(ind= c(a,p,c,v,h,d)
                      ,popfile= "Populations.csv"
                      ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                      ,name = "data_vcf/Eryth"
-                     ,rare= 0.0,qual= 0,missLoci= 0.75,missInd= 0.8,LD= 1e4)
+                     ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
 beep(3)
 
 
@@ -56,13 +56,6 @@ row.names(GENIND$tab)
 GENLIGHT = vcfR2genlight(VCF, n.cores = 7)
 pop(GENLIGHT) <- as.factor(file$.pop)
 pop(GENIND) <- as.factor(file$.pop)
-
-toto <- summary(GENIND)
-names(toto)
-par(mfrow=c(1,1))
-
-barplot(toto$Hexp-toto$Hobs, main="Heterozygosity: expected-observed",
-        ylab="Hexp - Hobs")
 
 #Is mean observed H significantly lower than mean expected H ? Nope
 bartlett.test(list(toto$Hexp,toto$Hobs))
@@ -231,9 +224,9 @@ plot(x, option = "scores", i = 3, j = 4, pop = file$.pop)
 # LEA analysis ####
 
 obj  <- snmf(file$.geno, K = 1:14, entropy = T, ploidy = 2,
-             CPU = 7,repetitions = 10, project= "new", alpha=100)
+             CPU = 7,repetitions = 10, project= "new", alpha=10, iterations = 1000)
 # Choix du K optimal (20 runs)
-ID =Eryth[-2]
+
 
 par(mfrow = c(1,1))
 plot(obj, col = "blue", pch=1,cex=0.5)
