@@ -13,22 +13,34 @@ Le génome de référence proviens de \textit{Primula veris}.
 Cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions. 
 En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome. 
 La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD.
-
 % extrait d'article de base :
 %Total DNA was extracted from silica-dried leaves using a DNeasy Plant Mini kit (Qiagen, Hilden, Germany) following the manufacturer’s instructions. DNA quality was visualized on 0.8% agarose gels and quantity was assessed using a QuBit 2.0 fluorom- eter (2.0, Life Technologies, Carlsbad, CA, USA). Genomic DNA was converted into RAD-Capture genotyping-by-sequencing libraries (SNPsaurus, LLC), a new protocol aimed at harnessing the wide genomic spectrum of RAD-sequencing while reducing the amount of missing data in interspecific datasets. Briefly, a double-digest RAD library was created from 100 ng of a pool of genomic DNA containing a diverse set of individuals from sect. Auricula (belong- ing to P. allionii, P. apennina, P. auricula, P. glutinosa, and P. minima; see Table A.1). The pooled DNA was digested with PstI-HF and MfeI- HF (NEB) and ligated to complementary adapters that allowed the resulting amplified fragments to be converted to biotinylated RNA baits. Fragments with inserts roughly 100–350 bp in size were iso- lated by gel extraction from a portion of the ligated product prior to amplification and the in vitro transcription reaction to create the RNA baits. Shotgun sequencing libraries were prepared from the 90 study samples using 5 ng each in a 1/10th Nextera (Illumina, Inc) reaction with unique dual-indexes to distinguish the individu- als. The samples were pooled and size-selected for insert sizes roughly 170–370 bp. The pooled libraries were then used in two successive overnight hybridizations to the biotinylated bait library, followed by capture using DynabeadsÒ MyOneTM Streptavidin C1 magnetic beads (Thermo Fisher) and amplification. The final cap- tured products were sequenced in a single 150 bp NextSeq 500 High Output run at the Genomics and Cell Characterization Core of the University of Oregon.
 
 \subsection{Bioinformatique}
 
 Pour chacun des individus, l'information consiste en une séquence de SNPs appellés par Freebayes, exporté sous format VCF. 
-Les analyses ont été porté sur deux jeux de données différents car filtrés sous des seuils différents.
+Les analyses ont été porté sur deux jeux de données car filtrés sous des seuils différents.
 Le premier jeu de donnée ('\verb|m30_-q20_mincov20|') est issus de filtres très strict, avec un score de qualité (Phred) requis de 30 et une couverture minimale de 20 lectures par site. 
 Afin de ne pas biaiser l'analyse par des seuils favorisant les régions conservées, le second jeu de données ('\verb|m13_-q20_mincov10|') est quant à lui produit avec un Phred minimal de 13 et une couverture de 10 lectures. 
 A partir de ces séquences, les SNPs ont été isolés par Freebayes, avec un score de Phred minimal de 20 et un support de lecture de 30\% minimum par allèle.
 
 A partir des deux jeux de donnée initiaux, un pipeline est établis pour générer divers ensembles de données. 
-Cette automatisation a permit entre autre de pouvoir évaluer l'effet des seuils posés au fur et à mesure de l'analyse. 
+Cette automatisation a permis de générer les jeux de données spécifiques à chaque analyse. 
 Les fonctions sont rassemblées en un package R hébergé sur Github (lien web \ref{github})
-Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction \verb|subset_reorder|, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. La fonction suivante \verb|rare|, permet de trier les allèles considérés comme étant présents dans un trop faible pourcentage des individus. 
+Dans un premier temps, le fichier initial est traité sous Rstudio \citep{RTeam2017}, avec la fonction \verb|subset_reorder|, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué. 
+Au maximum, les individus conservés à partir des jeux de données initiaux sont les individus des espèces suivantes :
+2 individus de \textit{P. apennina}, 
+3 individus de \textit{P. cottia}, 
+2 individus de \textit{P. pedemontana}, 
+2 individus de \textit{P. pedemontana} des Écrins, 
+6 individus de \textit{P. hirsuta}, 
+4 individus de \textit{P. villosa}, 
+2 individus de \textit{P. daonensis}.
+Un individu de \textit{P. apennina} n'a pas été conservé comme dans l'étude de \citet{Boucher2016a}, car présentant trop de données manquantes.
+Toutes les informations concernant les individus de l'analyse sont présentés en annexe \ref{table_ind}.
+
+
+La fonction suivante \verb|rare|, permet de trier les allèles considérés comme étant présents dans un trop faible pourcentage des individus. 
 Ces allèles rares sont écartés du jeu de donnée et le loci pour l'individu présentant cet allèle rare est considéré comme une donnée manquante. 
 Cette étape permet également de supprimer les lectures avec de multiples allèles variants qui sont reconnus comme des artefacts des algorithmes utilisés pour appeler les SNP.  
 %We then filtered variants in a very conservative way by removing all called multiple nucleotide polymorphisms, indels and complex variants. These types of variants are known to often be artifacts generated by the algorithms used for short read mapping (see https://www. broadinstitute.org/gatk/guide/best-practices.php).
@@ -63,16 +75,13 @@ La DAPC a donc été réalisée avec ces groupes et sans afin d'observer les dif
 
 La structure des populations de nos taxons a ensuite été étudié par le package LEA \citep{Frichot2015}.
 Ce package permet une implémentation dans R des analyses auparavant menées par le logiciel STRUCTURE.
-Pour cette étude, la structuration a été modélisée pour des structure de K populations allant de 1 à 15, avec 20 simulations par K, en ne retenant que la meilleurs simulation basée sur le critère de "cross-entropy
+Pour cette étude, la structuration a été modélisée pour des structure de K populations allant de 1 à 15, avec 20 simulations par K, en ne retenant que la meilleurs simulation basée sur le critère de "cross-entropy".
+Une dernière mesure de génétique des populations a été réalisé pour essayer d'estimer l'expension ou la contraction récente des populations. Ce \verb|D| de Tajima est mesuré à l'aide du package pegas \citep{Paradis2010}.
 
 Concernant l'hypothèse d'hybridation pour le taxon des Écrins, le package introgress \citep{Gompert2010} a été utilisé pour mesurer l'index h, index d'hybridation, entre deux taxons.
 Ce package requiert l'import des deux taxons parents présumés et des hybrides afin de mesurer un coefficient d'admixture (ou h-index).
 Ce coefficient basé sur une fonction de vraisemblance \citep{Buerkle2005}, où la proportion de chaque génome parental est mesurée dans l'individu hybride.
 Les marqueurs codominants utilisés ici n'étant pas fixés, le calcul du h-index se basera ici sur les fréquences alléliques.
-
-%, package Introgress pour mesurer les introgressions entre P. pedemontana et P. hirsuta.
-
-%admixture aussi a peut etre été utilisé pour ça.
 \todo{To do}
 
 \subsection{Inférences bayesiennes}
@@ -82,6 +91,10 @@ Ce logiciel permet de simuler des jeux de données selon divers scénarios, en �
 Les scénarios sont ensuite classés selon les probabilités a posteriori d'observer notre jeu de donnée initial selon les scénarios proposés. 
 Seuls quelques scénarios ont été étudiés ici, en prenant en compte le fait qu'ils sont à chaque fois supportés par peu d'individus. 
 Les priors sont également proposés dans un grand intervalle et selon une distribution uniforme, les temps de divergence entre populations et taille de population n'ayant pas été étudiés sur le terrain.
+
+Pour les topologies proposés en scénarios, toutes les topologies "classiques" avec aucun événement d'hybridation sont essayées ( 5 cas possibles pour les 4 taxons \textit{hirsuta, pedemontana, Écrins, cottia-apennina}). 
+Des topologies avec des polytomies regroupant plusieurs populations ont également été proposé. 
+Enfin des hypothèses d'hybridation de \textit{pedemontana} et \textit{hirsuta} sont étudiées pour l'origine du taxon des Écrins.
 \todo{To do}
 %with the approximate Bayesian computation (ABC) approach implemented in the software DIYABC (Cornuet et al. 2014). In short, a large number of simu- lated data sets were produced under each tested scenario by sampling parameter values into predefined prior dis-tributions, and an estimation of each scenario posterior probability was calculated as a function of the similarity between several summary statistics of simulated data sets and observed data using a logistic regression proce-dure. These posterior probabilities enable a ranking of scenarios and allow for the identification of the most probable evolutionary history. We only considered five evolutionary scenarios (Fig. 2), based on previously pub-lished studies dealing with the evolution of the complex (Porter et al. 1994; Wiemers 1998; Schmitt & Besold 2010) and our own hypothesis based on the morphometric and phylogenetic analyses (see Results). Scenario design and simulations. A uniform distribution with a large interval was chosen for each prior increas-ing the need in computation time but overcoming the lack of knowledge on population sizes, divergence times and admixture rate (see Table S2 Supporting information). Only one approximate C. arcania /C. gardetta divergence time of 1.5–4 million of years was available from Kodandaramaiah & Wahlberg (2009). For each scenario, a total of one million data sets were sim-ulated and the posterior probability was computed by performing a logistic regression on the 1% of simulated data closest to the observed data set (Cornuet et al.2008, 2010). Summary statistics used for observed/sim- ulated data sets comparisons are the mean gene diver-sity and Fst across all loci and Nei’s distances among populations. Gene diversity was chosen because allelic richness is directly influenced by hybridization; the genetic differentiation (Fst) and distance (Nei’s) among taxa were used because these indexes reflect the degree of differentiation between populations and are highly relevant to compare evolutionary histories. Assessing the ‘goodness of fit’ of the model. Once the most probable scenario was identified, different posterior anal-yses were carried out to evaluate the trustfulness of the procedure. First, to be sure of the choice of the scenario, 500 new data sets were simulated with each historical model creating pseudo-observed data sets for which pos-terior probabilities were re-estimated with the same pro-cedure described above. Type I and type II errors were evaluated by measuring, respectively, the fraction of data sets simulated under the best scenario that were assigned to other scenarios and the fraction of data sets simulated under other scenarios that were assigned to the best sce- nario. Second, we wanted to know whether our selected model is able to produce data sets similar to the observed one. This confidence in the model is evaluated by esti-mating the similarity between simulated (1000 simula-tions) and real data sets using summary statistics different than the ones used for model choice (an impor-tant precaution, see Cornuet et al. 2010). For each sum-mary statistic, a P-value is estimated by ranking the observed value among the values obtained with simu-lated data sets, and a principal component analysis was also performed to check visually the position of the observed data in relation to the data sets generated from the posterior predictive distribution. Posterior distribution of parameters and their precision. It was possible to evaluate the posterior distributions of parameters for our selected scenario using a local linear regression on the 1% of simulations closest to the observed data set (Cornuet et al. 2010). These distribu-tions gave an idea of the most probable value (median) and the ‘approximation’ (width of the distribution) for each historical model. A precision of these estimations was evaluated by computing the median of the absolute error divided by the true parameter value of the 500 pseudo-observed data sets simulated under the selected scenario using the median of the posterior distribution as point estimate (Cornuet et al. 2010).
 

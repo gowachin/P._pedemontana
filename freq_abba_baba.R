@@ -20,7 +20,9 @@ for (k in P1){
         Data[i,2]=j
         Data[i,3]=l
         Data[i,4]=m
-        d = durand_freq_D(file,P1 =k,P2=j,P3 =l,Root =m,n=1e4)
+        D = durand_freq_D(file,P1 =k,P2=j,P3 =l,Root =m,n=1e4)
+        d = D[[1]]
+        inf = D[[2]]
         Data[i,5]= mean(d)
         Data[i,6] = sum(d<0)/length(d)
         Data[i,7] = sum(d>0)/length(d)
@@ -29,6 +31,7 @@ for (k in P1){
         new.pval <- 2 * (1 - pnorm(z))
         Data[i,8] = new.pval
         Data[i,9] = z
+        Data[i,10] = inf
 
         setTxtProgressBar(pb, i)
         i=i+1
@@ -39,14 +42,14 @@ for (k in P1){
 close(pb)
 
 colnames(Data) = c("P1","P2","P3","Root",
-                   "d","p<0","p>0","pval","z")
+                   "d","p<0","p>0","pval","z","site inf")
 View(Data)
 beep(3)
 
 length(summary(file$.pop))
-P1 = "pedemontana" ; P2 = "valgau" ; P3 = "hirsuta" ; Root = "daonensis"
+P1 = "pedemontana" ; P2 = "hirsuta" ; P3 = "daonensis" ; Root = "lutea"
 
-x =durand_freq_D(file,P1,P2,P3,Root,1e4)
+x =durand_freq_D(file,P1,P2,P3,Root,n=1e4)
 hist(x)
 z <- abs(x[1]/sd(x[-1]))
 2 * (1 - pnorm(z))
@@ -90,6 +93,9 @@ durand_freq_D = function(file,P1,P2,P3,Root,n) {
   abba = (1-manus[,1])*manus[,2]*manus[,3]*(1-manus[,4])
   baba = manus[,1]*(1-manus[,2])*manus[,3]*(1-manus[,4])
 
+  a_b = abba != 0 ; b_a = baba != 0
+  inf = sum(a_b == T & b_a == T)
+  #print(c("sites inform" = inf))
   D= c(sum(abba-baba)/sum(abba+baba))
 
   #pb <- txtProgressBar(min = 1, max = n, style = 3)
@@ -105,7 +111,7 @@ durand_freq_D = function(file,P1,P2,P3,Root,n) {
   }
   #close(pb)
 
-  return(D)
+  return(list(D,inf))
 }
 
 

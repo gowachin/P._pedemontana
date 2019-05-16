@@ -12,15 +12,16 @@ library(pegas)
 library(Pedemontana)
 library(pbapply)
 
-
+out = c("AP1")
 a = c('AMB','AOL') #apenina  j'ai enlevé AML
 c = c('CS1','CP1','CP4') #cottia
 d = c('DGB','DRL') #daonensis
 h = c('DMB','HC1','HGL','HS2','HP1','HPB') #hirsuta
-p = c('PT1','PV1','GA2','GA4') #pedemontana
+p = c('PT1','PV1') #pedemontana
+va = c('GA2','GA4')
 v = c('VR3','VR1','VL2','VB1') #villosa
 
-Eryth.file = dataset(ind= c(a,p,c,v,h,d)
+Eryth.file = dataset(ind= c(a,p,va,c,v,h,d)
                      ,popfile= "Populations.csv"
                      ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                      ,name = "data_vcf/Eryth"
@@ -28,7 +29,7 @@ Eryth.file = dataset(ind= c(a,p,c,v,h,d)
 beep(3)
 
 
-PedeHirsu.file = dataset(ind= c(a,p,c,h,d)
+PedeHirsu.file = dataset(ind= c(a,p,va,c,h,d)
                          ,popfile= "Populations.csv"
                          ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                          ,name = "data_vcf/PedeHirsu"
@@ -36,7 +37,7 @@ PedeHirsu.file = dataset(ind= c(a,p,c,h,d)
 beep(3)
 
 
-Pede.file = dataset(ind= c(a,p,c)
+Pede.file = dataset(ind= c(a,p,c,h)
                          ,popfile= "Populations.csv"
                          ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
                          ,name = "data_vcf/Pedemontana"
@@ -57,11 +58,6 @@ GENLIGHT = vcfR2genlight(VCF, n.cores = 7)
 pop(GENLIGHT) <- as.factor(file$.pop)
 pop(GENIND) <- as.factor(file$.pop)
 
-#Is mean observed H significantly lower than mean expected H ? Nope
-bartlett.test(list(toto$Hexp,toto$Hobs))
-t.test(toto$Hexp,toto$Hobs,pair=T,var.equal=TRUE,alter="greater")
-
-GENIND_hwt <- hw.test(GENIND, B=0) # KEZAKO??
 
 fstat(GENIND)
 #     pop         Ind
@@ -245,15 +241,14 @@ for (i in 1:9) Pop(K= i,files = file$.geno, ID= file$.ind) ;beep(3)
 
 # pegas
 
-Eryth_v = read.vcfR(Eryth.file$.vcf, checkFile = T) ; Eryth_v
-Eryth_dna = vcfR2DNAbin(Eryth_v, consensus = T, extract.haps = F)
+DNABIN = vcfR2DNAbin(VCF, consensus = T, extract.haps = F)
 
-rownames(Eryth_dna)
-tajima.test(Eryth_dna[c(1:3,8:10),]) # cott-app
-tajima.test(Eryth_dna[c(4:7),]) # pede
-tajima.test(Eryth_dna[c(15:20),]) # hirsuta
-tajima.test(Eryth_dna[c(11:15),]) # villosa
-tajima.test(Eryth_dna)
+rownames(DNABIN)
+tajima.test(DNABIN[c(1:3,8:10),]) # cott-app
+tajima.test(DNABIN[c(4:7),]) # pede
+tajima.test(DNABIN[c(15:20),]) # hirsuta
+tajima.test(DNABIN[c(11:15),]) # villosa
+tajima.test(DNABIN)
 
 a = c("apennina", "apennina","apennina")
 c = c("cottia","cottia","cottia")
