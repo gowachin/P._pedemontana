@@ -2,11 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{files}
 \alias{files}
-\title{create files for the population genetic analysis
-.vcf
-.str (structure)
-.geno (genotype for LEA)
-.snp (for DIYABC)}
+\title{files}
 \usage{
 files(obj, name, ind, pop, head = NULL)
 }

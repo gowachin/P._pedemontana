@@ -2,8 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{save2vcf}
 \alias{save2vcf}
-\title{save as a vcf file but need to be a vcf troncated at the origine
-hide because tablobj2vcf is way better}
+\title{save2vcf}
 \usage{
 save2vcf(csv)
 }

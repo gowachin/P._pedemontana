@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{subset_reorder}
 \alias{subset_reorder}
-\title{subset the main information with the list of individual and clean the dataset for monomorphic loci}
+\title{subset_reorder}
 \usage{
 subset_reorder(data, list)
 }
@@ -11,8 +11,14 @@ subset_reorder(data, list)
 
 \item{list}{vector of individual to maintain in this subset (individual ID must be the same as the colnames in the dataframe)}
 }
+\value{
+same data.frame, but columns are not in the same order, after the 9th column.
+}
 \description{
 subset the main information with the list of individual and clean the dataset for monomorphic loci
+}
+\details{
+bind columns in the same order that the list put them, with a for() loop. Begin with the same 9 column because the file is expected to be a vcf.
 }
 \author{
 JAUNATRE Maxime

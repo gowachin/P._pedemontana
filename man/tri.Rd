@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{tri}
 \alias{tri}
-\title{delete in a first time the loci with a certain percentage of missing data, and in a second time individuals with too many missing data}
+\title{tri}
 \usage{
 tri(data, n.r = 0, n.c = 0, quiet = F, r = F, p = F)
 }

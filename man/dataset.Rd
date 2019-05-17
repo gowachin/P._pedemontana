@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{dataset}
 \alias{dataset}
-\title{create all thes files for population genetic}
+\title{dataset}
 \usage{
 dataset(ind, popfile, entryfile, name, rare = 0, qual = 0,
   missLoci = 0, missInd = 0, LD = 0)
@@ -12,7 +12,7 @@ dataset(ind, popfile, entryfile, name, rare = 0, qual = 0,
 
 \item{popfile}{csv file with population assignement, first column with individual ID, second column with population ID}
 
-\item{entryfile}{csv file originally a vcf}
+\item{entryfile}{a vcf file}
 
 \item{name}{basic name and location of the files to (character chain)}
 

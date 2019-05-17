@@ -4,7 +4,8 @@
 \alias{plot.raster}
 \title{plot a raster}
 \usage{
-plot.raster(rast, ext = extent(0, 0, 0, 0), line = F, raw = T)
+\method{plot}{raster}(rast, ext = extent(0, 0, 0, 0), line = F,
+  raw = T)
 }
 \arguments{
 \item{rast}{the raster file}

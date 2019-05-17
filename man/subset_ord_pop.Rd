@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{subset_ord_pop}
 \alias{subset_ord_pop}
-\title{reorder and subset the population assignement}
+\title{subset_ord_pop}
 \usage{
 subset_ord_pop(population, sub)
 }

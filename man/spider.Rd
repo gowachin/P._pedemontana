@@ -2,8 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{spider}
 \alias{spider}
-\title{push file from a type to another using pgdspider.
-For now, just working with VCF to structure, because it need a .spid done for the software}
+\title{spider}
 \usage{
 spider(input, inFORM, output, outFORM)
 }

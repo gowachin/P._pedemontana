@@ -23,7 +23,7 @@ v = c('VR3','VR1','VL2','VB1') #villosa
 
 Eryth.file = dataset(ind= c(a,p,va,c,v,h,d)
                      ,popfile= "Populations.csv"
-                     ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                     ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                      ,name = "data_vcf/Eryth"
                      ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
 beep(3)
@@ -31,7 +31,7 @@ beep(3)
 
 PedeHirsu.file = dataset(ind= c(a,p,va,c,h,d)
                          ,popfile= "Populations.csv"
-                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                          ,name = "data_vcf/PedeHirsu"
                          ,rare= 0.00,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
 beep(3)
@@ -39,7 +39,7 @@ beep(3)
 
 Pede.file = dataset(ind= c(a,p,c,h)
                          ,popfile= "Populations.csv"
-                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs_onlyCSV.csv"
+                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                          ,name = "data_vcf/Pedemontana"
                          ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
 beep(3)

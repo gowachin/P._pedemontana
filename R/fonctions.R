@@ -177,7 +177,6 @@ save2vcf = function(csv) {
 #' @param head the txt file where to stock the head of the vcf
 #' @param csv the name of the final csv
 #'
-#'
 #' @author JAUNATRE Maxime
 #'
 #' @export
@@ -353,7 +352,7 @@ subset_ord_pop = function(population,sub) {
 #'
 #' @param ind vector of individuals
 #' @param popfile csv file with population assignement, first column with individual ID, second column with population ID
-#' @param entryfile csv file originally a vcf
+#' @param entryfile a vcf file
 #' @param name basic name and location of the files to (character chain)
 #' @param rare numeric for the percentage of presence minimal for an allele to be retain (ex 0.05)
 #' @param qual numeric for the quality of a loci to be retain (ex 20)
@@ -369,11 +368,21 @@ subset_ord_pop = function(population,sub) {
 #' @export
 dataset = function(ind,popfile,entryfile,name,rare=0,qual=0,missLoci=0,missInd=0,LD=0) {
 
+  head = paste(name,"_head.txt",sep="")
+  csv = paste(name,"_CSV.csv",sep="")
+
+  vcf2csv(vcf = entryfile,head = head, csv = csv)
+
+  entryfile = csv
+
 cat("\n");cat("reading file \n")
 lecture <- readr::read_delim(entryfile,"\t", escape_double = FALSE, trim_ws = TRUE)
 
-cat("\n");cat("reordering data \n")
-reorder = subset_reorder(lecture, ind )
+if(identical(colnames(lecture[,-c(1:9)]) , ind) == F) {
+  cat("\nreordering data \n")
+  reorder = subset_reorder(lecture, ind )} else {
+    cat("\nno reordering needed \n")
+    reorder = lecture}
 
 if(rare > 0) {
   cat("\ndeleting rare allele \n")
@@ -416,6 +425,8 @@ print(resum)
 cat("\n");cat("saving files \n")
 name= paste(name,"_r",rare,"_q",qual,"_mL",missLoci,"_mI",missInd,"_LD1e",log10(LD),sep="")
 fichier = files(obj =final, name=name, ind=final_pop$ind, pop=final_pop$pop)
+
+system(paste("rm",csv,head,sep = " "))
 
 fichier$.ind = as.factor(as.character(fichier$.ind))
 fichier$.pop = as.factor(as.character(fichier$.pop))

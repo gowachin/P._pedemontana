@@ -2,7 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{tablobj2vcf}
 \alias{tablobj2vcf}
-\title{save a dataframe as a vcf file, concatening the head of a vcf}
+\title{tablobj2vcf}
 \usage{
 tablobj2vcf(obj, name, head, vcf)
 }

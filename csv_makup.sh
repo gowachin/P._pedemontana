@@ -1,11 +1,10 @@
 #!/bin/bash
-# tryhard :
 
 name=$1
 head=$2
 csv=$3
 
-echo $name $head $csv
+# echo $name $head $csv
 
 grep  '##' $name > $head
 sed '/^##/ d' $name > $csv

@@ -10,10 +10,16 @@ clean(data)
 \item{data}{a data frame from a vcf file (without the hashtag lignes)}
 }
 \value{
-a data frame
+same data.frame as beginning, whithout the monomorphic rows
+
+print some data about the percentage of data deleted by this function
 }
 \description{
-delete the monomorphic loci of a vcf file imported as a CSV
+delete the monomorphic loci of a vcf file imported as a dataframe
+}
+\details{
+delete row when there is only one genotype exept the missing data. Use an apply function by row, on the data.frame[,10:n.col], because it expect the file to be a vcf originally, with the first 9 column to be informativ about the loci.
+It only use the first 3 letters from each cell, expecting "0/0" format, and compute for levels(as.factor("the_row_itself")). In "0/0", each 0 is an allele, with the first allele before the slash and the second after.
 }
 \author{
 JAUNATRE Maxime

@@ -2,9 +2,9 @@
 % Please edit documentation in R/fonctions.R
 \name{Pop}
 \alias{Pop}
-\title{str barplot}
+\title{Pop}
 \usage{
-Pop(K, file, ID)
+Pop(K, files, ID)
 }
 \arguments{
 \item{ID}{individual tags

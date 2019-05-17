@@ -2,8 +2,7 @@
 % Please edit documentation in R/fonctions.R
 \name{rare}
 \alias{rare}
-\title{delete the alleles with less than a "rare" percentage of presence in the dataset
-delete the other variants, apart the two main allele (O and 1)}
+\title{rare}
 \usage{
 rare(data, rare = 0, quiet = T, r = F, p = F)
 }
