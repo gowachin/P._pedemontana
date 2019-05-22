@@ -2,22 +2,118 @@
 
 \subsection{Tri du jeu de données}
 
-%\lipsum[1-2]
-\todo{To do}
+Le jeu de donnée initial contient \textbf{beaucoup trop de SNP} \todo[color=yellow]{trouver le nombre de locis qu'on a au fur et a mesure}.
+filtres un par un 
+subset reorder 
+rare 
+qual 
+missing data 
+LD 
 
-\subsection{Clade Hirsuta}
+Le jeu final de donnée est de tant de SNPs.
 
-%\lipsum[1]
 
-% le clustering permet de voir déjà une séparation entre deux clades, conformement a la phylogénie, entre les taxons du complexe Pedemontana et les espèces P. hirsuta, P. villosa et P. daonenensis
-% le clustering pour K = 3 ségrège quand à lui P.hirsuta des deux autres epèces, laissant le commlexe pedemontana intact. On observe cependant un léger degré d'admixture pour les individus des Écrins avec P. hirsuta.
+\subsection{Sous-section \textit{Érythrodrosum}}
 
-\todo{To do}
+Les analyses de génétique des populations ont donc été faites sur \textbf{beaucoup} de \textit{loci}. Dans un premier temps, le $F_{st}$ général de la sous-section \textit{Erythrodrosum} donne une valeur de 0.15, ce qui confirme la présence d'une structure génétique. Cette structure étais attendue étant donné qu'il s'agit de plusieurs espèces à l'échelle des Alpes, mais pour autant il est important de remarquer que la valeur reste faible ($>$ 0.5).
 
-\subsection{Complexe ouest alpin}
+% Erythrodrosum
+%            pop        Ind
+% Total 0.1556567 -0.1016958
+% pop   0.0000000 -0.3047961
 
-Pour les analyses sur DIYABC, aucun scénario proposé ne permet de simuler un jeu de donnée proche des données réelles. 
-Le scénario observé le plus proche des données réelles étais celui d'un polytomie où coalescent tout les taxons assigné à l'espèce \textit{P. pedemontana}), puis un événement plus ancien de coalescence avec \textit{P. hirsuta}.
-Ne pouvant conclure si cette polytomie est réelle ou alors un artefact issu d'un manque de résolution (soft poolytomie), les analyses n'ont pas été plus loin avec cette outil et aucun résultat ne peut être présenté.
+\todo[inline,color=blue!20]{proposer une explication? peut etre parce qu'il y a une sous structure? 
+quid du Fis <0}
 
-\todo{To do}
+Les $F_{st}$ par pair entre populations sont également tous supérieurs à zero (valeurs comprises entre \textbf{tant et tant}), et la topologie par neigbhor-joining rejoins celle décrite précédement (Figure \ref{topologie}).\todo[color=blue!20]{rajouter fig topo et valeurs pairwise fst}
+
+\begin{wrapfigure}{r}{0.30\textwidth}
+	\vspace{-40pt}
+	\begin{center}
+\missingfigure[figwidth=6cm,figheight= 5cm]{Topologie}
+%		\includegraphics[width=0.29\textwidth]{file_name}
+	\end{center}
+	\vspace{-20pt}
+	\caption{\textbf{Topologie} faite avec les $F_{st}$}
+    \label{topologie}
+\end{wrapfigure}
+
+Cette structure est par ailleurs confirmée par le clustering réalisé par adegenet sans a-priori de populations. Ainsi, le nombre K de cluster avec le BIC le plus faible est atteins pour K=3. Pour cette valeur de K, les groupes sont corrélés à la géographie, avec un \clade{est-alpin} composé de \textit{P. daonensis} et \textit{P. villosa}, un clade composé de l'espèce \textit{P. hirsuta} et enfin \textit{P. pedemontana s.l.}.
+
+% K=1      K=2      K=3      K=4      K=5      K=6      K=7      K=8      K=9     K=10     K=11     K=12     K=13     K=14     K=15     K=16     K=17     K=18     K=19     K=20 
+% 121.8305 120.3166 119.9053 120.8310 122.0690 123.3748 124.7359 125.7829 126.8601 127.9004 128.7918 129.0472 129.3280 129.0943 128.6408 127.7302 125.9209 123.1317 117.1152 104.5158 
+%BIC
+
+\begin{wrapfigure}{r}{0.30\textwidth}
+	\vspace{-40pt}
+	\begin{center}
+\missingfigure[figwidth=6cm,figheight= 5cm]{cluster}
+%		\includegraphics[width=0.29\textwidth]{file_name}
+	\end{center}
+	\vspace{-20pt}
+	\caption{\textbf{cluster} cluster}
+    \label{cluster}
+\end{wrapfigure}
+
+\begin{wrapfigure}{r}{0.30\textwidth}
+	\vspace{-40pt}
+	\begin{center}
+\missingfigure[figwidth=6cm,figheight= 5cm]{ACP}
+%		\includegraphics[width=0.29\textwidth]{file_name}
+	\end{center}
+	\vspace{-20pt}
+	\caption{\textbf{ACP} ACP}
+    \label{ACP}
+\end{wrapfigure}
+
+Ce clustering est plus facilement visualisable sous la forme d'une analyse en composante principale comme dans la figure \ref{ACP}. Les deux premières composantes montrent ce clustering avec quelques précisions de plus. Ainsi, \textit{P. pedemontana s.l.}. semble bien plus robuste que le \clade{est-alpin}, avec des individus plus proches. Cependant, la population des Écrins n'est pas aussi groupée que le reste des populations composant \textit{P. pedemontana s.l.}, et s'en éloigne vers \textit{P. hirsuta}.
+
+ \todo[color=yellow]{result Erythro}
+
+\subsection{Clade `Hirsuta'}
+
+La structuration du \clade{Hirsuta} pour différents K permet de voir différentes informations (figure \ref{structure}. Pour K=2, une séparation est déjà nette entre deux clades, conformément aux résultats précédents, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}. Cette séparation présente néanmoins une légère trace d'admixture entre les individus des Écrins et \textit{P. hirsuta}. L'individu de \textit{P. hirsuta} présentant un peu d'admixture a été échantillonnée en Belledonne, un massif proche des Écrins (figure \ref{carte}).
+
+\begin{wrapfigure}{r}{0.30\textwidth}
+	\vspace{-40pt}
+	\begin{center}
+\missingfigure[figwidth=6cm,figheight= 12cm]{structure}
+%		\includegraphics[width=0.29\textwidth]{file_name}
+	\end{center}
+	\vspace{-20pt}
+	\caption{\textbf{structure} snmf pour k de 2 a 5}
+    \label{structure}
+\end{wrapfigure}
+
+Pour K=3, les individus des Écrins sont isolés et une admixture entre ces individus et les autres individus de \textit{P. pedemontana s.l.}. Cette structure retrouvée ici reflète ce qui étais observé sur l'ACP, où les individus des Écrins se regroupaient avec \textit{P. pedemontana s.l.} tout en étant excentré.
+
+Pour K=4, \textit{P. pedemontana s.l.} se retrouve éclaté avec les différentes populations échantillonnées dans les divers massifs. Cependant, les deux espèces \textit{P. apennina} et \textit{P. cottia} sont toujours regroupées, même si cet ensemble n'est pas robuste. En effet, pour K=5, c'est \textit{P.hirsuta} qui se retrouve scindé en deux avec d'un côté l'individu des Pyrénées et de l'autre l'ensemble des individus. Ici la structure de \textit{P. pedemontana s.l.} est plus ambigue, même si les individus des Écrins sont toujours isolés.
+
+%Pour les analyses sur DIYABC, aucun scénario proposé ne permet de simuler un jeu de donnée proche des données réelles. Le scénario observé le plus proche des données réelles étais celui d'un polytomie où coalescent tout les taxons assigné à l'espèce \textit{P. pedemontana}), puis un événement plus ancien de coalescence avec \textit{P. hirsuta}. Ne pouvant conclure si cette polytomie est réelle ou alors un artefact issu d'un manque de résolution (soft poolytomie), les analyses n'ont pas été plus loin avec cette outil et aucun résultat ne peut être présenté.
+\todo[color=yellow]{result hirsuta}
+
+\subsection{Admixture}
+
+\begin{wraptable}{r}{5.5cm}
+\begin{tabular}{ccc}\\\toprule  
+Header-1 & Header-1 & Header-1 \\\midrule
+2 &3 & 5\\  \midrule
+2 &3 & 5\\  \midrule
+2 &3 & 5\\  \bottomrule
+\end{tabular}
+\caption{ABBA-BABA}
+\label{ABBA}
+\end{wraptable} 
+
+\begin{wrapfigure}{r}{0.30\textwidth}
+	\vspace{-40pt}
+	\begin{center}
+\missingfigure[figwidth=6cm,figheight= 6cm]{cline}
+%		\includegraphics[width=0.29\textwidth]{file_name}
+	\end{center}
+	\vspace{-20pt}
+	\caption{\textbf{cline} hirsuta pedemontana s.l.}
+    \label{cline}
+\end{wrapfigure}
+
+\todo[color=yellow]{result admixture}

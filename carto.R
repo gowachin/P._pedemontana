@@ -1,6 +1,7 @@
 #### carto ####
 # carto raster WC ####
 library(readr)
+library(raster)
 Location <- read_delim("Location.csv", "&", escape_double = FALSE, trim_ws = TRUE)
 loc = cbind(Location$Longitude,Location$Latitude)
 loc
@@ -84,7 +85,30 @@ plot(Europ[[1]])
 
 plot(r, breaks=cuts, col = pal(7))
 plot.raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif",ext = extent (5.6,16,44.2,47.3) ,line = F)
+
+donensis = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+villosa = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+hirsuta = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+cottia = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+apennina = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+pedemontana = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
+ecrins = click(raster("Europ_clim/wc2.0_bio_30s_Europ_1.tif"), n=8, id=FALSE, xy=T, type="n")
+polygon(x=f$x,y = f$y,col="red",density = 50,border ="red", lwd = 0.5)
+
 text(x = Location$Longitude, y = Location$Latitude, Location$Code, cex = 0.7)
+
 
 # TD choler ####
 

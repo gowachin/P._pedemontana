@@ -1,0 +1,158 @@
+
+\section{Matériels et méthodes}
+
+\subsection{Cas d'étude}
+
+Détailler ici le groupe d'étude.
+
+\subsection{Échantillonnage}
+
+Les données génétiques utilisées lors de cette étude ont été produites dans le cadre de l'étude précédente de \citet{Boucher2016a}.
+ Il s'agit d'un jeu de données composé de 90 individus de toutes les espèces composant \textit{Primula} section \textit{Auricula}, collectés entre avril et septembre 2014.
+ L'identification taxonomique des individus a été réalisée sur le terrain, mais un individu a du être réattribué après analyse génétique au taxon \textit{P. hirsuta}.
+
+Les SNPs sont issus de séquençage haut débit via hyRAD \citep{Suchan2016}.
+ Le génome de référence proviens de \textit{Primula veris}.
+ \todo[inline]{Ici il faut prendre les choses dans l'ordre: tu ne peux pas commencer en disant 'les SNPs', on ne sait pas qu'ils existent. Idem pour le génome de référence: on ne sait pas à quoi il sert ici. Les grandes lignes logiques du génotypage c'est:
+ 
+ 1) besoin d'avoir accès à de nombreuses régions du génome pour avoir un échantillon représentatif.
+ 
+ 2) méthode RAD (dont il faut présenter le principe général) et dérivés OK, mais problème de perte d'allèles, surtout pour des données interspécifiques, d'où l'utilisation de capture hybride avec la méthode hyRAD.
+ 
+ 3) séquençage et alignement des reads sur un génome de réf
+ 
+ 4) SNP calling 
+ 
+Tu peux t'aider de mon papier pour ça bien sûr. Attention à ne pas laisser entendre que c'est toi qui a fait ces étapes 3 et 4 comme c'est un peu le cas ici. Pour plus de clarté tu pourrais sortir ça de ta partie 'Bioinfo'}
+ Cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions.
+ En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome.
+ La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD.
+% extrait d'article de base :
+%Total DNA was extracted from silica-dried leaves using a DNeasy Plant Mini kit (Qiagen, Hilden, Germany) following the manufacturer’s instructions. DNA quality was visualized on 0.8% agarose gels and quantity was assessed using a QuBit 2.0 fluorom- eter (2.0, Life Technologies, Carlsbad, CA, USA). Genomic DNA was converted into RAD-Capture genotyping-by-sequencing libraries (SNPsaurus, LLC), a new protocol aimed at harnessing the wide genomic spectrum of RAD-sequencing while reducing the amount of missing data in interspecific datasets. Briefly, a double-digest RAD library was created from 100 ng of a pool of genomic DNA containing a diverse set of individuals from sect. Auricula (belong- ing to P. allionii, P. apennina, P. auricula, P. glutinosa, and P. minima; see Table A.1). The pooled DNA was digested with PstI-HF and MfeI- HF (NEB) and ligated to complementary adapters that allowed the resulting amplified fragments to be converted to biotinylated RNA baits. Fragments with inserts roughly 100–350 bp in size were iso- lated by gel extraction from a portion of the ligated product prior to amplification and the in vitro transcription reaction to create the RNA baits. Shotgun sequencing libraries were prepared from the 90 study samples using 5 ng each in a 1/10th Nextera (Illumina, Inc) reaction with unique dual-indexes to distinguish the individu- als. The samples were pooled and size-selected for insert sizes roughly 170–370 bp. The pooled libraries were then used in two successive overnight hybridizations to the biotinylated bait library, followed by capture using DynabeadsÒ MyOneTM Streptavidin C1 magnetic beads (Thermo Fisher) and amplification. The final cap- tured products were sequenced in a single 150 bp NextSeq 500 High Output run at the Genomics and Cell Characterization Core of the University of Oregon.
+
+\subsection{Bioinformatique}
+
+Pour chacun des individus, l'information consiste en une séquence de SNPs appelés par Freebayes, exporté sous format VCF.
+ Les analyses ont été portées sur deux jeux de données car filtrés sous des seuils différents.
+ Le premier jeu de donnée ('\verb|m30_-q20_mincov20|') est issus de filtres très strict, avec un score de qualité (Phred) requis de 30 et une couverture minimale de 20 lectures par site.
+ Afin de ne pas biaiser l'analyse par des seuils favorisant les régions conservées, le second jeu de données ('\verb|m13_-q20_mincov10|') est quant à lui produit avec un Phred minimal de 13 et une couverture de 10 lectures.
+ A partir de ces séquences, les SNPs ont été isolés par Freebayes, avec un score de Phred minimal de 20 et un support de lecture de 30\% minimum par allèle.
+
+A partir des deux jeux de donnée initiaux, un pipeline est établi dans le langage R \citep{RTeam2017} pour générer divers ensembles de données, spécifiques à chaque analyse.
+ Les fonctions sont rassemblées en un package R hébergé sur Github (lien web \ref{github}).
+ Dans un premier temps, le fichier initial est traité avec la fonction \verb|subset_reorder|, qui permet de reconstruire le fichier en ne gardant que les individus souhaité dans l'ordre indiqué.
+ Au maximum, les individus conservés à partir des jeux de données initiaux sont les individus des espèces suivantes :
+2 individus de \textit{P. apennina}, 
+3 individus de \textit{P. cottia}, 
+2 individus de \textit{P. pedemontana}, 
+2 individus de \textit{P. pedemontana} des Écrins, 
+6 individus de \textit{P. hirsuta}, 
+4 individus de \textit{P. villosa}, 
+2 individus de \textit{P. daonensis}.
+Un individu de \textit{P. apennina} n'a pas été conservé comme dans l'étude de \citet{Boucher2016a}, car présentant trop de données manquantes.
+ Toutes les informations concernant les individus de l'analyse sont présentés en annexe \ref{table_ind}.
+ \todo[inline]{Cette info sur le nombre d'indivs/taxon est à mettre plus en avant. Ici elle est un peu noyée dans la masse et tu ne dis même pas que ce sont tous les échantillons de subsect. Erythrodrosum. Je me demandes même si c'est la peine de mentionner les 90 individus du jeu de données plus large... j'attaquerais directement avec ceux qui te concernent mais c'est à toi de voir ce qui te conviens le mieux.}
+
+
+La fonction suivante \verb|rare|, permet de trier les allèles considérés comme étant présents dans un trop faible pourcentage des individus.
+ Ces allèles rares sont écartés du jeu de données et le locus pour l'individu présentant cet allèle rare est considéré comme une donnée manquante.
+ \todo[inline]{Est-ce l'approche standard? J'aurais pensé que dans ce cas on virait le locus pour tout le monde...}
+ Cette étape permet également de supprimer les SNPs qui ont strictement plus d'un variant, qui sont reconnus comme des artefacts des algorithmes utilisés pour appeler les SNPs.
+%We then filtered variants in a very conservative way by removing all called multiple nucleotide polymorphisms, indels and complex variants. These types of variants are known to often be artifacts generated by the algorithms used for short read mapping (see https://www. broadinstitute.org/gatk/guide/best-practices.php).
+ Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information.
+ Afin de ne garder que les loci polymorphes, nous utilisons ensuite la fonction \verb|clean|.
+Les loci sont aussi filtrés sur le score de qualité (\verb|QUAL|) indiqué dans le vcf, qui correspond a la confiance dans l'assignation de l'allèle variant.
+%In the context of variant calling, Phred-scaled quality scores can be used to represent many types of probabilities. The most commonly used in GATK is the QUAL score, or variant quality score. It is used in much the same way as the base quality score: the variant quality score is a Phred-scaled estimate of how confident we are that the variant caller correctly identified that a given genome position displays variation in at least one sample
+ Une fonction nommée \verb|tri| est appelée pour supprimer les loci et les individus présentant trop de données manquantes selon les seuils posés.
+ Enfin, afin de limiter le déséquilibre de liaison, les sites sont filtrés selon leurs positions sur les contigs du génome de référence: si deux SNPs sont situées à une distance inférieure à \verb|n| paires de bases, seul le premier est conservé.
+
+
+Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-sélection d'individus et de loci \todo{locus et loci en italiques, c'est du latin.}est enregistrée sous quatre formats : \verb|.vcf|, \verb|.str|, \verb|.geno|, \verb|.snp|.
+ La transformation d'un format en un autre se fait respectivement au moyen d'un script bash, par l'utilisation du software PGDSpider \citep{Lischer2012}, grâce au package LEA \citep{Frichot2015} et avec un script R.
+ La production de ces fichiers est inscrite dans le pipeline par la fonction \verb|files|.
+
+Toutes ces fonctions sont indépendantes mais peuvent être appelées dans le bon ordre au moyen de la fonction \verb|dataset|, qui prend en entrée un vecteur de noms d'individus, un \verb|csv| contenant l'assignation de chaque individu à une population ou une lignée, le fichier \verb|vcf| original, le nom des fichiers de sortie et les seuils précisés au-dessus.
+
+Chaque seuil est choisi après vérification que la décision n'impacte que peu les résultats de diversité génétique.
+ Le nombre d'individus étant faible, il faut optimiser le nombre de SNPs par individus car cela permet de limiter la perte d'information et d'atteindre les mêmes résultats qu'attendus avec un échantillon plus vaste \citep{Nazareno2017}.
+
+
+\subsection{Génétique des populations}
+
+Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. 
+
+Dans un premier temps, des statistiques \verb|F| ont été calculées avec le package adegenet \citep{Jombart2011}. Ces statistiques permettent de se faire une première idée du jeu de données.
+ Ce package a également permit de réaliser un analyse en composante principale discriminante.
+ Cependant un clustering de nos individus a été réalisé avant, afin d'essayer d'attribuer des groupes sans a-priori de populations.
+ Ce clustering fait par adegenet trouve les groupes pour lesquels la variance intergroupes est maximale quand la variance intragroupes est minimale.
+ La DAPC a donc été réalisée avec ces groupes et sans afin d'observer les différences.
+ \todo[inline]{Pas très clair ici, il faut présenter les choses dans l'ordre, sinon on se perd un peu.}
+
+La structure des populations de nos taxons a ensuite été étudiée par le package LEA \citep{Frichot2015}.
+Contrairement au logiciel STRUCTURE (citation Pritchard si tu veux en parler), cette méthode permet d'inférer la structure de population BLABLA...
+ Pour cette étude, la structuration a été modélisée pour des structures de K populations allant de 1 à 15\todo{K=15 c'est beaucoup vu le nombre d'individus quand même...}, avec 20 simulations par K, en ne retenant que la meilleure simulation basée sur le critère de "cross-entropy".
+ Une dernière mesure de génétique des populations a été réalisée pour essayer d'estimer l’expansion ou la contraction récente des populations.
+ Ce \verb|D| de Tajima a été mesuré à l'aide du package pegas \citep{Paradis2010}.
+  \todo[inline]{Si tu inclus cette mesure il faut introduire avant à quoi celà va servir, sinon ça fait très 'exercice de style' en génét des pops. Tu pourrais évoquer les contractions de taille de population (efficace) pendant les cycles glaciaires en intro.}
+
+Afin de tester l'hypothèse d'hybridation pour le taxon des Écrins, le package introgress \citep{Gompert2010} a été utilisé pour mesurer l'index h, index d'hybridation, entre deux taxons: IL FAUT DIRE LESQUELS ICI.
+ Ce package requiert l'import des deux taxons parents présumés et des "hybrides" afin de mesurer un coefficient d'admixture (ou h-index) qui correspond à la proportion de chaque génome parental \citep{Buerkle2005} chez l'individu hybride.
+ Les marqueurs codominants utilisés ici n'étant pas tous fixés chez les parents, le calcul du h-index se basera ici sur les fréquences alléliques.
+\todo{To check}
+
+\subsection{Inférences bayésiennes} 
+\todo[inline]{Il faudrait un titre qui décrive ce qui est fait (un test de l'origine hybride d'une lignée, pas de l'admixture au passage), pas que c'est bayésien ça c'est du détail de cuisine.}
+
+Afin de caractériser l'admixture entre le taxon des Écrins et \textit{P. hirsuta}, une approche par approximate Bayesian computation (ABC) a été réalisée sur le logiciel DIYABC \citep{Cornuet2014}.
+ Ce logiciel permet de simuler des jeux de données selon divers scénarios, en échantillonnant des paramètres entre des priors définis.
+ Les scénarios sont ensuite classés selon les probabilités a posteriori d'observer notre jeu de donnée initial selon les scénarios proposés.
+ Seuls quelques scénarios ont été étudiés ici, en prenant en compte le fait qu'ils sont à chaque fois supportés par peu d'individus. 
+ \todo{A reformuler, ce n'est pas une question de support des scénarios mais plutôt de taille du jeu de données en général.}
+ Les priors sont également proposés dans un grand intervalle et selon une distribution uniforme, les temps de divergence entre populations et tailles de populations n'ayant pas ou peu été étudiés.
+
+Pour les topologies proposées en scénarios, toutes les topologies "classiques" sans évènement d'hybridation ont été proposées (5 cas possibles pour les 4 taxons composant  \textit{P. pedemontana s.l.}).
+ Des topologies avec des polytomies regroupant plusieurs populations ont également été proposées.
+ Enfin des hypothèses d'hybridation de \textit{pedemontana} et \textit{hirsuta} sont étudiées pour l'origine du taxon des Écrins.
+\todo{To check}
+%%%%%% mat&met thibaut coenonympha DIYABC %%%%%%
+%with the approximate Bayesian computation (ABC) approach implemented in the software DIYABC (Cornuet et al. 2014). In short, a large number of simu- lated data sets were produced under each tested scenario by sampling parameter values into predefined prior dis-tributions, and an estimation of each scenario posterior probability was calculated as a function of the similarity between several summary statistics of simulated data sets and observed data using a logistic regression proce-dure. These posterior probabilities enable a ranking of scenarios and allow for the identification of the most probable evolutionary history. We only considered five evolutionary scenarios (Fig. 2), based on previously pub-lished studies dealing with the evolution of the complex (Porter et al. 1994; Wiemers 1998; Schmitt & Besold 2010) and our own hypothesis based on the morphometric and phylogenetic analyses (see Results). Scenario design and simulations. A uniform distribution with a large interval was chosen for each prior increas-ing the need in computation time but overcoming the lack of knowledge on population sizes, divergence times and admixture rate (see Table S2 Supporting information). Only one approximate C. arcania /C. gardetta divergence time of 1.5–4 million of years was available from Kodandaramaiah & Wahlberg (2009). For each scenario, a total of one million data sets were sim-ulated and the posterior probability was computed by performing a logistic regression on the 1% of simulated data closest to the observed data set (Cornuet et al.2008, 2010). Summary statistics used for observed/sim- ulated data sets comparisons are the mean gene diver-sity and Fst across all loci and Nei’s distances among populations. Gene diversity was chosen because allelic richness is directly influenced by hybridization; the genetic differentiation (Fst) and distance (Nei’s) among taxa were used because these indexes reflect the degree of differentiation between populations and are highly relevant to compare evolutionary histories. Assessing the ‘goodness of fit’ of the model. Once the most probable scenario was identified, different posterior anal-yses were carried out to evaluate the trustfulness of the procedure. First, to be sure of the choice of the scenario, 500 new data sets were simulated with each historical model creating pseudo-observed data sets for which pos-terior probabilities were re-estimated with the same pro-cedure described above. Type I and type II errors were evaluated by measuring, respectively, the fraction of data sets simulated under the best scenario that were assigned to other scenarios and the fraction of data sets simulated under other scenarios that were assigned to the best sce- nario. Second, we wanted to know whether our selected model is able to produce data sets similar to the observed one. This confidence in the model is evaluated by esti-mating the similarity between simulated (1000 simula-tions) and real data sets using summary statistics different than the ones used for model choice (an impor-tant precaution, see Cornuet et al. 2010). For each sum-mary statistic, a P-value is estimated by ranking the observed value among the values obtained with simu-lated data sets, and a principal component analysis was also performed to check visually the position of the observed data in relation to the data sets generated from the posterior predictive distribution. Posterior distribution of parameters and their precision. It was possible to evaluate the posterior distributions of parameters for our selected scenario using a local linear regression on the 1% of simulations closest to the observed data set (Cornuet et al. 2010). These distribu-tions gave an idea of the most probable value (median) and the ‘approximation’ (width of the distribution) for each historical model. A precision of these estimations was evaluated by computing the median of the absolute error divided by the true parameter value of the 500 pseudo-observed data sets simulated under the selected scenario using the median of the posterior distribution as point estimate (Cornuet et al. 2010).
+
+\subsection{Admixture -ABBA-BABA-}
+\todo[inline]{Ici aussi pas besoin  de mettre le nom de la méthode dans le titre, mais plutôt de décrire ce qui est fait: un test d'introgression.}
+
+Une autre approche de l'admixture entre plusieurs taxons du complexe de populations étudiée a été réalisée par le test "\verb|ABBA-BABA|".
+\todo[inline]{Là ça doit être monstrueusement difficile de suivre pour quelqu'un qui ne connaît pas le groupe, ce qui confirme le besoin de cette première section qui introduit les différents taxons.}
+ Ce test d'admixture développé par \citet{Durand2011} propose une statistique (\verb|D|) basée sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier.
+ %Cette méthode étant initialement pensée pour des séquences haploïdes.
+ %De fait la plupart des algorithmes présentés écartent les sites avec une ambiguïté (code IUPAC) ou alors résolvent l’ambiguïté par un tirage aléatoire entre deux bases.
+ %Il existe aussi une méthode pour prendre en compte les sites hétérozygotes à partir des fréquences alléliques, comme présenté dans \citet{Durand2011}, mais la faible taille de populations biaiserais les résultats.
+ %Il est donc plus judicieux d'écarter les sites hétérozygotes dans un premier temps, rendant le test plus conservateur.
+ \todo[inline]{Pas besoin de gaspiller trois lignes pour parler d'une variante de la méthode (la plus commune, certes) que tu n'utilises pas.}
+ Considérant que les locis sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie.
+ Cette topologie [(((P1,P2),P3),O)] propose que "P1" et "P2" coalescent avant un autre événement de coalescence avec "P3", puis avec "O" l'outgroup.
+ \todo[inline]{Étant donné que tu décris une phylogénie et pas une généalogie ici, je le présenterais plutôt 'en partant du bas' et en parlant de divergences.}
+ Sur cette topologie on attend deux allèles présents en fin de branche avec "A" l'allèle ancestral et "B" l'allèle alternatif porté par l'outgroup.
+ Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA".
+ Sous un modèle neutre, on attend des proportions équilibrées de sites portant ces deux configurations.
+ L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par deux cas : une topologie autre ou alors une introgression de "P3" avec "P1" ou "P2".
+ Un introgression entre "P3" et "P1" verrais donc une plus grande proportion de locis à la configuration "BABA".
+ Cela aboutis à une valeur négative du "D", comme explicité par l'équation suivante :
+
+%\[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} C_{ABBA}(i)-C_{BABA}(i)}{\sum_{i=1}^{n} C_{ABBA}(i)+C_{BABA}(i)}\]
+
+%Afin d'obtenir un résultat statistique, les individus sont tirés de manière aléatoire dans la population pour calculer la valeur de \verb|D|.
+ %Ce calcul est réitéré pour toutes les combinaisons possibles de tirage (dicté par les tailles de populations). 
+
+%Devant le nombre réduit de sites informatifs avec rejet des sites hétérozygotes, 
+Il a été décidé de calculer \verb|D| à partir des fréquences alléliques, comme décrit dessous.
+ \textit{$P_{ij}$} correspond à l'allèle alternatif.
+
+\[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})-P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})+P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}\]
+
+Un intervalle de confiance sur cette statistique est obtenu par bootstraping des sites. Ce bootstraping a été réalisé 1000 fois par échantillonnage aléatoire avec remise des loci.
+\todo{complete pvalue here}
+
+Il est important de souligner que ce test ne permet en aucun cas de proposer un sens d'introgression, ni son intensité.
+
+\todo{put function in package!}
+

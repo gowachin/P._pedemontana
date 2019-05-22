@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,notitlepage]{article}
+\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Template pour rendus Master
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,7 +9,7 @@
 \renewcommand{\bibsection}{}
 
 \usepackage[french]{babel} % langue
-
+%\usepackage{•}
 %mise en page générale
 \usepackage{geometry}
 %\geometry{a4paper} % format de feuille
@@ -39,16 +39,69 @@
 
 \usepackage{lscape}
 
-\usepackage{subcaption}
-
 \usepackage{todonotes}
+%\usepackage[disable]{todonotes}
 
 \usepackage[export]{adjustbox}
 
 
+\usepackage{listings}
+\usepackage{color}
+%http://latexcolor.com/ 
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{beaublue}{rgb}{0.95, 0.95, 0.95}
+\definecolor{amber}{rgb}{1.0, 0.25, 0.0}
+\definecolor{indiagreen}{rgb}{0.07, 0.53, 0.03}
+\definecolor{number}{rgb}{0.01, 0.01, 0.01}
+
+\lstset{language = R,
+    basicstyle=\footnotesize,
+    breaklines=true,
+    keepspaces=true,
+    firstnumber=1,
+    numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=5pt,  % how far the line-numbers are from the code
+    numberstyle=\color{number},
+    deletekeywords={_,/,C,troll,approx,min},
+    backgroundcolor=\color{beaublue},   
+    commentstyle=\color{indiagreen},
+    keywordstyle=\color{amber},
+    stringstyle=\color{cerulean}
+    }
+    
+%\begin{lstlisting}
+%  %%%% put the R code here %%%%
+%\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% LATEX DIFF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% use as : latexdiff ancientfile.tex newfile.tex > revisionfile.tex
+
+% diff can be remove by revisionfile.tex > revisionfile.tex
+
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF     PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
 \DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
 \newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
+
+\newcommand{\clade}[1]{clade `#1'}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page de garde et table des matières
@@ -64,18 +117,16 @@
 \begin{titlepage} %Page de garde!!
 %logos de page de garde
 \begin{figure}
-  \centering
-\begin{subfigure}{0.4\textwidth}
-  %\centering
-  \includegraphics[width=0.7\linewidth,left]{fig/UGA.jpg}
-\end{subfigure}%
-\begin{subfigure}{.4\textwidth}
-  %\centering
-  \includegraphics[width=0.7\linewidth,right]{fig/leca.jpg}
-\end{subfigure}
-\label{fig:test}
+\noindent
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=0.5\linewidth,left]{fig/UGA.jpg}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=0.5\linewidth,right]{fig/leca.jpg}
+\end{minipage}
 \end{figure}
-%titres
 \maketitle
 
 
@@ -98,10 +149,7 @@ DivAdapt
 %image sympas
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=3]{fig/primulapedemontana_7.jpg}
-%	\caption{reference de la photo}
-%	\label{frontpage}
-
+\includegraphics[scale=2.8]{fig/primulapedemontana_7.jpg}
 \end{center}
 \end{figure}
 \thispagestyle{empty}
@@ -113,6 +161,12 @@ DivAdapt
 \begin{center}
 
 \lipsum[1]
+\todo[color=yellow]{abstract}
+
+\todo[inline,color=yellow]{Les nom de genre, section, sous-section, locus et loci en italiques, c'est du latin.}
+
+\newpage
+\listoftodos
 
 \end{center}
 \end{abstract}
@@ -120,6 +174,8 @@ DivAdapt
 
 \end{titlepage}
 \tableofcontents
+
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,17 +204,23 @@ DivAdapt
 
 \input{tex/intro.tex}
 
-
 \input{tex/mat_meth.tex}
-
 
 \input{tex/result.tex}
 
-
 \input{tex/discuss.tex}
 
-%\input{tex/thx.tex}
+%\input{tex/intro.tex}
 
+%\input{tex/mat_meth.tex}
+
+%\input{tex/result.tex}
+
+%\input{tex/discuss.tex}
+
+%\input{tex/thx.tex}
+ 
+\todo[color=red,inline]{Marque page de fin de doc = 13!!}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Références
@@ -319,4 +381,16 @@ P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher 
 %\end{subfigure}
 %\caption{Caption for this figure with two images}
 %\label{fig:image2}
+%\end{figure}
+
+%\begin{figure}
+%  \centering
+%\begin{subfigure}{0.4\textwidth}
+%  %\centering
+%  \includegraphics[width=0.7\linewidth,left]{fig/UGA.jpg}
+%\end{subfigure}%
+%\begin{subfigure}{.4\textwidth}
+%  %\centering
+%  \includegraphics[width=0.7\linewidth,right]{fig/leca.jpg}
+%\end{subfigure}
 %\end{figure}

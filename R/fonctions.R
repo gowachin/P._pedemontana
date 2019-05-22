@@ -221,12 +221,13 @@ tablobj2vcf = function(obj,name,head,vcf) {
 #'
 #' @export
 Pop = function(K, files,ID) {
-  obj.snmf = snmf(files, K = K, alpha = 100, project = "new",iterations = 2000, repetitions = 20,
+  obj.snmf = snmf(files, K = K, alpha = 10, project = "new",iterations = 2000, repetitions = 20,
                   CPU = 7, entropy = T)
   ce=cross.entropy(obj.snmf,K=K)
   best = which.min(ce)
   qmatrix = Q(obj.snmf, K = K, run = best)
-  barplot(t(qmatrix), col = color, border = NA, space = 0,xlab = "Individuals", ylab = "Admixture coefficients",
+  barplot(t(qmatrix), col = color, border = 1, space = 0.05,
+          xlab = "Individus", ylab = "Coefficient d'admixture", main = paste("K= ",K,sep = ""),
           names.arg =ID, las = 2)}
 
 
@@ -366,7 +367,7 @@ subset_ord_pop = function(population,sub) {
 #' @author JAUNATRE Maxime
 #'
 #' @export
-dataset = function(ind,popfile,entryfile,name,rare=0,qual=0,missLoci=0,missInd=0,LD=0) {
+dataset = function(ind,popfile,entryfile,name,rare=0,qual=0,missLoci=0,missInd=0,LD=1) {
 
   head = paste(name,"_head.txt",sep="")
   csv = paste(name,"_CSV.csv",sep="")
@@ -429,7 +430,8 @@ fichier = files(obj =final, name=name, ind=final_pop$ind, pop=final_pop$pop)
 system(paste("rm",csv,head,sep = " "))
 
 fichier$.ind = as.factor(as.character(fichier$.ind))
-fichier$.pop = as.factor(as.character(fichier$.pop))
+
+fichier$.pop = factor(as.character(fichier$.pop),unique(final_pop$pop))
 
 cat("\n");cat("DONE :) \n\n")
 

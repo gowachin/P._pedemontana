@@ -36,6 +36,6 @@ manual = function() {
 #' @export
 plot.raster = function(rast,ext=extent (0,0,0,0),line = F,raw =T) {
   if(raw == T) {rast=raster(rast)}
-  if (ext != extent (0,0,0,0)) {plot(crop(rast, ext)) } else {plot(rast) }
+  if (ext != extent (0,0,0,0)) {plot(crop(rast, ext), col = gray.scale()) } else {plot(rast, col = gray.scale()) }
   if(line==T){lines(read.table("data_carto/WORLD_lowres.dat"))}
 }

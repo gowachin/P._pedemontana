@@ -5,7 +5,7 @@
 \title{dataset}
 \usage{
 dataset(ind, popfile, entryfile, name, rare = 0, qual = 0,
-  missLoci = 0, missInd = 0, LD = 0)
+  missLoci = 0, missInd = 0, LD = 1)
 }
 \arguments{
 \item{ind}{vector of individuals}
