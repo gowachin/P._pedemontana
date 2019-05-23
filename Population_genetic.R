@@ -101,6 +101,8 @@ abline(v=3,col= "darkgreen", lty = 3)
 
 dapc1 = dapc(GENIND, var.contrib = TRUE, scale = FALSE, n.pca = length(pop(GENIND)), n.da = nPop(GENIND) - 1)
 
+GENIND$pop
+rownames(GENIND$tab)
 
 dapc1 <- dapc(GENIND)
 scatter(dapc1)
@@ -144,7 +146,7 @@ tiplabels(pch=20, col=myCol, cex=4)
 title("NJ tree ")
 
 dapc1 <- dapc(GENLIGHT, n.pca=10, n.da=2)
-scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=TRUE,
+scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=F,
         txt.leg=paste("group", 1:7))#, col=c("red","blue"))
 
 myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen")
@@ -516,6 +518,12 @@ par(mar = c(4.85, 2.825, 4, 4.56))
 plot(100,100,type="n", axes = F, ylab="", xlab="")
 
 text(71,80,"Pyrénées", font= 2, cex= 0.8)
+
+hirsutap = data.frame(x = c(71.72795, 69.90683, 68.34588, 67.82556, 68.60604, 70.42715, 73.15883, 73.93931, 73.02875, 71.85803, 70.94747, 68.99628),
+                      y= c(74.09680, 75.14700, 75.14700, 73.30915, 71.99640, 70.94620, 69.10835, 71.99640, 73.83425, 73.83425, 74.09680, 75.67210))
+polygon(x=hirsutap$x,y = hirsutap$y,col=colors[1],density = 75,border =colors[1], lwd = 0.5)
+text(70,75,"HP1", cex= 0.65)
+
 
 
 

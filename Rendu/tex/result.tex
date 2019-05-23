@@ -2,16 +2,10 @@
 
 \subsection{Tri du jeu de données}
 
-Le jeu de donnée initial contient \textbf{beaucoup trop de SNP} \todo[color=yellow]{trouver le nombre de locis qu'on a au fur et a mesure}.
-filtres un par un 
-subset reorder 
-rare 
-qual 
-missing data 
-LD 
+Le jeu de donnée initial contient 175799 \textit{loci}. Pour le jeu de donnée utilisé au niveau de la sous-section \textit{Erythrodrosum}, 2078 \textit{loci} ont été conservés pour les analyses, avec les seuils suivants : allèle rare 5\%, Phred de 20, une distance de 10kb minimum entre deux \textit{loci} et 5\% des individus sans information par \textit{locus}.
+Pour le jeu de donnée sur le \clade{Hirsuta}, 1851 \textit{loci} ont été conservés pour les analyses, avec les mêmes seuils.
 
-Le jeu final de donnée est de tant de SNPs.
-
+Le changement de taille du jeu de donnée est du à un nombre plus petit d'individus dans le second cas, qui rend des \textit{loci} monomorphes. Le seuil le plus strict est le seuil sur les données manquantes par \textit{locus}, qui ne conserve que  respectivement 7.05\% et 7.07\% du jeu de donnée. 
 
 \subsection{Sous-section \textit{Érythrodrosum}}
 
@@ -25,7 +19,7 @@ Les analyses de génétique des populations ont donc été faites sur \textbf{be
 \todo[inline,color=blue!20]{proposer une explication? peut etre parce qu'il y a une sous structure? 
 quid du Fis <0}
 
-Les $F_{st}$ par pair entre populations sont également tous supérieurs à zero (valeurs comprises entre \textbf{tant et tant}), et la topologie par neigbhor-joining rejoins celle décrite précédement (Figure \ref{topologie}).\todo[color=blue!20]{rajouter fig topo et valeurs pairwise fst}
+Les $F_{st}$ par pair entre populations sont également tous supérieurs à zero (valeurs comprises entre \textbf{tant et tant}), et la topologie par neigbhor-joining rejoins celle décrite précédement (Figure \ref{topologie}).
 
 \begin{wrapfigure}{r}{0.30\textwidth}
 	\vspace{-40pt}
@@ -94,6 +88,8 @@ Pour K=4, \textit{P. pedemontana s.l.} se retrouve éclaté avec les différente
 
 \subsection{Admixture}
 
+\lipsum[1]
+
 \begin{wraptable}{r}{5.5cm}
 \begin{tabular}{ccc}\\\toprule  
 Header-1 & Header-1 & Header-1 \\\midrule
@@ -103,7 +99,11 @@ Header-1 & Header-1 & Header-1 \\\midrule
 \end{tabular}
 \caption{ABBA-BABA}
 \label{ABBA}
-\end{wraptable} 
+\end{wraptable}
+
+\lipsum[1] 
+
+\lipsum[2]
 
 \begin{wrapfigure}{r}{0.30\textwidth}
 	\vspace{-40pt}
@@ -115,5 +115,7 @@ Header-1 & Header-1 & Header-1 \\\midrule
 	\caption{\textbf{cline} hirsuta pedemontana s.l.}
     \label{cline}
 \end{wrapfigure}
+
+\lipsum[1]
 
 \todo[color=yellow]{result admixture}

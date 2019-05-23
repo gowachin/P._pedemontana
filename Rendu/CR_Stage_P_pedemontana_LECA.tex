@@ -1,50 +1,49 @@
-\documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
+ \documentclass[12pt,a4paper,notitlepage,colorinlistoftodos]{article}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Template pour rendus Master
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\documentclass[12pt,a4paper,titlepage]{report}
 \usepackage[utf8]{inputenc} %encodage
 \usepackage[square,sort,comma,numbers]{natbib} % bibliography
 \setcitestyle{authoryear,open={(},close={)}}
 \renewcommand{\bibsection}{}
 
 \usepackage[french]{babel} % langue
-%\usepackage{•}
+
 %mise en page générale
 \usepackage{geometry}
 %\geometry{a4paper} % format de feuille
 \geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm} %marges
-%Police
-\usepackage{mathptmx} % Times si compilateur pdfLatex
-%interligne
-\linespread{1.5}
-%en tete et pied de page
-\usepackage{fancyhdr}
-\usepackage{lastpage}
-\pagestyle{plain}
+\usepackage{mathptmx} % Police Times si compilateur pdfLatex
+\linespread{1.5} % interligne
+\usepackage{fancyhdr} %en tete et pied de page
+\usepackage{lastpage} 
+\pagestyle{plain} 
 
-\usepackage{hyperref} % lien cliquables
-\usepackage{url, lipsum} %Lorem ipsum
+\usepackage{lscape} % page en landscape
+
+\usepackage{hyperref,url} % lien cliquables
+\usepackage{lipsum} %Lorem ipsum
 
 \usepackage{wrapfig} %position d'images dans le texte
-%\usepackage[myheadings]{fullpage}
-\usepackage{graphicx, subcaption, setspace, booktabs}
+\usepackage{graphicx, subcaption, setspace, booktabs, wrapfig}
 
 \usepackage[table]{xcolor}
 
 \usepackage{caption}
-\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour mettre des captions annexes
-
+\DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
 \DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
 
-\usepackage{lscape}
-
-\usepackage{todonotes}
-%\usepackage[disable]{todonotes}
+\usepackage{todonotes} % notes et commentaires
+%\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
 
 \usepackage[export]{adjustbox}
 
 
+%%%%%%%%%%%% skip an all paragraphe, between this bornes %%%%%%%%%%%%%%%%%%
+%\iffalse
+%\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Code R   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{listings}
 \usepackage{color}
 %http://latexcolor.com/ 
@@ -60,7 +59,7 @@
     breaklines=true,
     keepspaces=true,
     firstnumber=1,
-    numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+    numbers=left, % where line-numbers; possible values (none, left, right)
     numbersep=5pt,  % how far the line-numbers are from the code
     numberstyle=\color{number},
     deletekeywords={_,/,C,troll,approx,min},
@@ -75,9 +74,7 @@
 %\end{lstlisting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% LATEX DIFF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% use as : latexdiff ancientfile.tex newfile.tex > revisionfile.tex
-
-% diff can be remove by revisionfile.tex > revisionfile.tex
+% use terminal: latexdiff ancientfile.tex newfile.tex > revisionfile.tex
 
 %DIF UNDERLINE PREAMBLE %DIF PREAMBLE
 \RequirePackage[normalem]{ulem} %DIF PREAMBLE
@@ -98,20 +95,20 @@
 \providecommand{\DIFdelendFL}{} %DIF PREAMBLE
 %DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%% nouvelles commandes spécifique au doc %%%%%%%%%%%%%%%%%%
+\newcommand{\clade}[1]{clade `#1'}
+
 \DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
 \newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}}
 
-\newcommand{\clade}[1]{clade `#1'}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Page de garde et table des matières
+% Page de garde
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{\textbf{Délimitation d'espèces au sein du complexe de plantes des Alpes, \textit{Primula pedemontana s.l.}}}
 \author{Maxime Jaunatre, Master 1 BEE Grenoble}
 \date{1 Avril - 31 Mai 2019  |  Soutenance : juin 2019 }
 
 \renewcommand*\contentsname{Table des matières}
-
 \begin{document}
 
 \begin{titlepage} %Page de garde!!
@@ -128,7 +125,6 @@
 \end{minipage}
 \end{figure}
 \maketitle
-
 
 \noindent
 \begin{minipage}{1.3in}
@@ -156,26 +152,36 @@ DivAdapt
 
 {\let\thefootnote\relax\footnote{{ \textit{Primula pedemontana} Crédit photo : Florian Boucher}}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\begin{abstract} %abstract!!!
+\begin{abstract}
 \begin{center}
 
 \lipsum[1]
 \todo[color=yellow]{abstract}
 
 \todo[inline,color=yellow]{Les nom de genre, section, sous-section, locus et loci en italiques, c'est du latin.}
+\thispagestyle{empty}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Todo list pour travail en cours
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \listoftodos
 
 \end{center}
 \end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table des matières
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\tableofcontents
 \thispagestyle{empty}
 
 \end{titlepage}
-\tableofcontents
-
-
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -210,18 +216,9 @@ DivAdapt
 
 \input{tex/discuss.tex}
 
-%\input{tex/intro.tex}
-
-%\input{tex/mat_meth.tex}
-
-%\input{tex/result.tex}
-
-%\input{tex/discuss.tex}
-
 %\input{tex/thx.tex}
  
-\todo[color=red,inline]{Marque page de fin de doc = 13!!}
-
+\todo[color=red,inline]{Marque page de fin de doc = 12!!}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Références
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -230,12 +227,18 @@ DivAdapt
 \bibliographystyle{authordate1}
 \bibliography{Primula}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ressources
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ressources}
 \begin{web}[h]
 	\caption{\url{https://github.com/gowachin/Pedemontana}}
 	\label{github}
 \end{web}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Annexes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \begin{landscape}
 
@@ -276,17 +279,24 @@ P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher 
 \end{annexe}
 \end{landscape}
 
-%\begin{annexe}
-%\centering
-%\includegraphics[height=\textwidth , angle=270]{dessin_collembole.png}
-%\caption{Dessin d'observation de Collembole}
-%\label{collembole}
-%\centering
-%\end{annexe}
-
 \end{document}
 
-% SNIPPETS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figures et raccoucis!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{figure}[!ht]
+%    \centering
+%    \includegraphics[width=0.9\textwidth]{ACP.png}
+%    \caption{\textbf{Analyse en composante principale des variables biochimiques mesurées sur le sol des deux sites étudiés.} La représentation de l'axe 1/axe 2 permet d'observer 76.94\% de l'inertie totale comme représenté sur l'éboulis de valeur propre en haut à droite.}
+%    \label{ACP}
+%    \centering
+%\end{figure}
+
+%\begin{wrapfigure}{t}{0.5\textwidth}
+%\lipsum[1]
+%\end{wrapfigure}
+
 %\begin{wrapfigure}{r}{0.50\textwidth}
 %	\vspace{-30pt}
 %	\begin{center}
@@ -297,6 +307,20 @@ P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher 
 %	\label{ACPw}
 %\end{wrapfigure}
 
+%\begin{figure}[h]
+%\begin{subfigure}{0.5\textwidth}
+%\includegraphics[width=0.9\linewidth, height=5cm]{lion-logo}
+%\caption{Caption1}
+%\label{fig:subim1}
+%\end{subfigure}
+%\begin{subfigure}{0.5\textwidth}
+%\includegraphics[width=0.9\linewidth, height=5cm]{mesh}
+%\caption{Caption 2}
+%\label{fig:subim2}
+%\end{subfigure}
+%\caption{Caption for this figure with two images}
+%\label{fig:image2}
+%\end{figure}
 
 %\begin{table}[!ht]\footnotesize
 %	\centering
@@ -325,72 +349,10 @@ P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher 
 %	\label{table_site}
 %\end{table}
 
-%\begin{figure}[!ht]
-%    \centering
-%    \includegraphics[width=0.9\textwidth]{ACP.png}
-%    \caption{\textbf{Analyse en composante principale des variables biochimiques mesurées sur le sol des deux sites étudiés.} La représentation de l'axe 1/axe 2 permet d'observer 76.94\% de l'inertie totale comme représenté sur l'éboulis de valeur propre en haut à droite.}
-%    \label{ACP}
-%    \centering
-%\end{figure}
-
-
-
-%-------------------------------------------------------------------------------
-%\begin{figure}[!ht]
-%	\centering
-%	\includegraphics[width=0.8\textwidth]{graph}
-%	\caption{Blood pressure ranges and associated level of hypertension (American Heart Association, 2013).}
-%	\centering
-%	\label{label:graph}
-%\end{figure}
-%
-%\begin{wrapfigure}{t}{0.5\textwidth}
-%\lipsum[10]
-%\end{wrapfigure}
-%
-%\begin{wrapfigure}{r}{0.30\textwidth}
-%	\vspace{-40pt}
-%	\begin{center}
-%		\includegraphics[width=0.29\textwidth]{file_name}
-%	\end{center}
-%	\vspace{-20pt}
-%	\caption{}
-%	\label{label:file_name}
-%\end{wrapfigure}
-%
-%\begin{wrapfigure}{r}{0.45\textwidth}
-%	\begin{center}
-%		\includegraphics[width=0.29\textwidth]{manometer}
-%	\end{center}
-%	\caption{Aneroid sphygmomanometer with stethoscope (Medicalexpo, 2012).}
-%	\label{label:manometer}
-%\end{wrapfigure}
-%
-%
-%\usepackage{subcaption}
-%\begin{figure}[h]
-%\begin{subfigure}{0.5\textwidth}
-%\includegraphics[width=0.9\linewidth, height=5cm]{lion-logo}
-%\caption{Caption1}
-%\label{fig:subim1}
-%\end{subfigure}
-%\begin{subfigure}{0.5\textwidth}
-%\includegraphics[width=0.9\linewidth, height=5cm]{mesh}
-%\caption{Caption 2}
-%\label{fig:subim2}
-%\end{subfigure}
-%\caption{Caption for this figure with two images}
-%\label{fig:image2}
-%\end{figure}
-
-%\begin{figure}
-%  \centering
-%\begin{subfigure}{0.4\textwidth}
-%  %\centering
-%  \includegraphics[width=0.7\linewidth,left]{fig/UGA.jpg}
-%\end{subfigure}%
-%\begin{subfigure}{.4\textwidth}
-%  %\centering
-%  \includegraphics[width=0.7\linewidth,right]{fig/leca.jpg}
-%\end{subfigure}
-%\end{figure}
+%\begin{annexe}
+%\centering
+%\includegraphics[height=\textwidth , angle=270]{dessin_collembole.png}
+%\caption{Dessin d'observation de Collembole}
+%\label{collembole}
+%\centering
+%\end{annexe}

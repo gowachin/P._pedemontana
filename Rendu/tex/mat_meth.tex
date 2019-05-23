@@ -3,8 +3,11 @@
 
 \subsection{Cas d'étude}
 
+La section \textit{Auricula} Pax (1905) du genre \textit{Primula} comprend 21 espèces et est considérée comme endémique du système Alpin \citep{Ozenda1995}. Au sein de cette section, la sous-section \textit{Erythrodrosum} englobe 7 espèces : \textit{P. villosa; P. daonensis; P. hirsuta; P. apennina; P. cottia et P. pedemontana}. L'ensemble de ces espèces sont hexaploïdes avec un nombre de chromosome dérivé de x = 11 (du fait de l'ancienneté de la polyploïdie, elles sont considérés ici comme diploïdes). Leur niche écologique est située entre 300 et 3050 mètres d'altitude, avec un substrat rocheux acide (crevasses, éboulis et prairies alpines) \citep{Zhang2004}. La reproduction est sexuée du fait d'une hétérostylie stricte, et a lieu au début du printemps après la fonte de la neige.
 
-\todo[inline]{Détailler ici le groupe d'étude.}
+Leur répartition est soit très étendue (\textit{P. hirsuta}), soit restreinte à des massifs spécifique et donc disjointe (Figure \ref{carte}). C'est le cas pour \textit{P. apennina; P. cottia et P. pedemontana}.
+
+Concernant la population de \textit{P. pedemontana} des Écrins, la détermination est difficile à faire, car les individus présentent diverses morphologies, dont une morphologie intermédiaire : une hampe proche de \textit{P. hirsuta} mais une pilosité semblable à \textit{P. pedemontana}. La morphologie foliaire est également variée au sein de cette population avec un bord dentelé selon les individus.
 
 \subsection{Échantillonnage}
 
@@ -12,10 +15,8 @@ Les données génétiques utilisées lors de cette étude ont été produites da
 
 Les individus avaient été séquencés dans le but d'une étude phylogénétique, avec le besoin de récolter de l'information sur l'ensemble du génome, ce qui permet d'observer une histoire phylogénétique non restreinte à un marqueur. A ces fins, l'ADN avais été séquencé par hyRAD \citep{Suchan2016} car cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions requis par les enzymes utilisées en ddRAD. En effet les enzymes de restrictions sont trop sensibles à la mutation d'un nucléotide, tandis que les sondes ARN peuvent s'hybrider sur des sites plus nombreux sur le génome. La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD. 
 
-Les séquences obtenues par séquençage haut débit avaient été alignées sur un génome de référence partiel de \textit{Primula veris}. Le jeu de données utilisé ('\verb|m13_-q20_mincov10|') est issus de divers filtres, avec un score minimal de qualité (Phred) requis de 13 et une couverture minimale de 10 lectures par \textit{locus} lors de l'alignement avec le génome de référence. A partir de ces séquences, les SNPs ont été isolés par Freebayes, avec un score de Phred minimal de 20 et un support de lecture de 30\% minimum par allèle.
+Les séquences obtenues par séquençage haut débit avaient été alignées sur un génome de référence partiel de \textit{Primula veris} par le software Bowtie2. Le jeu de données utilisé ('\verb|m13_-q20_mincov10|') est issus de divers filtres sur l'alignement, avec un score minimal de qualité (Phred) requis de 13 et une couverture minimale de 10 lectures par \textit{locus}. A partir de ces séquences, les SNPs ont été isolés par Freebayes, avec un support de lecture de 30\% minimum par allèle, et l'ensemble est exporté sous format VCF.
 
-Finalement, l'information consiste en une séquence de SNPs appelés par Freebayes, exporté sous format VCF.
-\todo[color=yellow]{clarifier les seuils initiaux phred\& Co}
 %Les analyses ont été portées sur deux jeux de données car filtrés sous des seuils différents. Le premier jeu de donnée ('\verb|m30_-q20_mincov20|') est issus de filtres très strict, avec un score de qualité (Phred) requis de 30 et une couverture minimale de 20 lectures par site. Afin de ne pas biaiser l'analyse par des seuils favorisant les régions conservées, le second jeu de données ('\verb|m13_-q20_mincov10|') est quant à lui produit avec un Phred minimal de 13 et une couverture de 10 lectures.
 
 % extrait d'article de base :
@@ -23,16 +24,12 @@ Finalement, l'information consiste en une séquence de SNPs appelés par Freebay
 
 %Therefore, varying the threshold on mapping quality allowed us to filter out ambiguously mapped reads that potentially represent multi-copy or repetitive regions of the genome (includ- ing paralogs) or are too divergent to be mapped to the reference genome reliably. We first applied a very stringent filter by only considering reads that mapped to the reference genome with a Phred quality score greater than 30, i.e. a mapping error rate lower than 0.1\% and with a coverage required to call a base higher than 20 in each sample (dataset ‘MAP30_COV20’). Since retaining only reads with a very high mapping quality to the reference genome might restrict our analyses to highly conserved regions of the gen- ome of primroses, we built a second dataset by retaining all reads with a mapping quality greater than a PHRED score of 13 (i.e. cor- responding to a 5% error rate in mapping) and with a coverage >10 in each sample (dataset ‘MAP13_COV10’). In a later step, indels, SNPs, and multiple nucleotide polymor-phisms were called with Freebayes (Garrison and Marth, 2012) using the BAM files of mapped reads from the two datasets. We used a minimum fraction of 30% of reads to support an allele, since in outcrossers like auriculas (Richards, 2003) we expect heterozy- gous loci to be common throughout the genome. Heterozygous positions were recorded using IUPAC ambiguity codes. We only called nucleotides with a base call quality greater than a Phred score of 20 (Freebayes parameters: ‘-q 20 -F 0.3’).
 
-\todo[inline,caption={mat met propre}]{Ici il faut prendre les choses dans l'ordre: tu ne peux pas commencer en disant 'les SNPs', on ne sait pas qu'ils existent. Idem pour le génome de référence: on ne sait pas à quoi il sert ici. Les grandes lignes logiques du génotypage c'est:
-
- 1) besoin d'avoir accès à de nombreuses régions du génome pour avoir un échantillon représentatif.
-
- 2) méthode RAD (dont il faut présenter le principe général) et dérivés OK, mais problème de perte d'allèles, surtout pour des données interspécifiques, d'où l'utilisation de capture hybride avec la méthode hyRAD.
-
- 3) séquençage et alignement des reads sur un génome de réf
-
- 4) SNP calling 
-Tu peux t'aider de mon papier pour ça bien sûr. Attention à ne pas laisser entendre que c'est toi qui a fait ces étapes 3 et 4 comme c'est un peu le cas ici. Pour plus de clarté tu pourrais sortir ça de ta partie 'Bioinfo'}
+%\todo[inline,caption={mat met propre}]{Ici il faut prendre les choses dans l'ordre: tu ne peux pas commencer en disant 'les SNPs', on ne sait pas qu'ils existent. Idem pour le génome de référence: on ne sait pas à quoi il sert ici. Les grandes lignes logiques du génotypage c'est:
+% 1) besoin d'avoir accès à de nombreuses régions du génome pour avoir un échantillon représentatif.
+% 2) méthode RAD (dont il faut présenter le principe général) et dérivés OK, mais problème de perte d'allèles, surtout pour des données interspécifiques, d'où l'utilisation de capture hybride avec la méthode hyRAD.
+% 3) séquençage et alignement des reads sur un génome de réf
+% 4) SNP calling 
+%Tu peux t'aider de mon papier pour ça bien sûr. Attention à ne pas laisser entendre que c'est toi qui a fait ces étapes 3 et 4 comme c'est un peu le cas ici. Pour plus de clarté tu pourrais sortir ça de ta partie 'Bioinfo'}
 
 \subsection{Bioinformatique}
 
@@ -44,23 +41,19 @@ A partir du jeu de donnée initial, un pipeline est établi dans le langage R \c
 6 individus de \textit{P. hirsuta}, 
 4 individus de \textit{P. villosa}, 
 2 individus de \textit{P. daonensis}.
-Un individu de \textit{P. apennina} n'a pas été conservé comme dans l'étude de \citet{Boucher2016a}, car présentant trop de données manquantes. Toutes les informations concernant les individus de l'analyse sont présentés en annexe \ref{table_ind} et leur répartition est indiquée en Figure \ref{Carte}.
+Un individu de \textit{P. apennina} n'a pas été conservé comme dans l'étude de \citet{Boucher2016a}, car présentant trop de données manquantes. Toutes les informations concernant les individus de l'analyse sont présentés en annexe \ref{table_ind} et leur répartition est indiquée en Figure \ref{carte}.
  
- %\todo[inline,caption={ind table or map}]{Cette info sur le nombre d'indivs/taxon est à mettre plus en avant. Ici elle est un peu noyée dans la masse et tu ne dis même pas que ce sont tous les échantillons de subsect. Erythrodrosum. Je me demandes même si c'est la peine de mentionner les 90 individus du jeu de données plus large... j'attaquerais directement avec ceux qui te concernent mais c'est à toi de voir ce qui te conviens le mieux.}
-
 La fonction suivante \verb|rare|, permet de trier les allèles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de données et le locus pour l'individu présentant cet allèle rare est considéré comme une donnée manquante.
- %\todo[inline]{Est-ce l'approche standard? J'aurais pensé que dans ce cas on virait le locus pour tout le monde...}
- \todo[inline, color = blue!20]{je ne sais pas si c'est l'approche standard, mais ça permet de garder l'information sur les autres individus. Au pire le loci devient monomorphique. Et au pire si c'est une erreur, il se peut que le loci ai un phred faible, et j'ai un seuil a plus tard pour ça.}
+ \todo[inline, color = blue!20]{je ne sais pas si c'est l'approche standard, mais ça permet de garder l'information sur les autres individus. Au pire le \textit{locus} devient monomorphique. Et au pire si c'est une erreur, il se peut que le \textit{locus} ai un phred faible, et j'ai un seuil a plus tard pour ça.}
   Cette étape permet également de supprimer les SNPs qui ont strictement plus d'un variant, qui sont reconnus comme des artefacts des algorithmes utilisés pour appeler les SNPs.
 %We then filtered variants in a very conservative way by removing all called multiple nucleotide polymorphisms, indels and complex variants. These types of variants are known to often be artifacts generated by the algorithms used for short read mapping (see https://www. broadinstitute.org/gatk/guide/best-practices.php).
- Suite aux deux tris précédents, il y a donc des loci pour lesquels tout les individus portent la même information. Afin de ne garder que les loci polymorphes, nous utilisons ensuite la fonction \verb|clean|. Les loci sont aussi filtrés sur le score de qualité (\verb|QUAL|) indiqué dans le vcf, qui correspond a la confiance dans l'assignation de l'allèle variant.
+ Suite aux deux tris précédents, il y a donc des \textit{loci} pour lesquels tout les individus portent la même information. Afin de ne garder que les \textit{loci} polymorphes, nous utilisons ensuite la fonction \verb|clean|. Les \textit{loci} sont aussi filtrés sur le score de qualité (\verb|QUAL|) indiqué dans le vcf, qui correspond a la confiance dans l'assignation de l'allèle variant.
 %In the context of variant calling, Phred-scaled quality scores can be used to represent many types of probabilities. The most commonly used in GATK is the QUAL score, or variant quality score. It is used in much the same way as the base quality score: the variant quality score is a Phred-scaled estimate of how confident we are that the variant caller correctly identified that a given genome position displays variation in at least one sample
- Une fonction nommée \verb|tri| est appelée pour supprimer les loci \DIFdelbegin \DIFdel{puis }\DIFdelend \DIFaddbegin \DIFadd{et les }\DIFaddend individus présentant trop de données manquantes selon les seuils posés.
- \todo[inline,color=blue!20]{hum on ne garde pas la notion de suite? Parce que les deux tris sont consécutifs...}
+ Une fonction nommée \verb|tri| est appelée pour supprimer les \textit{loci} \DIFdelbegin \DIFdel{puis }\DIFdelend \DIFaddbegin \DIFadd{et les }\DIFaddend individus présentant trop de données manquantes selon les seuils posés.
+ \todo[inline,color=blue!20]{hum on ne garde pas la notion de suite? Parce que les deux tris sont consécutifs et non simultanés...peut-être trop de la cuisine?}
  Enfin, afin de limiter le déséquilibre de liaison, les sites sont filtrés selon leurs positions sur les contigs du génome de référence: si deux SNPs sont situées à une distance inférieure à \verb|n| paires de bases, seul le premier est conservé.
 
-
-Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-sélection d'individus et de loci est enregistrée sous quatre formats : \verb|.vcf|, \verb|.str|, \verb|.geno|, \verb|.snp|.
+Afin de pouvoir utiliser les fichiers triés sous divers format, la sous-sélection d'individus et de \textit{loci} est enregistrée sous quatre formats : \verb|.vcf|, \verb|.str|, \verb|.geno|, \verb|.snp|.
  La transformation d'un format en un autre se fait respectivement au moyen d'un script bash, par l'utilisation du software PGDSpider \citep{Lischer2012}, grâce au package LEA \citep{Frichot2015} et avec un script R.
  La production de ces fichiers est inscrite dans le pipeline par la fonction \verb|files|.
 
@@ -74,31 +67,15 @@ Chaque seuil est choisi après vérification que la décision n'impacte que peu 
 
 Les analyses de génétique des populations ont été réalisés sous Rstudio \citep{RTeam2017} avec différents packages. 
 
-Dans un premier temps, des statistiques \verb|F| ont été calculées avec le package adegenet \citep{Jombart2011}. Ces statistiques permettent de se faire une première idée du jeu de données.
- Ce package a également permit de réaliser un analyse en composante principale discriminante.
- Cependant un clustering de nos individus a été réalisé avant, afin d'essayer d'attribuer des groupes sans a-priori de populations.
- Ce clustering fait par adegenet trouve les groupes pour lesquels la variance intergroupes est maximale quand la variance intragroupes est minimale.
- La DAPC a donc été réalisée avec ces groupes et sans afin d'observer les différences.
-\todo[inline]{Pas très clair ici, il faut présenter les choses dans l'ordre, sinon on se perd un peu.}
-
-La structure des populations de nos taxons a ensuite été étudiée par le package LEA \citep{Frichot2015}.
-\DIFdelbegin \DIFdel{Ce package a permis une implémentation dans R des analyses auparavant menées par le logiciel STRUCTURE }\DIFdelend \DIFaddbegin \DIFadd{Contrairement au logiciel STRUCTURE (citation Pritchard si tu veux en parler), cette méthode permet d'inférer la structure de population BLABLA..}\DIFaddend .
- Pour cette étude, la structuration a été modélisée pour des structures de K populations allant de 1 à 15 \todo{K=15 c'est beaucoup vu le nombre d'individus quand même...}, avec 20 simulations par K, en ne retenant que la meilleure simulation basée sur le critère de "cross-entropy".
+Dans un premier temps, des statistiques \verb|F| ont été calculées avec le package adegenet \citep{Jombart2011}. Ces statistiques permettent de se faire une première idée du jeu de données au niveau de la sous-section \textit{Erythrodrosum}, où le $F_{st}$ permet d'apprécier la présence d'une structure génétique entre les différentes populations.
+ En parallèle, un clustering de nos individus a été réalisé afin d'essayer d'attribuer des groupes sans a-priori de populations. Ce clustering fait par adegenet trouve les groupes pour lesquels la variance intergroupes est maximale quand la variance intragroupes est minimale. En plus de ce clustering, une analyse par composante principale discriminante a été réalisée pour visualiser la répartition des individus au sein des groupes.
  
- Une dernière mesure de génétique des populations a été réalisée pour essayer d'estimer l’expansion ou la contraction récente des populations par rapport .
- Ce \verb|D| de Tajima a été mesuré à l'aide du package pegas \citep{Paradis2010}.
- \todo[inline]{Si tu inclus cette mesure il faut introduire avant à quoi celà va servir, sinon ça fait très 'exercice de style' en génét des pops. Tu pourrais évoquer les contractions de taille de population (efficace) pendant les cycles glaciaires en intro.}
+Afin d'observer plus spécifiquement le \clade{Hirsuta}, sa structure a ensuite été étudiée par le package LEA \citep{Frichot2015}. Cette structuration est établie par un algorithme sNMF, et permet d'estimer des coefficients d'admixture pour tout les individus. Pour cette étude, la structuration a été modélisée pour des structures de K populations allant de 2 à 5, avec 20 simulations par K et un alpha de 10, en ne retenant que la meilleure simulation basée sur le critère de "cross-entropy". Les structures avec K $>$ 5 ne sont pas étudiées, car le \clade{Hirsuta} ne contient que 5 populations et que ces populations sont échantillonnées avec peu d'individus. Un K plus grand reviendrais à structurer ces populations en assignant un individu par population.
+ 
+ %Une dernière mesure de génétique des populations a été réalisée pour essayer d'estimer l’expansion ou la contraction récente des populations par rapport . Ce \verb|D| de Tajima a été mesuré à l'aide du package pegas \citep{Paradis2010}.
+ %\todo[inline]{Si tu inclus cette mesure il faut introduire avant à quoi celà va servir, sinon ça fait très 'exercice de style' en génét des pops. Tu pourrais évoquer les contractions de taille de population (efficace) pendant les cycles glaciaires en intro.}
 
-Afin de tester l'hypothèse d'hybridation pour le taxon des Écrins, le package introgress \citep{Gompert2010} a été utilisé pour mesurer l'index h, index d'hybridation, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}.
- Ce package requiert l'import des deux taxons parents présumés et des "hybrides" afin de mesurer un coefficient d'admixture (ou h-index) \DIFdelbegin \DIFdel{.
- Ce coefficient basé sur une fonction de vraisemblance \mbox{%DIFAUXCMD
-\citep{Buerkle2005}}\hspace{0pt}%DIFAUXCMD
-, où }\DIFdelend \DIFaddbegin \DIFadd{qui correspond à }\DIFaddend la proportion de chaque génome parental \DIFdelbegin \DIFdel{est mesurée dans }\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
-\citep{Buerkle2005} }\hspace{0pt}%DIFAUXCMD
-chez }\DIFaddend l'individu hybride.
-\todo[inline,color=blue!20]{ça vaut peut etre le coup de m'attarder sur comment il mesure ça. Si j'explique pas là et que j'ai a l'oral, je sais pas encore comment l'expliquer}
- Les marqueurs codominants utilisés ici n'étant pas tous fixés chez les parents, le calcul du h-index se basera ici sur les fréquences alléliques.
-
+%%%%%%%%%%%%%%%%  ABSENCE DE LA PARTIE DIYABC %%%%%%%%%%%%%%%%%
 
 %\subsection{Inférences bayésiennes}
 
@@ -111,27 +88,20 @@ chez }\DIFaddend l'individu hybride.
 
 \subsection{Hypothèse d'admixture}
 
-Une autre approche de l'admixture entre les taxons du \clade{Hirsuta} a été réalisée par le test "\verb|ABBA-BABA|".
-\todo[inline]{Là ça doit être monstrueusement difficile de suivre pour quelqu'un qui ne connaît pas le groupe, ce qui confirme le besoin de cette première section qui introduit les différents taxons.}
- Ce test d'admixture développé par \citet{Durand2011} propose une statistique (\verb|D|) basée sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier.
- % Cette méthode étant initialement pensée pour des séquences haploïdes.
- % De fait la plupart des algorithmes présentés écartent les sites avec une ambiguïté (code IUPAC) ou alors résolvent l’ambiguïté par un tirage aléatoire entre deux bases.
- % Il existe aussi une méthode pour prendre en compte les sites hétérozygotes à partir des fréquences alléliques, comme présenté dans \citet{Durand2011}, mais la faible taille de populations biaiserais les résultats.
- % Il est donc plus judicieux d'écarter les sites hétérozygotes dans un premier temps, rendant le test plus conservateur.
- Considérant que les locis sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie.
- Cette topologie [(((P1,P2),P3),O)] propose\DIFdelbegin \DIFdel{que "P1" et "P2" coalescent avant un autre événement de coalescence avec "P3", puis avec "O" l'outgroup }\DIFdelend \DIFaddbegin \DIFadd{une divergence basale entre l'outgroupe "O" et les autres taxons, suivie de la divergence de "P3" et finalement une divergence entre "P1" et "P2".}\DIFaddend  
+%\todo[inline]{Là ça doit être monstrueusement difficile de suivre pour quelqu'un qui ne connaît pas le groupe, ce qui confirme le besoin de cette première section qui introduit les différents taxons.}
+
+Afin de tester l'hypothèse d'admixture pour le taxon des Écrins, un test "\verb|ABBA-BABA|" a été réalisé. Ce test d'admixture développé par \citet{Durand2011} propose une statistique (\verb|D|) basée sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier. 
+ % Cette méthode étant initialement pensée pour des séquences haploïdes. De fait la plupart des algorithmes présentés écartent les sites avec une ambiguïté (code IUPAC) ou alors résolvent l’ambiguïté par un tirage aléatoire entre deux bases. Il existe aussi une méthode pour prendre en compte les sites hétérozygotes à partir des fréquences alléliques, comme présenté dans \citet{Durand2011}, mais la faible taille de populations biaiserais les résultats. Il est donc plus judicieux d'écarter les sites hétérozygotes dans un premier temps, rendant le test plus conservateur.
+ Considérant que les \textit{loci} sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie. Cette topologie [(((P1,P2),P3),O)] propose\DIFdelbegin \DIFdel{que "P1" et "P2" coalescent avant un autre événement de coalescence avec "P3", puis avec "O" l'outgroup }\DIFdelend \DIFaddbegin \DIFadd{une divergence basale entre l'outgroup "O" et les autres taxons, suivie de la divergence de "P3" et finalement une divergence entre "P1" et "P2".}\DIFaddend  
  
 Sur cette topologie on attend deux allèles présents en fin de branche avec "A" l'allèle ancestral et "B" l'allèle alternatif porté par l'outgroup.
- Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA", ce qui correspond à une minorité de \textit{loci}.
- Sous un modèle neutre, on attend des proportions équilibrées de \textit{loci} portant ces deux configurations.
- L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par deux cas : une topologie autre ou alors une introgression de "P3" avec "P1" ou "P2".
- Un introgression entre "P3" et "P1" verrais donc une plus grande proportion de \textit{loci} à la configuration "BABA".
+ Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA", ce qui correspond à une minorité de \textit{loci}. Sous un modèle neutre, on attend des proportions équilibrées de \textit{loci} portant ces deux configurations. L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par deux cas : une topologie autre ou alors une introgression de "P3" avec "P1" ou "P2".
+ Un introgression entre "P3" et "P1" verrais donc une plus grande proportion de \textit{loci} à la configuration "BABA" et une valeur négative du "\verb|D|"
  %Cela aboutis à une valeur négative du "D", comme explicité par l'équation suivante :
 
 % \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} C_{ABBA}(i)-C_{BABA}(i)}{\sum_{i=1}^{n} C_{ABBA}(i)+C_{BABA}(i)}\]
 
-% Afin d'obtenir un résultat statistique, les individus sont tirés de manière aléatoire dans la population pour calculer la valeur de \verb|D|.
- %DIF > Ce calcul est réitéré pour toutes les combinaisons possibles de tirage (dicté par les tailles de populations). 
+% Afin d'obtenir un résultat statistique, les individus sont tirés de manière aléatoire dans la population pour calculer la valeur de \verb|D|. Ce calcul est réitéré pour toutes les combinaisons possibles de tirage (dicté par les tailles de populations). 
 
 % Devant le nombre réduit de sites informatifs avec rejet des sites hétérozygotes, 
 Il a été décidé de calculer \verb|D| à partir des fréquences alléliques, comme décrit dessous.
@@ -139,10 +109,16 @@ Il a été décidé de calculer \verb|D| à partir des fréquences alléliques, 
 
 \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})-P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})+P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}\]
 
-Un intervalle de confiance sur cette statistique est obtenu par bootstraping des sites. Ce bootstraping a été réalisé 1000 fois par échantillonnage aléatoire avec remise des loci.
-\todo[color=yellow]{complete pvalue here}
-
+Un intervalle de confiance sur cette statistique est obtenu par bootstraping des sites. Ce bootstraping a été réalisé 1000 fois par échantillonnage aléatoire avec remise des \textit{loci}.
 Il est important de souligner que ce test ne permet en aucun cas de proposer un sens d'introgression, ni son intensité.
 
-\todo[color=yellow]{put function in package!}
+Une autre approche de l'admixture entre les taxons du \clade{Hirsuta} a été réalisée par le package introgress \citep{Gompert2010}, utilisé pour mesurer l'index h, index d'hybridation, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}.
+ Ce package requiert l'import des deux taxons parents présumés et des "hybrides" afin de mesurer un coefficient d'admixture (ou h-index) \DIFdelbegin \DIFdel{.
+ Ce coefficient basé sur une fonction de vraisemblance \mbox{%DIFAUXCMD
+\citep{Buerkle2005}}\hspace{0pt}%DIFAUXCMD
+, où }\DIFdelend \DIFaddbegin \DIFadd{qui correspond à }\DIFaddend la proportion de chaque génome parental \DIFdelbegin \DIFdel{est mesurée dans }\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\citep{Buerkle2005} }\hspace{0pt}%DIFAUXCMD
+chez }\DIFaddend l'individu hybride.
+\todo[inline,color=blue!20]{ça vaut peut être le coup de m'attarder sur comment il mesure ça. Si j'explique pas là et que j'ai a l'oral, je sais pas encore comment l'expliquer}
+ Les marqueurs codominants utilisés ici n'étant pas tous fixés chez les parents, le calcul du h-index se basera ici sur les fréquences alléliques.
 
