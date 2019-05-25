@@ -1,4 +1,3 @@
-#install.packages("vcfR")
 library(vcfR,readr)
 library(ade4,adegenet)
 library(poppr)
@@ -12,6 +11,7 @@ library(pegas)
 library(Pedemontana)
 library(pbapply)
 library(raster)
+library(introgress)
 
 out = c("AP1")
 a = c('AMB','AOL') #apenina  j'ai enlevé AML
@@ -147,7 +147,7 @@ title("NJ tree ")
 
 dapc1 <- dapc(GENLIGHT, n.pca=10, n.da=2)
 scatter(dapc1,scree.da=FALSE, bg="white", posi.pca="topright", legend=F,
-        txt.leg=paste("group", 1:7))#, col=c("red","blue"))
+        txt.leg=paste("group", 1:7), col=c("red","blue"))
 
 myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen")
 
@@ -194,10 +194,10 @@ assignplot(dapc1, only.grp=NULL, subset=NULL, new.pred=NULL, cex.lab=.75,pch=3)
 
 scatter(dapc1, posi.da="topleft", bg="white", pch=17:22)
 
-myCol <- c("darkblue","purple","green","orange","red","blue","darkgreen","yellow","cyan")
-scatter(dapc1, posi.da="topright", bg="white",
-        pch=17:22, cstar=0, col=myCol, scree.pca=TRUE,
-        posi.pca="topleft")
+myCol <- c("slateblue2","darkorchid3","violetred2","steelblue3","goldenrod2","darkolivegreen3","lightsalmon3")
+scatter(dapc1, posi.da="topleft", bg="gray90",
+        pch=17:25, cstar=0, col=myCol, scree.pca=F, clabel = 1.4)
+
 
 # PCAdapt analysis ####
 #install.packages("pcadapt")
@@ -286,6 +286,51 @@ ind.hap2<-with(
 plot(net, size=attr(net, "freq"), scale.ratio = 0.02, cex = 0.8, pie=ind.hap2)
 legend("topleft", colnames(ind.hap2), col=rainbow(ncol(ind.hap2)), pch=20)
 
+# introgress ####
+
+PedeHirsu <- readr::read_delim(file$.csv, "\t", escape_double = FALSE, trim_ws = TRUE)
+
+LociData = PedeHirsu[,c(1,2)]
+LociData$locus = paste("c",substr(LociData$CHROM,7,10),".",LociData$POS, sep = "")
+LociData$type = "C"
+LociData$lg = substr(LociData$CHROM,7,10)
+LociData = as.data.frame(LociData[,-c(1,2)])
+
+LociData[1,]
+
+AdmixData = PedeHirsu[,-c(1:9)]
+AdmixData = sapply(AdmixData, substring, 1, 3)
+NAs = AdmixData == "." ; AdmixData[NAs == T] = "NA/NA" ; rm(NAs)
+
+file$.ind
+###       1      2      3      4      5      6      7      8      9      10     11     12     13     14     15
+###      AMB    AOL    CS1    CP1    CP4    PT1    PV1    GA2    GA4    DMB    HC1    HGL    HS2    HP1    HPB
+Pop = c("Pop1","Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop2","Pop2","Pop3","Pop3","Pop2","Pop3","Pop3","Pop3")
+Ind = colnames(AdmixData)
+AdmixData = rbind(Ind,AdmixData)
+colnames(AdmixData) = NULL
+
+Parent_1 = AdmixData[-c(1),c(6:7)] ; rownames(Parent_1) = LociData[,1]
+Parent_2 = AdmixData[-c(1),-c(1:9,12)] ; rownames(Parent_2) = LociData[,1]
+
+count.matrix = prepare.data(admix.gen = AdmixData,
+                            loci.data = LociData, fixed = F,
+                            parental1 = Parent_1 , parental2 = Parent_2,
+                            pop.id = F, ind.id = T)
+hi.index.sim = est.h(introgress.data = count.matrix,
+                     loci.data = LociData)
+mk.image(introgress.data = count.matrix, loci.data = LociData,
+         marker.order = NULL,hi.index = hi.index.sim,ylab.image = "Individuals",
+         xlab.h = "population 2 ancestry", pdf = F)
+abline(h= c(7:10), col = "red", lty = 3)
+text(x = hi.index.sim[,2],y = c(1:15), rownames(x), pos = c(4,4,4,4,4,4,4,4,4,2,2,2,2,2))
+rownames(hi.index.sim) = Ind
+hi.index.sim
+
+x= hi.index.sim[order(hi.index.sim$h),]
+x
+
+plot(x)
 
 # ABBA BABA compute D ####
 

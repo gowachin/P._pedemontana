@@ -5,10 +5,10 @@ table = data.frame(AML = c("A","A","B","A"),
 table
 
 Data=data.frame()
-P1=c("apennina","cottia","pedemontana","valgau")
-P2=c("apennina","cottia","pedemontana","valgau")
+P1=c("apennina","cottia","pedemontana")
+P2=c("apennina","cottia","ecrins")
 P3=c("hirsuta")
-Root=c("daonensis","villosa")
+Root=c("daonensis")
 i=1
 pb <- txtProgressBar(min = 1, max = length(P1)*length(P2)*length(P3)*length(Root), style = 3)
 for (k in P1){
@@ -45,6 +45,10 @@ colnames(Data) = c("P1","P2","P3","Root",
                    "d","p<0","p>0","pval","z","site inf")
 View(Data)
 beep(3)
+
+Data = rbind(Data[7,-c(6,7,9)],Data[8,-c(6,7,9)],Data[9,-c(6,7,9)],Data[3,-c(6,7,9)],Data[6,-c(6,7,9)])
+
+write.table(Data,"Rendu/fig/ABBA.csv",sep=" & ")
 
 length(summary(file$.pop))
 P1 = "pedemontana" ; P2 = "hirsuta" ; P3 = "daonensis" ; Root = "lutea"

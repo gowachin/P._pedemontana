@@ -1,5 +1,59 @@
 \section{Discussion}
 
+L'ensemble des analyses portées dans cette étude apportent de nouveaux éléments concordants avec les dernières études de cette sous-section \textit{Erythrodrosum}. Ainsi, cette section est composée de plusieurs groupes génétiques associés à des espèces aux aires de répartitions bien localisées dans les Alpes. D'un côté un \clade{est-alpin} composé des espèces \textit{P. daonensis} et \textit{P. villosa}, et de l'autre un \clade{Hirsuta} composé de l'espèce homonyme et de \textit{P. pedemontana s.l.}. Ce dernier taxon ne semble pas présenter une structure très marquée malgré les répartitions allopatriques des lignées la composant. Enfin, pour la lignée de \textit{P. pedemontana} des Écrins, un signal d'admixture avec \textit{P. hirsuta} permet d'affirmer l'existence d'un flux de gene (passé ou actuel). Cette information est cohérente avec les observations de terrains et permet d'expliquer en partie pourquoi les précédentes études ne peuvent l'assigner comme une espèce à part entière ou comme un hybride. 
+
+\iffalse
+\subsection{Tri du jeu de données}
+
+Le jeu de donnée initial contient 175 799 \textit{loci}. Pour le jeu de donnée utilisé au niveau de la sous-section \textit{Erythrodrosum}, 2 078 \textit{loci} ont été conservés pour les analyses, avec les seuils suivants :  fréquence des allèles rares $>$ 5\%, Phred $>$ 20, une distance de 10kb minimum entre deux \textit{loci} et 5\% des individus sans information maximum par \textit{locus}.
+Pour le jeu de donnée sur le \clade{Hirsuta}, 1851 \textit{loci} ont été conservés pour les analyses, avec les mêmes seuils.
+
+Le changement de taille du jeu de donnée est du à un nombre plus petit d'individus dans le second cas, qui rend des \textit{loci} monomorphes. Le seuil le plus strict est le seuil sur les données manquantes par \textit{locus}, qui ne conserve que  respectivement 7.05\% et 7.07\% du jeu de donnée. 
+
+\subsection{Sous-section \textit{Erythrodrosum}}
+
+Dans un premier temps, le $F_{st}$ général entre les différents taxons de la sous-section \textit{Erythrodrosum} donne une valeur de 0.15, ce qui appuie l'hypothèse la présence d'une structure génétique. Cette structure était attendue étant donné qu'il s'agit de plusieurs espèces, mais pour autant il est important de remarquer que la valeur reste faible.
+% Erythrodrosum
+%            pop        Ind
+% Total 0.1556567 -0.1016958
+% pop   0.0000000 -0.3047961
+\todo[color=blue!20,inline]{proposer une explication? peut etre parce qu'il y a une sous structure? 
+quid du Fis $<$0}
+\todo[inline]{les filtres un peu drastiques sur la quantité de données manquantes virent le gros de la variabilité? A toi de voir si tu veux en parler ou si tu gardes ça pour l'oral. 
+De toute façon, si tu donnes une explication c'est en Discussion, pas dans les résultats qui doivent être factuels. D'ailleurs je mettrais en Discussion la portion ci-dessus: 'ce qui appuie l'hypothèse la présence d'une structure génétique. Cette structure était attendue étant donné qu'il s'agit de plusieurs espèces, mais pour autant il est important de remarquer que la valeur reste faible.'}
+
+Les $F_{st}$ entre paires d'espèces sont également tous supérieurs à zero (valeurs comprises entre 0.093 et 0.214), et les relations phylogénétiques entre espèces obtenues par neigbhor-joining à partir de ces valeurs de $F_{st}$ rejoignent celles décrites précédemment (Figure \ref{topologie}).
+
+Cette structure est par ailleurs confirmée par le clustering réalisé par adegenet sans \textit{a priori} de populations. Ainsi, le nombre K de clusters avec le critère d'information bayésien le plus faible \DIFdelbegin \DIFdel{(BIC =   119.90)}\DIFdelend est atteint pour K=3.
+\todo[inline]{L'info intéressante à donner c'est la différence de BIC, le BIC du meilleur modèle seulement ne donne aucune info intéressante.}
+Pour cette valeur de K, les groupes sont corrélés à la géographie, avec un \clade{est-alpin} composé de \textit{P. daonensis} et \textit{P. villosa}, un clade composé de l'espèce \textit{P. hirsuta} et enfin \textit{P. pedemontana s.l.}.
+
+Ce clustering est plus facilement visualisable sous la forme d'une analyse en composante principale comme dans la figure \ref{DAPC}. Les deux premières composantes montrent ce clustering avec quelques précisions de plus. Ainsi, \textit{P. pedemontana s.l.}. semble bien plus robuste que le \clade{est-alpin}, avec des individus plus proches. Cependant, la population des Écrins n'est pas aussi groupée que le reste des populations composant \textit{P. pedemontana s.l.}, et s'en éloigne vers \textit{P. hirsuta}.
+
+\subsection{Clade `Hirsuta'}
+
+La structuration du \clade{Hirsuta} pour différentes valeurs de K permet de voir différentes informations (figure \ref{structure}. Pour K=2, une séparation est déjà nette entre deux clades, conformément aux résultats précédents, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}. Cette séparation présente néanmoins une légère trace d'admixture entre les individus des Écrins et \textit{P. hirsuta}. L'individu de \textit{P. hirsuta} présentant un peu d'admixture a été échantillonné en Belledonne, un massif proche des Écrins (figure \ref{carte}).
+
+\todo[inline]{Ici il faudrait entourer montrer les différentes espèces sur ces graphes, le relecteur ne connait pas mes codes d'individus...}
+Pour K=3, les individus des Écrins sont isolés et une admixture entre ces individus et les autres individus de \textit{P. pedemontana s.l.}. Cette structure retrouvée ici reflète ce qui étais observé sur la DAPC, où les individus des Écrins se regroupaient avec \textit{P. pedemontana s.l.} tout en étant excentré.
+
+Pour K=4, \textit{P. pedemontana s.l.} se retrouve éclaté avec les différentes populations échantillonnées dans les divers massifs. Cependant, les deux espèces \textit{P. apennina} et \textit{P. cottia} sont toujours regroupées, même si cet ensemble n'est pas robuste. En effet, pour K=5, c'est \textit{P.hirsuta} qui se retrouve scindé en deux avec d'un côté l'individu des Pyrénées et de l'autre l'ensemble des individus. Ici la structure de \textit{P. pedemontana s.l.} est plus ambigue, même si les individus des Écrins sont toujours isolés.
+
+%Pour les analyses sur DIYABC, aucun scénario proposé ne permet de simuler un jeu de donnée proche des données réelles. Le scénario observé le plus proche des données réelles étais celui d'un polytomie où coalescent tout les taxons assigné à l'espèce \textit{P. pedemontana}), puis un événement plus ancien de coalescence avec \textit{P. hirsuta}. Ne pouvant conclure si cette polytomie est réelle ou alors un artefact issu d'un manque de résolution (soft poolytomie), les analyses n'ont pas été plus loin avec cette outil et aucun résultat ne peut être présenté.
+\DIFaddbegin \todo[inline]{Au final c'est quoi la meilleure valeur de K? Tu perds pas mal de place à décrire ces différents graphes je trouve... Clairement l'intérêt de K=5 me paraît très limité. Je trouve également que tu emploies le terme 'robuste' un peu à la légère, je ne vois pas trop ce que tu veux dire, que le résultat ne te plaît pas?}
+\DIFaddend 
+
+\subsection{Admixture}
+
+Le test d'admixture entre les différentes populations de \textit{P. pedemontana s.l.} et \textit{P. hirsuta}, avec \textit{P. daonensis} en outgroup confirment l'admixture entre le taxon des Écrins et \textit{P. hirsuta}. En effet, le D estimé est supérieur à 0 avec une moyenne de 0.102. A contrario, le test ne permet pas d'estimer un D différent de 0 pour les autres populations, ce qui reflète les observations précédentes en sNMF.
+
+Cependant, il est important de noter que ce test ne permet pas d'estimer quelle population de \textit{P. pedemontana s.l.} s'est admixté avec \textit{P. hirsuta}, vu que le résultat est positif quelque soit la population sélectionnée en P1. Ce résultat permet par contre de proposer deux hypothèses : la proximité génétique entre ces trois espèces ou alors une admixture passée avant séparation de ces populations sur des massifs isolés.
+
+\todo[inline,color=blue!20]{totale réécriture de la partie introgress, article a creuser davantage}
+\todo[inline]{Pas sur que mettre introgress soit nécessaire. Cette section admixture est très bien. Par contre, as-tu besoin de présenter les résultats 'contrôle', i.e. sans le taxon des Ecrins? Si tu choisis de le faire alors il faut mieux expliquer pourquoi (en gros tu testes la méthode de Durand pour des faux positifs). Aussi, il faudrait expliquer dans les méthodes pourquoi tu teste les 3 P1 différents. Enfin, il faut vraiment une figure ABBA BABA, avec les taxons que tu as choisis, ça illustrera à la fois la méthode dans le mat et met et les résultats ici (tu pourrais par exemple mettre la flèche entre hirsuta et ecrins en plus gros que celle qui montre la situation BABA).}
+
+
+
 % LIMITATIONS
 \todo[inline,caption={emo discuss}]{C'est assez violent de commencer directement la discussion comme ça! 
 
@@ -29,4 +83,7 @@ Un meilleur échantillonnage permettrais d'avoir suffisamment d'information gén
 Autre aspect du rééchantillonnage,la délimitation des population au niveau géographique est un prérequis a un bon échantillonnage génétique.
  Dans cette étude, les individus sont échantillonnés sur des distances parfois trop importantes (\textit{P. pedemontana}) ou trop courtes (\textit{P. pedemontana} des Écrins ou alors \textit{P. apennina}).
 
+poser mieux les populations parentes pour introgress 
+ 
+\fi
 \todo[color=yellow]{discussion complete}
