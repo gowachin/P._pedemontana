@@ -37,14 +37,6 @@ PedeHirsu.file = dataset(ind= c(a,c,p,va,h)
                          ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
 beep(3)
 
-
-Pede.file = dataset(ind= c(a,p,c,h)
-                         ,popfile= "Populations.csv"
-                         ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
-                         ,name = "data_vcf/Pedemontana"
-                         ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0.8,LD= 1e4)
-beep(3)
-
 # adegenet ####
 
 file = Eryth.file
@@ -236,13 +228,15 @@ color = c("orange","violet","lightgreen","red","blue","green","cyan","grey","bla
 color = c("chartreuse3","cadetblue2","dodgerblue3","sienna3","coral2")
 
 par(mfrow = c(1,1))
-obj.snmf = snmf(file$.geno, K = 11, alpha = 10, project = "new")
-qmatrix = Q(obj.snmf, K = 11)
+obj.snmf = snmf(file$.geno, K = 3, alpha = 10, project = "new")
+qmatrix = Q(obj.snmf, K = 3)
 barplot(t(qmatrix), col = color, border = 1, space = 0.05, xlab = "Individuals", ylab = "Admixture coefficients",
         names.arg =file$.ind, las = 2)
-
 par(mfrow = c(4,1))
 for (i in 2:5) Pop(K= i,files = file$.geno, ID= file$.ind) ;beep(3)
+
+legend("bottomright", c("P. hirsuta","P. cottia","P. apennina","P. pedemontana","P. pedemontana Ecrins"),
+       pch = c(1,13,8), text.font=c(3), cex = 0.7)
 
 # taille de pop ####
 

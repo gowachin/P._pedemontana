@@ -12,13 +12,11 @@ Concernant la population de \textit{P. pedemontana} des Écrins, la déterminati
 
 Les données génétiques utilisées lors de cette étude ont été produites dans le cadre de l'étude précédente de \citet{Boucher2016a}. Il s'agit d'un jeu de données composé de 90 individus de toutes les espèces composant \textit{Primula} section \textit{Auricula}, collectés entre avril et septembre 2014. L'identification taxonomique des individus a été réalisée sur le terrain, mais un individu a du être réattribué après analyse génétique au taxon \textit{P. hirsuta}.
 
-Les individus avaient été génotypés dans le cadre d'une étude phylogénétique, avec le besoin de récolter de l'information sur l'ensemble du génome pour estimer une histoire phylogénétique non restreinte à un seul marqueur. A ces fins, l'ADN avait été génotypé par la méthode hyRAD \citep{Suchan2016} car cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions requis par les enzymes utilisées en RAD-seq \textbf{(référence nécessaire ici)} \todo[color=yellow]{ref}. En effet les enzymes de restrictionsutilisées en RAD-seq sont sensibles à la mutation d'un nucléotide, tandis que les sondes ARN utilisés pour la capture de loci dans la méthode hyRAD peuvent s'hybrider sur des sites de restriction, même mutés. La nécessité de capturer des sites malgré une faible variation provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD. 
-
-\todo[inline]{C'est beaucoup mieux mais il manque encore deux points importants dans ce paragraphe (j'ai déjà bien ré-écrit): 1) tu ne dis pas clairement qu'on fait de la capture hybride de loci RAD avec des sondes ARN, on le comprend mais ce n'est pas dit directement. 2) tu dis qu'on a peu de variation, mais ceci-dit que les sites de restriction sont mutés, ça paraît un peu contradictoire comme ça.}
+Les individus avaient été génotypés dans le cadre d'une étude phylogénétique, avec le besoin de récolter de l'information sur l'ensemble du génome pour estimer une histoire phylogénétique non restreinte à un seul marqueur. A ces fins, l'ADN avait été génotypé par la méthode hyRAD \citep{Suchan2016} car cette technique permet de génotyper le long du génome malgré des mutations sur les sites de restrictions requis par les enzymes utilisées en RAD-seq \citep{Davey2010}. En effet les enzymes de restrictions utilisées en RAD-seq sont sensibles à la mutation d'un nucléotide, tandis que les sondes ARN utilisés pour la capture de loci dans la méthode hyRAD peuvent s'hybrider sur ces sites de restriction RAD visés, même mutés. La nécessité de capturer des sites malgré une variance génétique provient du niveau interspécifique de l'étude, qui pose l'hypothèse que les mutations peuvent se placer sur les sites de restrictions et ainsi limiter leur capture par simple séquençage ddRAD. 
 
 Les séquences obtenues par séquençage haut débit avaient été alignées sur le génome de référence de \textit{Primula veris} par le logiciel Bowtie2. Le jeu de données utilisé ('\verb|m13_-q20_mincov10|') est issu de divers filtres sur l'alignement, avec un score minimal de qualité (Phred) requis de 13 et une couverture minimale de 10 lectures par \textit{locus}. A partir de ces séquences, les SNPs ont été identifiées en utilisant Freebayes, avec un support de lecture de 30\% minimum par allèle, et ont été exportés sous format VCF.
 
-\todo[inline]{Si tu manques de place tu peux réduire toute cette section à quelques lignes seulement: tu est parti d'un jeu de données de SNPs pour 90 individus, obtenus après génotypage de type hyRAD et alignement sur un génome de réf.}
+%\todo[caption=reduc possible, color=yellow]{Si tu manques de place tu peux réduire toute cette section à quelques lignes seulement: tu est parti d'un jeu de données de SNPs pour 90 individus, obtenus après génotypage de type hyRAD et alignement sur un génome de réf.}
 
 % extrait d'article de base :
 %Total DNA was extracted from silica-dried leaves using a DNeasy Plant Mini kit (Qiagen, Hilden, Germany) following the manufacturer’s instructions. DNA quality was visualized on 0.8% agarose gels and quantity was assessed using a QuBit 2.0 fluorom- eter (2.0, Life Technologies, Carlsbad, CA, USA). Genomic DNA was converted into RAD-Capture genotyping-by-sequencing libraries (SNPsaurus, LLC), a new protocol aimed at harnessing the wide genomic spectrum of RAD-sequencing while reducing the amount of missing data in interspecific datasets. Briefly, a double-digest RAD library was created from 100 ng of a pool of genomic DNA containing a diverse set of individuals from sect. Auricula (belong- ing to P. allionii, P. apennina, P. auricula, P. glutinosa, and P. minima; see Table A.1). The pooled DNA was digested with PstI-HF and MfeI- HF (NEB) and ligated to complementary adapters that allowed the resulting amplified fragments to be converted to biotinylated RNA baits. Fragments with inserts roughly 100–350 bp in size were iso- lated by gel extraction from a portion of the ligated product prior to amplification and the in vitro transcription reaction to create the RNA baits. Shotgun sequencing libraries were prepared from the 90 study samples using 5 ng each in a 1/10th Nextera (Illumina, Inc) reaction with unique dual-indexes to distinguish the individu- als. The samples were pooled and size-selected for insert sizes roughly 170–370 bp. The pooled libraries were then used in two successive overnight hybridizations to the biotinylated bait library, followed by capture using DynabeadsÒ MyOneTM Streptavidin C1 magnetic beads (Thermo Fisher) and amplification. The final cap- tured products were sequenced in a single 150 bp NextSeq 500 High Output run at the Genomics and Cell Characterization Core of the University of Oregon.
@@ -46,7 +44,7 @@ Un individu de \textit{P. apennina} n'a pas été conservé comme dans l'étude 
 
 La fonction suivante \verb|rare|, permet de trier les allèles considérés comme étant présents dans un trop faible pourcentage des individus. Ces allèles rares sont écartés du jeu de données et le locus pour l'individu présentant cet allèle rare est considéré comme une donnée manquante.
 
- \todo[inline, color = blue!20]{je ne sais pas si c'est l'approche standard, mais ça permet de garder l'information sur les autres individus. Au pire le \textit{locus} devient monomorphique. Et au pire si c'est une erreur, il se peut que le \textit{locus} ai un phred faible, et j'ai un seuil a plus tard pour ça.}
+%\todo[inline,caption=rare,color = blue!20]{je ne sais pas si c'est l'approche standard, mais ça permet de garder l'information sur les autres individus. Au pire le \textit{locus} devient monomorphique. Et au pire si c'est une erreur, il se peut que le \textit{locus} ai un phred faible, et j'ai un seuil a plus tard pour ca.}
  
 Cette étape permet également de supprimer les SNPs qui ont strictement plus d'un variant, qui sont reconnus comme des artefacts des algorithmes utilisés pour appeler les SNPs.
 %We then filtered variants in a very conservative way by removing all called multiple nucleotide polymorphisms, indels and complex variants. These types of variants are known to often be artifacts generated by the algorithms used for short read mapping (see https://www. broadinstitute.org/gatk/guide/best-practices.php).
@@ -66,10 +64,8 @@ Chaque seuil est choisi après vérification que la décision n'impacte que peu 
 
 \subsection{Génétique des populations}
 
-Les analyses de génétique des populations ont été réalisés sous \DIFdelbegin \DIFdel{Rstudio \mbox{%DIFAUXCMD
-\citep{RTeam2017} }\hspace{0pt}%DIFAUXCMD
-}\DIFdelend \DIFaddbegin \DIFadd{R }\DIFaddend avec différents packages. 
-\todo[inline]{Rstudio c'est juste une interface et en plus ça t'économise une citation et ça te permet de citer un peu de biologie à la place ;)}
+Les analyses de génétique des populations ont été réalisés sous R avec différents packages. 
+\todo[color=blue!20]{\citep{RTeam2017}}
 
 Dans un premier temps, des statistiques \verb|F| ont été calculées avec le package adegenet \citep{Jombart2011}. Ces statistiques permettent de se faire une première idée du jeu de données au niveau de la sous-section \textit{Erythrodrosum}, où le $F_{st}$ permet d'apprécier la présence d'une structure génétique entre les différentes populations.
  En parallèle, un clustering de nos individus a été réalisé afin d'essayer d'attribuer des groupes sans \textit{a priori}. Ce clustering fait par adegenet trouve les groupes pour lesquels la variance intergroupes est maximale quand la variance intragroupes est minimale. En plus de ce clustering, une analyse par composante principale discriminante a été réalisée pour visualiser la répartition des individus au sein des groupes.
@@ -92,23 +88,23 @@ Afin d'observer plus spécifiquement l'ensemble d'espèces de l'ouest des Alpes 
 
 \subsection{Hypothèse d'admixture}
 
-%\todo[inline]{Là ça doit être monstrueusement difficile de suivre pour quelqu'un qui ne connaît pas le groupe, ce qui confirme le besoin de cette première section qui introduit les différents taxons.}
-
 Afin de tester l'hypothèse d'admixture pour le taxon des Écrins, un test "\verb|ABBA-BABA|" a été réalisé. Ce test d'admixture développé par \citet{Durand2011} propose une statistique (\verb|D|) basée sur quatre lignées partageant un ancêtre commun, selon la fréquence de SNPs observés avec un motif particulier. 
  % Cette méthode étant initialement pensée pour des séquences haploïdes. De fait la plupart des algorithmes présentés écartent les sites avec une ambiguïté (code IUPAC) ou alors résolvent l’ambiguïté par un tirage aléatoire entre deux bases. Il existe aussi une méthode pour prendre en compte les sites hétérozygotes à partir des fréquences alléliques, comme présenté dans \citet{Durand2011}, mais la faible taille de populations biaiserais les résultats. Il est donc plus judicieux d'écarter les sites hétérozygotes dans un premier temps, rendant le test plus conservateur.
- Considérant que les \textit{loci} sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie. Cette topologie [(((P1,P2),P3),O)] propose une divergence basale entre l'outgroup "O" et les autres taxons, suivie de la divergence de "P3" et finalement une divergence entre "P1" et "P2". 
+ Considérant que les \textit{loci} sont sous une évolution neutre et sans déséquilibre de liaison, on attend deux configurations différentes pour une même topologie. Cette topologie [(((P1,P2),P3),O)] propose une divergence basale entre l'outgroup "O" et les autres taxons, suivie de la divergence de "P3" et finalement une divergence entre "P1" et "P2" (Figure \ref{abba-top}). 
 
 Sur cette topologie on attend deux allèles présents en fin de branche avec "A" l'allèle ancestral et "B" l'allèle alternatif porté par certains individus de l'ingroup.
- Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA", ce qui correspond à une minorité de \textit{loci}. Sous un modèle neutre, on attend des proportions équilibrées de \textit{loci} portant ces deux configurations. L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par une introgression de "P3" avec "P1" ou "P2". Une introgression entre "P3" et "P1" verrait donc une plus grande proportion de \textit{loci} à la configuration "BABA" et une valeur négative du "\verb|D|"
+ Ce test ne s'intéresse qu'a deux cas : "ABBA" et "BABA", ce qui correspond à une minorité de \textit{loci}. Sous un modèle neutre, on attend des proportions équilibrées de \textit{loci} portant ces deux configurations. L'hypothèse alternative est qu'un déséquilibre de ces proportions peut être induit par une introgression de "P3" avec "P1" ou "P2". Une introgression entre "P3" et "P2" verrait donc une plus grande proportion de \textit{loci} à la configuration "ABBA" et une valeur positive du "\verb|D|".
  
- \todo[inline, caption=faire figure abba-baba]{je pense qu'il faut absolument une figure avec un schéma ABBA-BABA ici, on se perd carrement en lisant les explications (dans le papier de Durand aussi, rassure-toi) et avec un figure ça sera hyper clair. }
- 
- %Cela aboutis à une valeur négative du "D", comme explicité par l'équation suivante :
-
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=1\textwidth]{fig/abba_mat.png}
+    \caption{\textbf{Topologies des \textit{loci} inclus dans le test "ABBA-BABA".} Les deux topologies de gauche représentent les configurations en équilibre sous un modèle neutre (D=0). La topologie de droite explicite un cas d'admixture entre "P1" et "P3", ce qui induit une plus grande proportion de la configuration schématisée (ABBA).}
+    \label{abba-top}
+    \centering
+\end{figure} 
+  %Cela aboutis à une valeur négative du "D", comme explicité par l'équation suivante :
 % \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} C_{ABBA}(i)-C_{BABA}(i)}{\sum_{i=1}^{n} C_{ABBA}(i)+C_{BABA}(i)}\]
-
 % Afin d'obtenir un résultat statistique, les individus sont tirés de manière aléatoire dans la population pour calculer la valeur de \verb|D|. Ce calcul est réitéré pour toutes les combinaisons possibles de tirage (dicté par les tailles de populations). 
-
 % Devant le nombre réduit de sites informatifs avec rejet des sites hétérozygotes, 
 Il a été décidé de calculer \verb|D| à partir des fréquences alléliques, comme décrit dessous.
  \textit{$P_{ij}$} correspond à la fréquence de l'allèle alternatif.
@@ -116,7 +112,7 @@ Il a été décidé de calculer \verb|D| à partir des fréquences alléliques, 
 \[D(P1,P2,P3,0)=\frac{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})-P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}{\sum_{i=1}^{n} (1-P_{i1})P_{i2}P_{i3}(1-P_{i4})+P_{i1}(1-P_{i2})P_{i3}(1-P_{i4})}\]
 
 Un intervalle de confiance sur cette statistique est obtenu par bootstraping des SNPs. Ce bootstraping a été réalisé 1000 fois par échantillonnage aléatoire avec remise des \textit{loci}.
-Il est important de souligner que ce test ne permet en aucun cas de proposer un sens d'introgression, ni son intensité.
+Il est important de souligner que ce test ne permet en aucun cas de proposer un sens d'introgression, ni son intensité. Afin de vérifier l'absence de faux positifs, ce test serra effectué avec des taxons pour lesquels aucune hypothèse d'admixture n'existe (\textit{P. apennina} et \textit{P. cottia}). De plus, pour ne pas biaiser l'analyse avec l'\textit{a priori} que le taxon des Écrins est issue d'une lignée de \textit{P. pedemontana}, l'admixture serra testé entre tout les taxons de \textit{P. pedemontana s.l.} et \textit{P. hirsuta}. Ce besoin de considérer toutes les entités taxonomiques présentes vient du fait que pour identifier la source de l'introgression, il faut considérer toutes les lignées dérivés de l'ancêtre commun \citep{Eaton2015}. 
 
 \iffalse % introgress n'est pas utilisé
 \DIFdelend Une autre approche de l'admixture entre les taxons du \clade{Hirsuta} a été réalisée par le package introgress \citep{Gompert2010}, utilisé pour mesurer l'index h, index d'hybridation, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}.
