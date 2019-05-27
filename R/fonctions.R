@@ -15,8 +15,8 @@
 #' @export
 clean = function(data) {
   n.col= dim(data)[2]
-  compte = pbapply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
-  #exterminate = pbapply(data[,10:n.col],1,paste,collapse ="")
+  compte = apply(data[,10:n.col],1,function(data) length(levels(as.factor(substr(as.character(data),1,3)))[!levels(as.factor(substr(as.character(data),1,3))) %in% "."] ) >1)
+  #exterminate = apply(data[,10:n.col],1,paste,collapse ="")
   #compte = exterminate == paste(rep(".",23),collapse = "")
   print(summary(compte))
   resum = c(pourc.clean = (1-sum(compte)/length(compte) )*100)
@@ -68,11 +68,11 @@ rare = function(data,rare = 0,quiet = T, r= F,p = F) { # data est un data frame 
   n.col = dim(data)[2] ; n.row = dim(data)[1]
   matrix = as.matrix(data[,10:n.col])
 
-  H. = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
-  H0 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "0")+sum(substr(as.character(matrix),3,3) == "0") )/H. >= rare
-  H1 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H. >= rare
-  H2 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "2")+sum(substr(as.character(matrix),3,3) == "2") )/H. >= rare
-  H3 = pbapply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "3")+sum(substr(as.character(matrix),3,3) == "3") )/H. >= rare
+  H. = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
+  H0 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "0")+sum(substr(as.character(matrix),3,3) == "0") )/H. >= rare
+  H1 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H. >= rare
+  H2 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "2")+sum(substr(as.character(matrix),3,3) == "2") )/H. >= rare
+  H3 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "3")+sum(substr(as.character(matrix),3,3) == "3") )/H. >= rare
 
   Haplo1 = matrix(substr(as.character(matrix),1,1), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
   Haplo2 = matrix(substr(as.character(matrix),3,3), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
@@ -118,7 +118,7 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   matrix = data[,10:n.col]
   matrix = matrix == "."
 
-  row  = pbapply(matrix,1,sum)
+  row  = apply(matrix,1,sum)
   row = 1-row/(n.col-9) >= n.r
 
   data = data[which(row == T),]
@@ -128,7 +128,7 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   matrix = data[,10:n.col]
   matrix = matrix == "."
 
-  col  = pbapply(matrix,2,sum)
+  col  = apply(matrix,2,sum)
   col = 1-col/(n.row) >= n.c
 
   matrix = data[,10:n.col]
@@ -146,28 +146,6 @@ tri = function(data,n.r = 0,n.c = 0,quiet = F, r= F,p = F) { # data est un data 
   if (r== T & p == F) return(data)
   if (r== T & p == T) return(resum)
 }
-
-
-
-
-#' save2vcf
-#'
-#' save as a vcf file but need to be a vcf troncated at the origine
-#' hide because tablobj2vcf is way better
-#'
-#'
-#' @param csv the dataframe with the information to save inside a vcf file
-#'
-#' @author JAUNATRE Maxime
-#'
-save2vcf = function(csv) {
-  name = deparse(substitute(csv))
-  write.table(csv, paste("data_vcf/",name,".csv",sep = ""),sep = "\t", quote = F, row.names=F)
-  system(paste(" ./CSV_to_VCF.sh data_vcf/",name,".csv ; mv data_vcf/",name,".csv data_vcf/",name,".vcf",sep="") )
-}
-
-
-
 
 #' vcf2csv
 #'
@@ -230,7 +208,6 @@ Pop = function(K, files,ID) {
           xlab = "Individus", ylab = "Coefficient d'admixture", main = paste("K= ",K,sep = ""),
           names.arg =ID, las = 2)}
 
-
 #' spider
 #'
 #' push file from a type to another using pgdspider.
@@ -254,8 +231,6 @@ spider = function(input,inFORM,output,outFORM) {
   print(command)
   system(command)
 }
-
-
 
 #' files
 #'
@@ -322,7 +297,6 @@ fichiers = list(  .csv = paste(name,".csv",sep=""),
 return(fichiers)
 }
 
-
 #' subset_ord_pop
 #'
 #' reorder and subset the population assignement
@@ -344,8 +318,6 @@ subset_ord_pop = function(population,sub) {
   }
   return(as.data.frame(manus))
 }
-
-
 
 #' dataset
 #'
@@ -436,4 +408,70 @@ fichier$.pop = factor(as.character(fichier$.pop),unique(final_pop$pop))
 cat("\n");cat("DONE :) \n\n")
 
 return(fichier)
+}
+
+
+#' ABBA-BABA test
+#'
+#' compute the durand's D for admixture test between different populations
+#'
+#' @param file a list containning an element named .csv (a character chain with the location of a .csv file) and a vector of factor .pop containing the assignation to populations for each individual. usually made by the dataset function
+#' @param P1,P2,P3,Root a character chain for the populations to compare in this test
+#' @param n number of bootstrap.
+#'
+#'
+#' @return a list with a vector (all the D value, first one is without bootstrap) and a value for the number of informativ loci
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+durand_freq_D = function(file,P1,P2,P3,Root,n) {
+  
+  table = suppressMessages(substr(as.matrix(readr::read_delim(file$.csv,"\t", escape_double = FALSE, trim_ws = TRUE)[,-c(1:9)]),1,3))
+  table = rbind(as.character(file$.pop),table)
+  #verif
+  if (P1 %in% file$.pop == F ) {message("P1 is not in file$.pop")}
+  if (P2 %in% file$.pop == F ) {message("P2 is not in file$.pop")}
+  if (P3 %in% file$.pop == F ) {message("P3 is not in file$.pop")}
+  if (Root %in% file$.pop == F ) {message("Root is not in file$.pop")}
+  
+  #if ( length(unique.default(c(P1,P2,P3,Root)))<4 ) {
+  #  forward = menu(c("yes","no"), title = "2 populations are the same, wish to continue?")
+  #  if (forward == 1) {} else {stop("Assign other populations")}
+  #  }
+  
+  echanti = c(P1,P2,P3,Root)
+  manus = matrix(ncol = 4, nrow = dim(table)[1])
+  for(i in 1:4) {
+    matrix = table[,which(table[1,]==echanti[i])]
+    H. = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) != ".")*2 )
+    H1 = apply(matrix,1, function(matrix) sum(substr(as.character(matrix),1,1) == "1")+sum(substr(as.character(matrix),3,3) == "1") )/H.
+    manus[,i] = H1
+  }
+  
+  x = apply(manus,1,sum) == 0
+  manus = manus[which(x == F),]
+  
+  abba = (1-manus[,1])*manus[,2]*manus[,3]*(1-manus[,4])
+  baba = manus[,1]*(1-manus[,2])*manus[,3]*(1-manus[,4])
+  
+  a_b = abba != 0 ; b_a = baba != 0
+  inf = sum(a_b == T & b_a == T)
+  #print(c("sites inform" = inf))
+  D= c(sum(abba-baba)/sum(abba+baba))
+  
+  #pb <- txtProgressBar(min = 1, max = n, style = 3)
+  for (i in 1: n+1){
+    tmp.manus = manus[sample(c(1:dim(manus)[1]),dim(manus)[1], replace = T ),] ; tmp.manus
+    
+    abba = (1-tmp.manus[,1])*tmp.manus[,2]*tmp.manus[,3]*(1-tmp.manus[,4])
+    baba = tmp.manus[,1]*(1-tmp.manus[,2])*tmp.manus[,3]*(1-tmp.manus[,4])
+    
+    D[i] = sum(abba-baba)/sum(abba+baba)
+    
+    # setTxtProgressBar(pb, i)
+  }
+  #close(pb)
+  
+  return(list(D,inf))
 }

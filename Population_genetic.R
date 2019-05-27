@@ -1,17 +1,14 @@
-library(vcfR,readr)
-library(ade4,adegenet)
-library(poppr)
-library(parallel)
-library(ape)
-library(hierfstat)
-library(pcadapt)
-library(LEA)
-library(vegan)
-library(pegas)
-library(Pedemontana)
-library(pbapply)
 library(raster)
-library(introgress)
+
+library(Pedemontana)
+library(LEA)
+library(vcfR)
+library(readr)
+library(ade4)
+library(adegenet)
+library(hierfstat)
+library(ape)
+
 
 out = c("AP1")
 a = c('AMB','AOL') #apenina  j'ai enlevé AML
@@ -27,7 +24,7 @@ Eryth.file = dataset(ind= c(a,p,va,c,v,h,d)
                      ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                      ,name = "data_vcf/Eryth"
                      ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
-beep(3)
+
 
 
 PedeHirsu.file = dataset(ind= c(a,c,p,va,h)
@@ -35,12 +32,9 @@ PedeHirsu.file = dataset(ind= c(a,c,p,va,h)
                          ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                          ,name = "data_vcf/Hirsuta"
                          ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
-beep(3)
-
 # adegenet ####
 
 file = Eryth.file
-file = Pede.file
 file = PedeHirsu.file
 
 # analyse pour genind ####
@@ -50,8 +44,6 @@ row.names(GENIND$tab)
 GENLIGHT = vcfR2genlight(VCF, n.cores = 7)
 pop(GENLIGHT) <- as.factor(file$.pop)
 pop(GENIND) <- as.factor(file$.pop)
-
-
 
 fstat(GENIND)
 #     pop         Ind
@@ -166,10 +158,6 @@ ploidy(GENLIGHT) = 2
 glPlot(GENLIGHT, posi="topleft")
 file$.ind
 
-#calcul de distance
-GENLIGHT.pop.dist <- poppr::bitwise.dist(GENLIGHT)
-GENLIGHT.pop.dist
-
 # dapc ##
 grp = find.clusters(GENLIGHT, max.n.clust = round(nInd(GENLIGHT))-1)
 names(grp) ; grp$Kstat ; grp$stat ; grp$grp ; grp$size
@@ -190,27 +178,6 @@ myCol <- c("slateblue2","darkorchid3","violetred2","steelblue3","goldenrod2","da
 scatter(dapc1, posi.da="topleft", bg="gray90",
         pch=17:25, cstar=0, col=myCol, scree.pca=F, clabel = 1.4)
 
-
-# PCAdapt analysis ####
-#install.packages("pcadapt")
-
-filename <- read.pcadapt(file$.vcf, type = "vcf")
-x <- pcadapt(input = filename, K = 9)
-plot(x, option = "screeplot")
-plot(x, option = "scores", pop = file$.pop)
-plot(x, option = "scores", i = 2, j = 3, pop = file$.pop)
-plot(x, option = "scores", i = 3, j = 4, pop = file$.pop)
-
-#Another option to choose the number of PCs is based on the ‘score plot’ that displays
-#population structure. The score plot displays the projections of the individuals onto
-#the specified principal components. Using the score plot, the choice of K can be limited
-#to the values of K that correspond to a relevant level of population structure.
-
-#When population labels are known, individuals of the same populations can be displayed
-#with the same color using the pop argument, which should contain the list of indices of
-#the populations of origin. In the geno3pops example, the first population is composed of
-#the first 50 individuals, the second population of the next 50 individuals, and so on.
-#Thus, a vector of indices or characters (population names) that can be provided to the argument pop should look like this:
 
 # LEA analysis ####
 
@@ -238,186 +205,68 @@ for (i in 2:5) Pop(K= i,files = file$.geno, ID= file$.ind) ;beep(3)
 legend("bottomright", c("P. hirsuta","P. cottia","P. apennina","P. pedemontana","P. pedemontana Ecrins"),
        pch = c(1,13,8), text.font=c(3), cex = 0.7)
 
-# taille de pop ####
+# admixture
 
-# pegas
 
-DNABIN = vcfR2DNAbin(VCF, consensus = T, extract.haps = F)
-
-rownames(DNABIN)
-tajima.test(DNABIN[c(1:3,8:10),]) # cott-app
-tajima.test(DNABIN[c(4:7),]) # pede
-tajima.test(DNABIN[c(15:20),]) # hirsuta
-tajima.test(DNABIN[c(11:15),]) # villosa
-tajima.test(DNABIN)
-
-a = c("apennina", "apennina","apennina")
-c = c("cottia","cottia","cottia")
-da = c("daonensis","daonensis")
-hi = c("hirsuta","hirsuta","hirsuta","hirsuta","hirsuta","hirsuta")
-p = c("pedemontana","pedemontana")
-v = c("villosa","villosa","villosa","villosa")
-va = c("valgau","valgau")
-
-# haplotype network ####
-d = Eryth_dna
-e <- dist.dna(d)
-h <- pegas::haplotype(d)
-h <- sort(h, what = "label")
-(net <- pegas::haploNet(h))
-ind.hap<-with(
-  stack(setNames(attr(h, "index"), rownames(h))),
-  table(hap=ind, pop=rownames(d)[values])
-)
-plot(net, size=attr(net, "freq"), scale.ratio=0.01, pie=ind.hap2, labels = T, lwd = 1, fast = T)
-legend("topleft", colnames(ind.hap), col=rainbow(ncol(ind.hap)), pch=19, ncol=2)
-
-wrong.pop<-c(a,p,va,c,v,hi,da)
-ind.hap2<-with(
-  stack(setNames(attr(h, "index"), rownames(h))),
-  table(hap=ind, pop=wrong.pop[values])
-)
-plot(net, size=attr(net, "freq"), scale.ratio = 0.02, cex = 0.8, pie=ind.hap2)
-legend("topleft", colnames(ind.hap2), col=rainbow(ncol(ind.hap2)), pch=20)
-
-# introgress ####
-
-PedeHirsu <- readr::read_delim(file$.csv, "\t", escape_double = FALSE, trim_ws = TRUE)
-
-LociData = PedeHirsu[,c(1,2)]
-LociData$locus = paste("c",substr(LociData$CHROM,7,10),".",LociData$POS, sep = "")
-LociData$type = "C"
-LociData$lg = substr(LociData$CHROM,7,10)
-LociData = as.data.frame(LociData[,-c(1,2)])
-
-LociData[1,]
-
-AdmixData = PedeHirsu[,-c(1:9)]
-AdmixData = sapply(AdmixData, substring, 1, 3)
-NAs = AdmixData == "." ; AdmixData[NAs == T] = "NA/NA" ; rm(NAs)
-
-file$.ind
-###       1      2      3      4      5      6      7      8      9      10     11     12     13     14     15
-###      AMB    AOL    CS1    CP1    CP4    PT1    PV1    GA2    GA4    DMB    HC1    HGL    HS2    HP1    HPB
-Pop = c("Pop1","Pop1","Pop1","Pop1","Pop1","Pop2","Pop2","Pop2","Pop2","Pop3","Pop3","Pop2","Pop3","Pop3","Pop3")
-Ind = colnames(AdmixData)
-AdmixData = rbind(Ind,AdmixData)
-colnames(AdmixData) = NULL
-
-Parent_1 = AdmixData[-c(1),c(6:7)] ; rownames(Parent_1) = LociData[,1]
-Parent_2 = AdmixData[-c(1),-c(1:9,12)] ; rownames(Parent_2) = LociData[,1]
-
-count.matrix = prepare.data(admix.gen = AdmixData,
-                            loci.data = LociData, fixed = F,
-                            parental1 = Parent_1 , parental2 = Parent_2,
-                            pop.id = F, ind.id = T)
-hi.index.sim = est.h(introgress.data = count.matrix,
-                     loci.data = LociData)
-mk.image(introgress.data = count.matrix, loci.data = LociData,
-         marker.order = NULL,hi.index = hi.index.sim,ylab.image = "Individuals",
-         xlab.h = "population 2 ancestry", pdf = F)
-abline(h= c(7:10), col = "red", lty = 3)
-text(x = hi.index.sim[,2],y = c(1:15), rownames(x), pos = c(4,4,4,4,4,4,4,4,4,2,2,2,2,2))
-rownames(hi.index.sim) = Ind
-hi.index.sim
-
-x= hi.index.sim[order(hi.index.sim$h),]
-x
-
-plot(x)
-
-# ABBA BABA compute D ####
-
-CalcPopD <- function(alignment = "alignment.fasta"){
-  ##  Now we have eqn. 2 from page 2240
-  ##  input is an alignment the can take multiple sequences from each
-  ##  population of interest.  IMPORTANT MAKE SURE SEQUENCES ARE IN ORDER
-  ##  P1, P2, P3, OUTGROUP!  Again we find the biallelic sites but now
-  ##  those biallelic sites need not be fixed and we will calculate frequencies
-  ##  of SNP for each population.  The way the function is set up we do need to
-  ##  feed in an alignment where each sequence from a population has the same name:
-  ##  pop1
-  ##  AACCACAAGCCAGCTCAGCTACAG
-  ##  pop1
-  ##  TACAACAAGCGAGCTCAGCTACAG
-  ##  pop1
-  ##  GGCCACAAGCCAGCTCAGCTACAG
-  ##  pop2
-  ##  GGCCACAAGCCAGCTCAGCTACAG
-  ##  pop2
-  ##  GGCCACAAGCCAGCTCAGCTACAG
-  ##  pop3
-  ##  TACCACAAGCCAGCTCAGCTACAG
-  ##  OUTGROUP
-  ##  TACCAGGAGCCAGCTCTTCTACCC
-  Mode <- function(x) {                                                                      #  i need a little mode function which R is lacking ugh
-    ux <- unique(x)
-    ux[which.max(tabulate(match(x, ux)))]
-  }
-  alignment<-read.alignment(alignment, format="fasta")                                       #  read in the alignment
-  alignment.matrix<-matrix(,length(alignment$nam),nchar(alignment$seq[[1]])+1)               #  make a matrix for the alignment
-  for(i in 1:length(alignment$nam)){
-    alignment.matrix[i,2:ncol(alignment.matrix)]<-unlist(strsplit(alignment$seq[[i]],""))    #  fill in the matrix
-  }
-  alignment.matrix[,1]<-alignment$nam                                                        #  get those names into our matrix row names dont work :(
-  groups<-unique(alignment$nam)
-  p1 <- p2 <- p3 <- p4 <- 0                                                                  #  lets just set up the variable names from the durand paper
-  numerator <- denominator <- 0
-  useful<-0                                                                                  #  plus some of my own
-  segregating<-0                                                                             #  plus some of my own
-  seg.pos<-F                                                                                 #  plus some of my own
-  for(i in 2:ncol(alignment.matrix)){                                                        #  run through all sites
-    seg.pos<-F                                                                               #  reset this switch
-    if(length(unique(alignment.matrix[,i]))==2){                                             #  unique(c(p1,p2,p3,o))==2 aka biallelic
-      A <- Mode(alignment.matrix[alignment.matrix[, 1] == groups[4], i])                     #  lets treat the more common variant in the outgroup as "A"
-      B <- unique(alignment.matrix[,i])[unique(alignment.matrix[, i]) != A]                  #  not purposely obfuscating... the other variant in variable "B"
-      if(B %in% unique(alignment.matrix[alignment.matrix[, 1] == groups[3], i])){            #  makes sure that we have at least some indication of an ABBA/BABA pattern
-        if(length(unique(alignment.matrix[alignment.matrix[, 1] %in% groups[1:2], i])) == 2){  #  makes sure that we've got some different resolutions in the ingroups
-          useful <- useful + 1                                                                 #  lets just keep track of how many sites are even useful
-          if(length(unique(alignment.matrix[alignment.matrix[, 1] == groups[1], i])) == 2) {seg.pos<-T}#  next 5 lines are a lame way of counting sites that are segregating
-          if(length(unique(alignment.matrix[alignment.matrix[, 1] == groups[2], i])) == 2) {seg.pos<-T}#  vs those that are fixed another words is population sampling
-          if(length(unique(alignment.matrix[alignment.matrix[, 1] == groups[3], i])) == 2) {seg.pos<-T}#  really of any value within the data set that we are examining
-          if(length(unique(alignment.matrix[alignment.matrix[, 1] == groups[4], i])) == 2) {seg.pos<-T}
-          if(seg.pos == T){segregating <- segregating + 1}
-          #print(segregating)
-          p1 <- (sum(alignment.matrix[alignment.matrix[, 1] == groups[1], i] == A))/length(alignment.matrix[alignment.matrix[, 1] == groups[1], i])  #  freq of A snp in first population
-          p2 <- (sum(alignment.matrix[alignment.matrix[, 1] == groups[2], i] == A))/length(alignment.matrix[alignment.matrix[, 1] == groups[2], i])  #  freq of A snp in second population
-          p3 <- (sum(alignment.matrix[alignment.matrix[, 1] == groups[3], i] == A))/length(alignment.matrix[alignment.matrix[, 1] == groups[3], i])  #  freq of A snp in third population
-          p4 <- (sum(alignment.matrix[alignment.matrix[, 1] == groups[4], i] == A))/length(alignment.matrix[alignment.matrix[, 1] == groups[4], i])  #  freq of A snp in outgroup population
-          #  Durands explanation of eqn 2 is lacking... as least to my feable mind!
-          #  it appears to me that as written p hat is actually the frequency of SNP "B" so....
-          #  snap...  vindicated my interpretation matches that found in the supplemental material of the
-          #  heliconius genome paper supplement... too cool
-          p1 <- 1-p1  #convert these over from proportion A to proportion B
-          p2 <- 1-p2  #convert these over from proportion A to proportion B
-          p3 <- 1-p3  #convert these over from proportion A to proportion B
-          p4 <- 1-p4  #convert these over from proportion A to proportion B
-          numerator <- ((1 - p1) * p2 * p3 * (1 - p4)) - (p1 * (1 - p2) * p3 * (1 - p4)) + numerator              #  build up our numerator sum
-          denominator <- ((1 - p1) * p2 * p3 * (1 - p4)) + (p1 * (1 - p2) * p3 * (1 - p4)) + denominator          #  build up our denominator sum
-        }
+Data=data.frame()
+P1=c("apennina","cottia","pedemontana")
+P2=c("apennina","cottia","ecrins")
+P3=c("hirsuta")
+Root=c("daonensis")
+i=1
+pb <- txtProgressBar(min = 1, max = length(P1)*length(P2)*length(P3)*length(Root), style = 3)
+for (k in P1){
+  for (j in P2) {
+    for (l in P3) {
+      for (m in Root) {
+        #cat("\n",c(k,j,l,m),"\n")
+        Data[i,1]=k
+        Data[i,2]=j
+        Data[i,3]=l
+        Data[i,4]=m
+        D = durand_freq_D(file,P1 =k,P2=j,P3 =l,Root =m,n=1e4)
+        d = D[[1]]
+        inf = D[[2]]
+        Data[i,5]= mean(d)
+        Data[i,6] = sum(d<0)/length(d)
+        Data[i,7] = sum(d>0)/length(d)
+        
+        z <- abs(d[1]/sd(d[-1]))
+        new.pval <- 2 * (1 - pnorm(z))
+        Data[i,8] = new.pval
+        Data[i,9] = z
+        Data[i,10] = inf
+        
+        setTxtProgressBar(pb, i)
+        i=i+1
       }
     }
   }
-  d <- numerator / denominator    #what its all about
-
-  user.result <- list()
-  user.result$d.stat <- d
-  user.result$pval <- "HELP"
-  user.result$align.length <- ncol(alignment.matrix) - 1
-  user.result$useful.sites <- useful
-  user.result$seg.sites <- segregating
-  print(paste("Sites in alignment =", ncol(alignment.matrix) - 1))
-  print(paste("Number of sites with ABBA or BABA patterns =", useful))
-  print(paste("Number of ABBA or BABA sites that are still segregating in at least one population =", segregating))
-  print(paste("D statistic =", d))
 }
+close(pb)
 
-library(seqinr)
+colnames(Data) = c("P1","P2","P3","Root",
+                   "d","p<0","p>0","pval","z","site inf")
+View(Data)
+beep(3)
 
-CalcPopD (alignment = "data/ABBA_BABA_FASTA.fas")
+Data = rbind(Data[7,],Data[8,],Data[9,],Data[3,],Data[6,])
+Data = Data[,-c(6,7,9)]
+write.table(Data,"Rendu/fig/ABBA.csv",sep=" & ")
 
-install.packages("evobiR")
-library(evobiR)
+length(summary(file$.pop))
+P1 = "pedemontana" ; P2 = "ecrins" ; P3 = "hirsuta" ; Root = "daonensis"
+
+x =durand_freq_D(file,P1,P2,P3,Root,n=1e4)
+hist(x)
+z <- abs(x[1]/sd(x[-1]))
+2 * (1 - pnorm(z))
+sum(x<0)/length(x)
+sum(x>0)/length(x)
+
+z <- abs(d[1]/sd(d[-1]))
+new.pval <- 2 * (1 - pnorm(z))
+new.pval
 
 
 # plot de l'évolution du pourcentage de données en fonction des seuils ####
