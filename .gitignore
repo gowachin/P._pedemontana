@@ -3,25 +3,10 @@
 .RData
 .Ruserdata
 
-data_carto
-data
+Europ_clim
 data_vcf
 
-geno.snmfProject
-genotype.snmfProject
-
-wc2.0_30s_bio
-Europ_clim
-diyabc
-
-
-Rendu/tex/thx.tex
-
-Rendu/tex/intro.log
-Rendu/tex/mat_meth.log
-Rendu/tex/result.log
-Rendu/tex/discuss.log
-
+data_carto/STRM.tif
 
 Rendu/CR_Stage_P_pedemontana_LECA.aux
 Rendu/CR_Stage_P_pedemontana_LECA.bbl
