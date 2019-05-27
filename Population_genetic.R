@@ -32,7 +32,6 @@ PedeHirsu.file = dataset(ind= c(a,c,p,va,h)
                          ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                          ,name = "data_vcf/Hirsuta"
                          ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
-# adegenet ####
 
 file = Eryth.file
 file = PedeHirsu.file
