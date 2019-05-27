@@ -142,5 +142,76 @@ polygon(x=hirsutap$x,y = hirsutap$y,col=colors[1],density = 75,border =colors[1]
 text(70,75,"HP1", cex= 0.65)
 
 
+# phrapl tree ####
+
+library(phrapl)
+library(rgl)
+
+data(TestData)
+migrationArray[[4]]
+
+#rajout des growth map car le jeu de base ne les contient pas!!!
+for (i in 1:6) {
+  migrationArray[[i]]$growthMap = matrix(c(0,0,0,0,NA,0),ncol =2)
+}
+
+PlotModel2D( migrationArray[[2]])
+
+ab_plot = migrationArray[[2]]
+
+ab_plot$collapseMatrix = matrix(c(1,1,0,0,
+                                  1,NA,1,0,
+                                  1,NA,NA,1), ncol = 3)
+ab_plot$n0multiplierMap = matrix(c(1,1,1,1,
+                                   1,NA,1,1,
+                                   1,NA,NA,1), ncol = 3)
+ab_plot$growthMap = matrix(c(0,0,0,0,
+                             0,NA,0,0,
+                             0,NA,NA,0), ncol = 3)
+d_plot = ba_plot = ab_plot
+d_plot$migrationArray = array(c(NA,0,0,0,
+                                0,NA,0,0,
+                                0,0,NA,0,
+                                0,0,0,NA,
+                                NA,NA,0,0,
+                                NA,NA,NA,NA,
+                                0,NA,NA,0,
+                                0,NA,0,NA,
+                                NA,NA,NA,0,
+                                NA,NA,NA,NA,
+                                NA,NA,NA,NA,
+                                0,NA,NA,NA),c(4,4,3))
+ab_plot$migrationArray = array(c(NA,0,0,0,
+                                 0,NA,1,0,
+                                 0,1,NA,0,
+                                 0,0,0,NA,
+                                 NA,NA,0,0,
+                                 NA,NA,NA,NA,
+                                 0,NA,NA,0,
+                                 0,NA,0,NA,
+                                 NA,NA,NA,0,
+                                 NA,NA,NA,NA,
+                                 NA,NA,NA,NA,
+                                 0,NA,NA,NA),c(4,4,3))
+
+ba_plot$migrationArray = array(c(NA,0,1,0,
+                                 0,NA,0,0,
+                                 1,0,NA,0,
+                                 0,0,0,NA,
+                                 NA,NA,0,0,
+                                 NA,NA,NA,NA,
+                                 0,NA,NA,0,
+                                 0,NA,0,NA,
+                                 NA,NA,NA,0,
+                                 NA,NA,NA,NA,
+                                 NA,NA,NA,NA,
+                                 0,NA,NA,NA),c(4,4,3))
+
+par(mfrow=c(1,3))
+PlotModel2D(d_plot, taxonNames = c("A","B","B","A"), tree.col = c("grey"),tree.lwd = 10)
+PlotModel2D(d_plot, taxonNames = c("B","A","B","A"), tree.col = c("grey"),tree.lwd = 10)
+PlotModel2D(ab_plot, taxonNames = c("A","B","B","A"), tree.col = c("grey"),tree.lwd = 10)
+PlotModel2D(ba_plot, taxonNames = c("B","A","B","A"), tree.col = c("grey"),tree.lwd = 10)
+
 
 
