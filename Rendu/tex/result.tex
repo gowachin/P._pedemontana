@@ -2,7 +2,9 @@
 
 \subsection{Tri du jeu de données}
 
-Le jeu de donnée initial contient 175 799 \textit{loci}. Pour le jeu de donnée utilisé au niveau de la sous-section \textit{Erythrodrosum}, 2 078 \textit{loci} ont été conservés pour les analyses, avec les seuils suivants :  fréquence des allèles rares $>$ 5\%, Phred $>$ 20, une distance de 10kb minimum entre deux \textit{loci} et 5\% des individus sans information maximum par \textit{locus}.
+Le jeu de données initial contient 175 799 SNPs.
+\todo[color=blue!20]{À checker partout: loci ou SNPs? Si c'est juste une paire de bases dont tu parle, mieux vaut utiliser SNP, avec 'loci' on a tendance à penser que c'est une séquence entière.}
+Pour le jeu de données utilisé au niveau de la sous-section \textit{Erythrodrosum}, 2 078 \textit{loci} ont été conservés pour les analyses, avec les seuils suivants :  fréquence des allèles rares $>$ 5\%, Phred $>$ 20, une distance de 10kb minimum entre deux \textit{loci} et 5\% des individus sans information maximum par \textit{locus}.
 Pour le jeu de donnée sur le \clade{Hirsuta}, 1 851 \textit{loci} ont été conservés pour les analyses, avec les mêmes seuils.
 
 Le changement de taille du jeu de donnée est du à un nombre plus petit d'individus dans le second cas, qui rend des \textit{loci} monomorphes. Le seuil le plus strict est le seuil sur les données manquantes par \textit{locus}, qui ne conserve que  respectivement 7.05\% et 7.07\% du jeu de donnée. 
@@ -21,7 +23,7 @@ Dans un premier temps, le $F_{st}$ général entre les différents taxons de la 
 	\begin{center}
 	\includegraphics[width=0.29\textwidth]{fig/topologie.png}
 	\end{center}
-	\caption{\textbf{Topologie d'\textit{Erythrodrosum} par Neighbor-joining}, réalisé à partir de la matrice de distances $F_{st}$ par paires de populations.}
+	\caption{\textbf{Topologie de la sous-section \textit{Erythrodrosum} obtenue par Neighbor-joining}, réalisé à partir de la matrice de distances $F_{st}$ par paires de populations.}
     \label{topologie}
 \end{wrapfigure}
 
@@ -51,14 +53,15 @@ Cette structure est par ailleurs confirmée par le clustering réalisé par adeg
     \includegraphics[width=0.49\textwidth]{fig/DAPC.png}
     \caption{\textbf{Analyse en composante principale discriminante de la sous-section \textit{Erythrodrosum} Pax.} Les groupes à priori sont les populations échantillonnées.}
     \end{center}
-    \label{DAPC}
+    \label{dapc}
     \vspace{-20pt}
 \end{wrapfigure}
 
-Ce clustering est plus facilement visualisable sous la forme d'une analyse en composante principale discriminante comme dans la figure \ref{DAPC}. Les deux premières composantes montrent ce clustering avec quelques précisions de plus. Ainsi, les individus de \textit{P. pedemontana s.l.}. sont plus proches que ceux du \clade{est-alpin}. Cependant, la population des Écrins n'est pas aussi groupée que le reste des populations composant \textit{P. pedemontana s.l.}, et s'en éloigne vers \textit{P. hirsuta}.
+Ce clustering est plus facilement visualisable sous la forme d'une analyse en composante principale discriminante comme dans la figure 4. Les deux premières composantes montrent ce clustering avec quelques précisions de plus. Ainsi, les individus de \textit{P. pedemontana s.l.}. sont plus proches que ceux du \clade{est-alpin}. Cependant, la population des Écrins n'est pas aussi groupée que le reste des populations composant \textit{P. pedemontana s.l.}, et s'en éloigne vers \textit{P. hirsuta}.
 
-\newpage
 \subsection{Clade `Hirsuta'}
+
+La structuration du \clade{Hirsuta} pour différentes valeurs de K permet de voir différentes informations (figure \ref{structure}). Pour K=2, une séparation est déjà nette entre deux clades, conformément aux résultats précédents, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}. Cette séparation présente néanmoins une légère trace d'admixture entre les individus des Écrins et \textit{P. hirsuta}. L'individu de \textit{P. hirsuta} présentant un peu d'admixture a été échantillonné en Belledonne, un massif proche des Écrins (figure \ref{carte}).
 
 \begin{wrapfigure}{r}{0.50\textwidth}
 	\vspace{-40pt}
@@ -70,7 +73,6 @@ Ce clustering est plus facilement visualisable sous la forme d'une analyse en co
     \vspace{-20pt}
 \end{wrapfigure}
 
-La structuration du \clade{Hirsuta} pour différentes valeurs de K permet de voir différentes informations (figure \ref{structure}). Pour K=2, une séparation est déjà nette entre deux clades, conformément aux résultats précédents, entre \textit{P. pedemontana s.l.} et \textit{P. hirsuta}. Cette séparation présente néanmoins une légère trace d'admixture entre les individus des Écrins et \textit{P. hirsuta}. L'individu de \textit{P. hirsuta} présentant un peu d'admixture a été échantillonné en Belledonne, un massif proche des Écrins (figure \ref{carte}).
 
 Pour K=3, les individus des Écrins sont isolés et une admixture entre ces individus et les autres individus de \textit{P. pedemontana s.l.}. Cette structure retrouvée ici reflète ce qui étais observé sur la DAPC, où les individus des Écrins se regroupaient avec \textit{P. pedemontana s.l.} tout en étant excentré.
 
@@ -78,9 +80,9 @@ Pour K=4, \textit{P. pedemontana s.l.} se retrouve éclaté avec les différente
 
 %Pour les analyses sur DIYABC, aucun scénario proposé ne permet de simuler un jeu de donnée proche des données réelles. Le scénario observé le plus proche des données réelles étais celui d'un polytomie où coalescent tout les taxons assigné à l'espèce \textit{P. pedemontana}), puis un événement plus ancien de coalescence avec \textit{P. hirsuta}. Ne pouvant conclure si cette polytomie est réelle ou alors un artefact issu d'un manque de résolution (soft poolytomie), les analyses n'ont pas été plus loin avec cette outil et aucun résultat ne peut être présenté.
 
-\subsection{Détection de flux de gènes}
+\subsection{Hypothèse d'admixture}
 
-Le test d'admixture entre les différentes populations de \textit{P. pedemontana s.l.} et \textit{P. hirsuta}, avec \textit{P. daonensis} en outgroup confirment l'admixture entre le taxon des Écrins et \textit{P. hirsuta}. En effet, le D estimé est supérieur à 0 avec une moyenne de 0.102. A contrario, le test ne permet pas d'estimer un D différent de 0 pour les autres populations, ce qui reflète les observations précédentes en sNMF.
+Le test d'admixture entre les différentes populations de \textit{P. pedemontana s.l.} et \textit{P. hirsuta}, avec \textit{P. daonensis} en outgroup confirment l'admixture entre le taxon des Écrins et \textit{P. hirsuta} \ref{ABBA}. En effet, le D estimé est supérieur à 0 avec une moyenne de 0.102. A contrario, le test ne permet pas d'estimer un D différent de 0 pour les autres populations, ce qui reflète les observations précédentes en sNMF.
 
 Cependant, il est important de noter que ce test ne permet pas d'estimer quelle population de \textit{P. pedemontana s.l.} s'est admixté avec \textit{P. hirsuta}, vu que le résultat est positif quelque soit la population sélectionnée en P1.
 
@@ -93,7 +95,7 @@ P1 & P2 & P3 & Outgroup & D & p-valeur \\ \midrule
 \textit{P. apennina} & Taxon des Écrins & \textit{P. hirsuta} & \textit{P. daonensis} & \textbf{0.109} & \textbf{6.465.10$^{-7}$} \\
 \textit{P. cottia} & Taxon des Écrins & \textit{P. hirsuta} & \textit{P. daonensis} & \textbf{0.116} & \textbf{1.237.10$^{-8}$} \\ \bottomrule
 \end{tabular}
-\caption{\textbf{Test d'admixture par ABBA-BABA}. La p-valeur est estimée à partir d'un bootstrap sur les \textit{loci} et recalcul de la valeur D. Un D supérieur à 0 indique une admixture entre P2 et P3.}
+\caption{\textbf{Test d'admixture par ABBA-BABA}. La p-valeur est estimée à partir d'un bootstrap sur les \textit{loci}. Un D supérieur à 0 indique une admixture entre P2 et P3.}
 \label{ABBA}
 \end{table}
 

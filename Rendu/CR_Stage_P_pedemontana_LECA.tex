@@ -33,7 +33,7 @@
 \DeclareCaptionType{annexe}[Annexe][Liste d'annexes] % rajout pour captions annexes
 \DeclareCaptionType{web}[Web][Sites Web] % rajout pour mettre des captions web
 
-\usepackage{todonotes} % notes et commentaires
+\usepackage[disable]{todonotes} % notes et commentaires
 %\usepackage[disable]{todonotes} % pour supprimer les commentaires lors de la compil
 
 \usepackage[export]{adjustbox}
@@ -145,12 +145,12 @@ DivAdapt
 %image sympas
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=2.8]{fig/primulapedemontana_7.jpg}
+\includegraphics[scale=0.1]{fig/Primula_hirsuta_Grand_Chat_longistyle.JPG}
 \end{center}
 \end{figure}
 \thispagestyle{empty}
 
-{\let\thefootnote\relax\footnote{{ \textit{Primula pedemontana} Crédit photo : Florian Boucher}}}
+{\let\thefootnote\relax\footnote{{ \textit{Primula hirsuta},  Crédit photo : Florian Boucher}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Abstract
@@ -159,7 +159,7 @@ DivAdapt
 \begin{abstract}
 
 
-La dynamique des Alpes au Quaternaire a permis l'apparition d'une flore très diverse. Cependant, cette diversité porte les traces de multiples événements génétiques difficiles à différencier. Cette étude propose de réanalyser un jeu de données phylogénétique sur la sous-section \textit{Erythrodrosum}, située au sein d'un large groupe de fleur de montagnes endémiques du système alpin : la section \textit{Auricula} du genre \textit{Primula}. Pour cela, les \textit{loci} produits par séquençage a haut débit avec capture par sondes ARN, et alignés sur un génome de référence, sont re-triés pour obtenir un jeu de donnée analysable par les outils de génétique des populations. Ce nouveau jeu de donnée permet de valider les résultats précédemment établis sur la structure génétique de \textit{P. pedemontana}, proposant une révision taxonomique, ainsi que la confirmation d'un flux de gène entre cette espèce et \textit{P. hirsuta} dans le massif des Écrins. Finalement, cette étude préliminaire recentre les futures campagnes d'échantillonnage dans les massifs des Écrins et de la Vanoise, dans le but de clarifier l'impact des cycles de glaciations sur la génétique des fleurs de montagnes.
+La dynamique des Alpes au Quaternaire a permis l'apparition d'une flore très diverse. Cependant, cette diversité porte les traces de multiples événements génétiques difficiles à différencier. Cette étude propose de réanalyser un jeu de données phylogénétique sur la sous-section \textit{Erythrodrosum}, située au sein d'un large groupe de fleur de montagnes endémiques du système alpin : la section \textit{Auricula} du genre \textit{Primula}. Pour cela, les SNPs produits par séquençage à haut débit avec capture par sondes ARN, et alignés sur un génome de référence, sont re-triés pour obtenir un jeu de données analysable par les outils de génétique des populations. Ce nouveau jeu de donnée permet de valider les résultats précédemment établis sur la structure génétique de \textit{P. pedemontana}, proposant une révision taxonomique, ainsi que la confirmation d'un flux de gène entre cette espèce et \textit{P. hirsuta} dans le massif des Écrins. Finalement, cette étude préliminaire recentre les futures campagnes d'échantillonnage dans les massifs des Écrins et de la Vanoise, dans le but de clarifier l'impact des cycles de glaciations sur la génétique des fleurs de montagnes.
 
 
 \thispagestyle{empty}
@@ -229,10 +229,18 @@ La dynamique des Alpes au Quaternaire a permis l'apparition d'une flore très di
 % Ressources
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ressources}
+
 \begin{web}[h]
-	\caption{\url{https://github.com/gowachin/Pedemontana}}
+	\caption{\url{http://www.ecrins-parcnational.fr/actualite/lenigme-de-la-primevere-du-valgaudemar}}
+	\label{pne}
+\end{web}
+
+\begin{web}[h]
+	\caption{\url{https://github.com/gowachin/P._pedemontana}}
 	\label{github}
 \end{web}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Annexes
@@ -272,7 +280,7 @@ P. villosa ssp. villosa &Turracher Hohe, Austria &VL2 &Long-styled &F. Boucher &
 P. villosa ssp. villosa &Turracher Hohe, Austria &VB1 &Short-styled &F. Boucher &07/06/14 & 13.87581 & 46.91273 &1801&3004397&2708593&Photo \\
 	\bottomrule
 	\end{tabular}}
-	\caption{\textbf{Individus séquencés pour cette étude} lorem ipsum}
+	\caption{\textbf{Individus séquencés pour cette étude}. D'après les informations de \citet{Boucher2016a}.}
 	\label{table_ind}
 \end{annexe}
 \end{landscape}
