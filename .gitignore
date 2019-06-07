@@ -4,7 +4,11 @@
 .Ruserdata
 
 Europ_clim
-data_vcf
+data_vcf/freebayes_-F0.3-n10-m13_-q20_mincov10_90samples_SNPs_only.vcf
+data_vcf/freebayes_-F0.3-n10-m30_-q20_mincov20_90samples_SNPs_only.vcf
+data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf
+data_vcf/systematics_references.vcf
+data_vcf/freebayes_vcf.head
 
 data_carto/STRM.tif
 

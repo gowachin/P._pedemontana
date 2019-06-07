@@ -1,3 +1,4 @@
+
 library(raster)
 
 library(Pedemontana)
@@ -23,9 +24,10 @@ p = c('PT1','PV1') #pedemontana
 va = c('GA2','GA4')
 v = c('VR3','VR1','VL2','VB1') #villosa
 
+
 Eryth.file = dataset(ind= c(a,p,va,c,v,h,d)
                      ,popfile= "Populations.csv"
-                     ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
+                     ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_r0_q5_mL0_mI0_LD1e0.vcf"
                      ,name = "data_vcf/Eryth"
                      ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
 
