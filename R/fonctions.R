@@ -185,6 +185,41 @@ tablobj2vcf = function(obj,name,head,vcf) {
   system(paste("rm ",name,".temp",sep = ""))
 }
 
+#' objvcf2geno
+#'
+#' save a dataframe as a vcf file, concatening the head of a vcf
+#'
+#' @param obj name of the data frame to save
+#' @param name name for save
+#'
+#' @author JAUNATRE Maxime
+#'
+#' @export
+objvcf2geno = function(data,name) {
+
+  n.col = dim(data)[2] ; n.row = dim(data)[1]
+  matrix = as.matrix(data[,10:n.col])
+  
+  Haplo1 = matrix(substr(as.character(matrix),1,1), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
+  Haplo2 = matrix(substr(as.character(matrix),3,3), nrow = dim(matrix)[1], ncol = dim(matrix)[2])
+  
+  matrix[Haplo1 %.in% c(".","0","1") | Haplo2 %.in% c(".","1","2")] = "."
+  
+  matrix[Haplo1 ==  "0" & Haplo2 == "0"] = "2"
+  matrix[Haplo1 !=  Haplo2] = "1"
+  matrix[Haplo1 == "1" & Haplo2 == "1"] = "0"
+  matrix[Haplo1 == "." | Haplo2 == "."] = "9"
+  
+  save = matrix
+  
+  matrix = as.matrix(apply(matrix, 1, paste, collapse=""), ncol=1)
+  
+  write.table(matrix, name ,sep = "", quote = F, row.names=F, col.names = F)
+  
+  return(save)
+
+}
+
 #' Pop
 #'
 #' str barplot
@@ -220,14 +255,13 @@ Pop = function(K, files,ID) {
 #'
 #' @author JAUNATRE Maxime
 #'
-#' @export
 spider = function(input,inFORM,output,outFORM) {
   if (inFORM == "VCF" & outFORM == "STRUCTURE") {spid = "Spid_VCF_STRUCTURE.spid"}
   if (inFORM == "VCF" & outFORM == "PED") {spid = "Spid_VCF_PED.spid"}
 
-  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/Pedemontana/",
-                  input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/Pedemontana/", output, " -outputformat ", outFORM ,
-                  " -spid Bureau/BEE/Stage/Pedemontana/data_vcf/",spid,sep = "")
+  command = paste("cd ; java -Xmx1024m -Xms512M -jar Téléchargements/PGDSpider_2.1.1.5/PGDSpider2-cli.jar -inputfile Bureau/BEE/Stage/P._pedemontana/",
+                  input, " -inputformat ", inFORM ," -outputfile Bureau/BEE/Stage/P._pedemontana/", output, " -outputformat ", outFORM ,
+                  " -spid Bureau/BEE/Stage/P._pedemontana/data_vcf/",spid,sep = "")
   print(command)
   system(command)
 }
@@ -253,7 +287,7 @@ spider = function(input,inFORM,output,outFORM) {
 files = function(obj,name,ind,pop, head= NULL) {
 .csv = paste(name,".csv",sep="")
 .vcf = paste(name,".vcf",sep="")
-.str = paste(name,".str",sep="")
+#.str = paste(name,".str",sep="")
 .geno = paste(name,".geno",sep="")
 .snp = paste(name,".snp",sep="")
 
@@ -261,26 +295,25 @@ if( is.null(head) ) {head="data_vcf/freebayes_vcf.head"} else {}
 
 cat("\n");cat("writing VCF \n")
 tablobj2vcf(obj, .csv , head , .vcf)
-cat("\n");cat("VCF done, writing STR \n")
-spider( .vcf ,"VCF", .str ,"STRUCTURE")
-system(paste("sed -i '1d' ", .str , sep=""))
 
-source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
-suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
+cat("\n");cat("VCF done, writing GENO \n")
+matrix = objvcf2geno(data =obj, .geno)
 
-cat("\n");cat("STR done, writing GENO \n")
-struct2geno(file = .str , TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output =  .geno)
+#cat("\n");cat("VCF done, writing STR \n")
+#spider( .vcf ,"VCF", .str ,"STRUCTURE")
+#system(paste("sed -i '1d' ", .str , sep=""))
 
-x =c("barplotCoeff", "barplotFromPops", "correlation",
-     "correlationFromPops", "createGrid", "createGridFromAsciiRaster",
-     "defaultPalette", "displayLegend", "fst",
-     "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients",
-     "loadPkg", "maps", "mapsFromPops",
-     "mapsMethodMax", "struct2geno")
-rm(list = x, envir = .GlobalEnv)
+#source("http://membres-timc.imag.fr/Olivier.Francois/Conversion.R")
+#suppressWarnings(source("http://membres-timc.imag.fr/Olivier.Francois/POPSutilities.R"))
+
+#cat("\n");cat("STR done, writing GENO \n")
+#struct2geno(file = .str , TESS = FALSE, diploid = T, FORMAT = 2,extra.row = 0, extra.col = 2, output =  .geno)
+
+#x =c("barplotCoeff", "barplotFromPops", "correlation", "correlationFromPops", "createGrid", "createGridFromAsciiRaster", "defaultPalette", "displayLegend", "fst", "getConstraintsFromAsciiRaster", "helpPops", "lColorGradients", "loadPkg", "maps", "mapsFromPops","mapsMethodMax", "struct2geno")
+#rm(list = x, envir = .GlobalEnv)
 
 cat("\n");cat("GENO done, writing SNP \n")
-temp.geno = read.geno( .geno )
+temp.geno = t(matrix)
 temp.geno= rbind(rep("A",dim(temp.geno)[2]),temp.geno)
 temp.geno = cbind(c("IND",as.character(ind)),c("SEX",rep("9",dim(temp.geno)[1]-1)),c("POP",as.character(pop)),temp.geno)
 colnames(temp.geno) = NULL
@@ -289,7 +322,7 @@ system(paste("sed -i '1 i\ <NM=1NF>' ", .snp ,sep=""))
 
 fichiers = list(  .csv = paste(name,".csv",sep=""),
                   .vcf = paste(name,".vcf",sep=""),
-                  .str = paste(name,".str",sep=""),
+#                  .str = paste(name,".str",sep=""),
                   .geno = paste(name,".geno",sep=""),
                   .snp = paste(name,".snp",sep=""),
                   .ind = ind,
@@ -324,7 +357,7 @@ subset_ord_pop = function(population,sub) {
 #' create all thes files for population genetic
 #'
 #' @param ind vector of individuals
-#' @param popfile csv file with population assignement, first column with individual ID, second column with population ID
+#' @param popfile csv file with population assignement or R matrix in GlobalEnv, first column with individual ID, second column with population ID
 #' @param entryfile a vcf file
 #' @param name basic name and location of the files to (character chain)
 #' @param rare numeric for the percentage of presence minimal for an allele to be retain (ex 0.05)
@@ -357,11 +390,15 @@ if(identical(colnames(lecture[,-c(1:9)]) , ind) == F) {
     cat("\nno reordering needed \n")
     reorder = lecture}
 
+if (dim(reorder)[1] > 2) {} else {stop("Too strict treshold on cleaning MNP")}
+
 if(rare > 0) {
   cat("\ndeleting rare allele \n")
   Rare = rare(reorder, rare  = rare, r= T)} else {
     cat("\nno rare filter \n")
     Rare = reorder}
+
+if (dim(Rare)[1] > 2) {} else {stop("Too strict treshold on allele scarcity")}
 
 if(qual > 0) {
   cat("\ndeleting poor quality SNP \n")
@@ -369,11 +406,15 @@ if(qual > 0) {
     cat("\nno qual filter \n")
     quality = Rare}
 
+if (dim(quality)[1] > 2) {} else {stop("Too strict treshold on quality")}
+
 if(missLoci > 0 | missInd > 0 ) {
   cat("\napplying treshold to missing data \n")
   missingdata = tri(data = quality,n.r=missLoci,n.c = missInd, r = T)} else {
     cat("\nno missing data filter \n")
     missingdata = quality}
+
+if (dim(missingdata)[1] > 2) {} else {stop("Too strict treshold on missing data")}
 
 if(LD > 1) {
   cat("\n");cat("deleting loci with narrow positions \n")
@@ -386,8 +427,12 @@ if(LD > 1) {
     cat("\nno LD filter \n")
     final = missingdata}
 
+if (dim(final)[1] > 2) {} else {stop("Too strict treshold linkage desequilibrium")}
+
 cat("\n");cat("reading pop file \n")
-Populations <- as.data.frame(read.csv(popfile))
+if (class(popfile) == "character") {Populations <- as.data.frame(read.csv(popfile))
+}else if (class(popfile) %in% c("matrix","data.frame")) {Populations <- as.data.frame(popfile) }
+
 colnames(Populations) = c("ind","pop")
 final_pop = subset_ord_pop(population =Populations,sub=c(colnames(final[,-c(1:9)])))
 
@@ -405,7 +450,7 @@ fichier$.ind = as.factor(as.character(fichier$.ind))
 
 fichier$.pop = factor(as.character(fichier$.pop),unique(final_pop$pop))
 
-cat("\n");cat("DONE :) \n\n")
+cat("\n");cat("DONE ! \n\n")
 
 return(fichier)
 }

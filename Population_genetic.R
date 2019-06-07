@@ -10,6 +10,10 @@ library(hierfstat)
 library(ape)
 
 
+Populations <- read_csv("Populations.csv")
+Populations$Code
+
+
 out = c("AP1")
 a = c('AMB','AOL') #apenina  j'ai enlevé AML
 c = c('CS1','CP1','CP4') #cottia
@@ -24,8 +28,6 @@ Eryth.file = dataset(ind= c(a,p,va,c,v,h,d)
                      ,entryfile= "data_vcf/freebayes_-F0_3-n10-m13_-q20_mincov10_Eryth_SNPs.vcf"
                      ,name = "data_vcf/Eryth"
                      ,rare= 0.05,qual= 20,missLoci= 0.95,missInd= 0,LD= 1e4)
-
-
 
 PedeHirsu.file = dataset(ind= c(a,c,p,va,h)
                          ,popfile= "Populations.csv"
